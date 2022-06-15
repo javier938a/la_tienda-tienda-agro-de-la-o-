@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% block extra-css %}
+      <link href="{% static 'assets/css/jquery-ui/jquery-ui.css' %}" rel="stylesheet">
+      <link href="{% static 'assets/css/select2/select2.css' %}" rel="stylesheet">
+      <link rel="stylesheet" href="{% static 'assets/css/toastr/toastr.css' %}">
+
+      <style>
+        .ui-autocomplete {
+          max-height: 500px;
+          overflow-y: auto;
+          /* prevent horizontal scrollbar */
+          overflow-x: hidden;
+        }
+        /* IE 6 doesn't support max-height
+         * we use height instead, but this forces the menu to always be this tall
+         */
+        * html .ui-autocomplete {
+          height: 100px;
+        }
+        </style>
+{% endblock %}
+
+{% block barra_superior %}
+
+{% endblock %}
+
+{# blocke para especificar los atributos del body y quitar la barra lateral #}
+{% block atributos_body %}
+        class="toggle-sidebar" {# este atributo quita el espacio de mas a la izquierda #}
+{% endblock %}
+
+{% block barra_lateral %}
+
+{% endblock %}
+
+{% block contenido %}
+  <div class="container">
+    <section class="section">
+      <form action="">
+        {% csrf_token %}
+        <div class="row">            
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="">Descripcion de la devolucion sobre venta</label>
+              <input class="form-control" type="text" name="no_documento" id="no_documento" value="">
+            </div>
+          </div>
+          <div class="col-md-6 form-group">
+            <select name="sucursal" id="sucursal" class="form-control " disabled>
+              {% if suc %}
+                {% for sucursal in suc %}
+                  <option value="{{ sucursal.id }}" selected>{{ sucursal.descripcion }}</option>
+                {% endfor %}
+              {% else %}}
+                <option value="">No hay sucursales</option>
+              {% endif %}
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5">
+            <div class="form-group">
+              <label for="">Escriba el Numero de Factura</label>
+              <input class="form-control" type="text" name="producto" id="producto" placeholder="Escriba el numero de factura" value="">
+              <input class="form-control" type="text" name="codigo_barra" id="codigo_barra" placeholder="Ingrese el codigo de barra" value="" style="display: none;">
+            </div>
+          </div>
+          <div class="col-md-9">
+
+          </div>
+          <div class="col-md-1">
+              <div class="form-group">
+                <!--Espacio en blanco-->
+              </div>
+          </div>
+          <div class="col-md-1">
+            <div class="form-group">                
+              <button id="efectuar_venta" type="button" class="btn btn-success form-control">Guardar</button>
+            </div>           
+          </div>
+          <div class="col-md-1">
+            <div class="form-group">
+              <a  class="btn btn-danger form-control" href="{% url 'store:dev_ventas' %}">Salir</a>
+            </div>              
+          </div>
+        </div>
+      </form>
+  </section
+  <section>
+    <br>
+  </section>
+  <section class="section">
+    <div class="row">
+      <div class="col-lg-12">
+
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Detalle de Devolucion Sobre Venta</h5>
+            <!-- Table with stripped rows -->
+            <div class="table-responsive" style="height: 50vh;">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Producto</th>
+                    <th scope="col">Presentacion</th>
+                    <th scope="col">Cantidad</th>
+                    <th scope="col">Precio</th>
+                    <th scope="col">Total</th>
+                    <th scope="col">Accion</th>
+                  </tr>
+                </thead>
+                <tbody id="table-productos-venta">
+
+                </tbody>
+                <tfoot>
+                  <tr>
+                      <th scope="row" colspan="5" style="text-align: right;">Totol IVA</th>
+                      <td id="total_iva"></td>
+                  </tr>
+                  <tr>
+                      <th scope="row" colspan="5" style="text-align: right;">Total sin iva</th>
+                      <td id="total_sin_iva"></td>
+                  </tr>
+                  <tr>
+                      <th scope="row" colspan="5" style="text-align: right;">Total</th>
+                      <td id="total"></td>
+                  </tr>
+                  <tr>
+                    <th scope="row" colspan="5" style="text-align:right;">Efectivo</th>
+                    <td>
+                      <input class="form-control" type="text" name="txt_efectivo" id="txt_efectivo" value="" style="display: none;" disabled>
+                      <input class="form-control" type="text" name="txt_efectivo_sin_ticket" id="txt_efectivo_sin_ticket" value="" disabled>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row" colspan="5" style="text-align:right;">cambio</th>
+                    <td><input class="form-control" type="text" name="txt_cambio" id="txt_cambio" value="" disabled></td>
+                  </tr>
+              </tfoot>
+              </table>
+            </div>
+            <!-- End Table with stripped rows -->
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+  </div>
+{% endblock %}
+
+{% load static %}
+{% block extra-script %}
+    <script src="{% static 'assets/js/jquery-ui/jquery-ui.js' %}"></script>
+    <script src="{% static 'assets/js/jquery-mask/jquery.mask.js' %}"></script>
+    <script src="{% static 'assets/js/select2/select2.js' %}"></script>
+    <script src="{% static 'assets/js/toastr/toastr.min.js' %}"></script>
+    <script src="{% static 'assets/js/proces_devolucion_venta/crear_devolucion_venta.js' %}"></script>
+    
+{% endblock %}

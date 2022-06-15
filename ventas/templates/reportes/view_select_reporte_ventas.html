@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% block extra-css %}
+    <link href="{% static 'assets/css/jquery-ui/jquery-ui.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/select2/select2.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'assets/css/toastr/toastr.css' %}">
+{% endblock %}
+
+{% block contenido %}
+    <div class="container">
+        <h4 class="h4">Rango de fecha del reporte</h4>
+        <form id="frm_reporte_venta" target="_blank" action="{% url 'store:print_report_venta' %}" method="GET">
+            {% csrf_token %}
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                        <label for="">Fecha inicial</label>
+                        <input type="text" id="fecha_inicio" name="fecha_inicial" class="form-control">
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                        <label for="">Fecha Final</label>
+                        <input type="text" id="fecha_final" name="fecha_final" class="form-control">
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="d-grid-gap-2 d-md-flex justify-content-md-end">
+                            <button class="btn btn-success" type="submit" id="generar_reporte">Generar reporte</button>
+                        </div>                       
+                    </div>
+                </div>                
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% load static %}
+{% block extra-script %}
+    <script src="{% static 'assets/js/jquery-ui/jquery-ui.js' %}"></script>
+    <script src="{% static 'assets/js/jquery-mask/jquery.mask.js' %}"></script>
+    <script src="{% static 'assets/js/select2/select2.js' %}"></script>
+    <script src="{% static 'assets/js/toastr/toastr.min.js' %}"></script>
+    <script src="{% static 'assets/js/reportes_js/reporte_ventas.js' %}"></script>
+{% endblock %}

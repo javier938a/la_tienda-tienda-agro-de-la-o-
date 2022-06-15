@@ -1,0 +1,49 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Reporte de Ventas</title>
+    <meta name="description" content="Invoice demo sample">
+  </head>
+
+  <body>
+    <center>
+      <h4>Reporte de venta <br> desde {{ fecha_inicial }} hasta el dia {{ fecha_final }} </h4>
+    </center>
+    <table>
+      <thead>
+        <tr>
+          <th>Fecha de Venta</th>
+          <th>Numero de Factura</th>
+          <th>total IVA</th>
+          <th>Total sin Iva</th>
+          <th>Total con iva</th>
+        </tr>
+      </thead>
+      <tbody>
+          {% if ventas %}
+            {% for venta in ventas %}
+                <tr>
+                    <td>{{ venta.fecha_venta|date:"d-m-Y" }}</td>
+                    <td>{{ venta.numero_factura }}</td>
+                    <td>${{ venta.total_iva }}</td>
+                    <td>${{ venta.total_sin_iva }}</td>
+                    <td>${{ venta.total_con_iva }}</td>
+                </tr>
+            {% endfor %}
+            <tr>
+              <td colspan="2">Totales</td>
+              <td>${{ total_iva_sum }}</td>
+              <td>${{ total_sin_iva_sum }}</td>
+              <td>${{ total_con_iva_sum }}</td>
+            </tr>
+          {% else %}
+                <tr>
+                    <td>No hay ventas registradas en el rango de fecha proporcionado.</td>
+                </tr>
+          {% endif %}
+
+      </tbody>
+    </table>
+
+  </body>
+</html>

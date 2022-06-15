@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+    <section class="section">
+        <div class="row align-items-top">
+            <div class="col-lg-2">
+
+            </div>
+            <div class="col-lg-8">
+    
+              <!-- Default Card -->
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Carga de Inventario</h5>
+                  {% if carga_prod %}
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col" colspan="4">Inventario de la fecha {{ carga_prod.fecha_carga }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>                            
+                            <td>Usuario:</td>
+                            <td>{{ carga_prod.usuario }}</td>
+                            <td>Descripcion</td>
+                            <td>{{ carga_prod.descripcion }}</td>
+                        </tr>
+                        <tr>                        
+                            <td>Sucursal:</td>
+                            <td>{{ carga_prod.sucursal }}</td>
+                            <td>Fecha de carga de inventario:</td>
+                            <td>{{ carga_prod.fecha_carga }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                  {% endif %}
+                </div>
+              </div><!-- End Default Card -->
+    
+              <!-- Card with header and footer -->
+              <div class="card">
+                <div class="card-header">Detalle</div>
+                <div class="card-body">
+                  <h5 class="card-title">Detalle</h5>
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Producto</th>
+                        <th scope="col">Presentacion</th>
+                        <th scope="col">Cantidad</th>
+                        <th scope="col">Costo</th>
+                        <th scope="col">Precio</th>
+                        <th scope="col">Total</th>
+                        <th scope="col">Tipo</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% if detalle_producto_carga %}
+                            {% for carga_detalle in detalle_producto_carga %}
+                                <tr>
+                                    <th scope="row">{{ carga_detalle.id }}</th>
+                                    <td>{{ carga_detalle.producto }}</td>
+                                    <td>{{ carga_detalle.presentacion }}</td>
+                                    <td>{{ carga_detalle.cantidad }}</td>
+                                    <td>${{ carga_detalle.costo }}</td>
+                                    <td>${{ carga_detalle.precio }}</td>
+                                    <td>${{ carga_detalle.total }}</td>
+                                    <td>{{ carga_detalle.tipo_prod }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                        <p>No hay productos registrados para este inventario</p>
+                      {% endif %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="6">Total</th>
+                            <th>${{ carga_prod.total }}</th>
+                        </tr>
+                    </tfoot>
+                  </table>
+                  <!-- End Active Table -->
+                </div>
+                <div class="card-footer">
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a class="btn btn-success" href="{% url 'store:list_carga_prod' %}">Salir</a>
+                    </div>
+                </div>
+              </div><!-- End Card with header and footer -->
+            </div>
+        </div>
+    
+    </div>
+    </section>
+
+
+{% endblock %}

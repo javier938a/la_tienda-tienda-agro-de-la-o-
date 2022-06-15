@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block contenido %}
+    <div class="pagetitle">
+      <h1>Listar Cargas de Inventario</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'store:index' %}">Inicio</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'store:list_descarga_prod' %}">Listar Cargas de Inventario</a></li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Descargas de Productos de inventario</h5>
+              <a class="btn btn-primary pull-right" href="{% url 'store:crear_descarga_prod' %}">Agregar descarga</a>
+              <!-- Table with stripped rows -->
+              <table class="table datatable">
+                <thead>
+                  <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Usuario</th>
+                    <th scope="col">Fecha de carga</th>
+                    <th scope="col">Descripcion</th>
+                    <th scope="col">Sucursal</th>
+                    <th scope="col">Total</th>
+                    <th scope="col" colspan="2">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {% if descarga_prod %}
+                        {% for descarga in descarga_prod %}
+                            <tr>                    
+                                <th scope="row">{{ carga.id }}</th>
+                                <td>{{ descarga.usuario }}</td>
+                                <td>{{ descarga.fecha_descarga }}</td>
+                                <td>{{ descarga.descripcion }}</td>
+                                <td>{{ descarga.sucursal }}</td>
+                                <td>{{ descarga.total }}</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Action
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#">Detalle de descarga</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <p>No hay registros que mostrar</p>
+                  {% endif %}
+                </tbody>
+              </table>
+              <!-- End Table with stripped rows -->
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+{% endblock %}
+
+
+{% load static %}
+
+{% block extra-script %}
+    <script src="{% static 'assets/js/proces_descarga_productos/listar_descarga_productos.js' %}"></script>
+{% endblock %}

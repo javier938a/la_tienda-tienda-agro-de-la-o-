@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block contenido %}
+    <div class="pagetitle">
+      <h1>Listar Ventas</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'store:index' %}">Inicio</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'store:list_venta' %}">Listar Ventas</a></li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Ventas</h5>
+              <a class="btn btn-primary pull-right" href="{% url 'store:crear_venta' %}">Crear Venta</a>
+              <!-- Table with stripped rows -->
+              <table class="table datatable">
+                <thead>
+                  <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Usuario</th>
+                    <th scope="col">Fecha de venta</th>
+                    <th scope="col">Numero de Factura</th>
+                    <th scope="col">Sucursal</th>
+                    <th scope="col">Total</th>
+                    <th scope="col" colspan="2">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {% if ventas %}
+                        {% for venta in ventas %}
+                            <tr>                    
+                                <th scope="row">{{ venta.id }}</th>
+                                <td>{{ venta.usuario }}</td>
+                                <td>{{ venta.fecha_venta }}</td>
+                                <td>{{ venta.numero_factura }}</td>
+                                <td>{{ venta.sucursal }}</td>
+                                <td>${{ venta.total_sin_iva }}</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Action
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            {# <li><a class="dropdown-item" href="#">Editar</a></li> #}
+                                            <li><a class="dropdown-item" href="{% url 'store:detalle_venta' venta.id %}">Detalle de venta</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <p>No hay registros que mostrar</p>
+                  {% endif %}
+                </tbody>
+              </table>
+              <!-- End Table with stripped rows -->
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+{% endblock %}
+
+
+{% load static %}
+
+{% block extra-script %}
+    <script src="{% static 'assets/js/proces_venta/listar_venta.js' %}"></script>
+{% endblock %}

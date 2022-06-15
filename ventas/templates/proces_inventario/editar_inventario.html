@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% load static %}
+{% block extra-css %}
+      <link href="{% static 'assets/css/jquery-ui/jquery-ui.css' %}" rel="stylesheet">
+      <link href="{% static 'assets/css/select2/select2.css' %}" rel="stylesheet">
+      <link rel="stylesheet" href="{% static 'assets/css/toastr/toastr.css' %}">
+{% endblock %}
+
+{% block contenido %}
+    <section class="section">
+        <form action="">
+        {% csrf_token %}
+        <div class="row">            
+            <div class="col-md-6">
+            <div class="form-group">
+                <label for="">Descripcion de la carga</label>
+                <input class="form-control" type="text" name="descripcion" id="descripcion" value="{{ inventario_prod.descripcion }}">
+            </div>
+            </div>
+            <div class="col-md-6 form-group">
+            <label for="">Seleccione una sucursal</label>
+            <select name="sucursal" id="sucursal" class="form-control select">
+                {% if suc %}
+                <option value="">Seleccione</option>
+                {% for sucursal in suc %}
+                    {% if inventario_prod.sucursal.id == sucursal.id %}
+                        <option value="{{ sucursal.id }}" selected>{{ sucursal.descripcion }}</option>
+                    {% else %}
+                        <option value="{{ sucursal.id }}">{{ sucursal.descripcion }}</option>
+                    {% endif %}                    
+                {% endfor %}
+                {% else %}}
+                    <option value="">No hay sucursales</option>
+                {% endif %}
+            </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 ">
+            <div class="form-group">
+                <label for="">Escriba un producto</label>
+                <input class="form-control" type="text" name="producto" id="producto" placeholder="Escriba un producto" value="">
+                <input type="hidden" name="url_auto_prod" id="url_auto_prod" value="{% url 'store:auto_prod_list' %}">
+                <input type="hidden" name="url_add_prod_detalle" id="url_add_prod_detalle" value="{% url 'store:add_prod_detalle' %}">
+                <input type="hidden" name="url_update_datos_inventario" id="url_update_datos_inventario" value="{% url 'store:add_update_inv' %}">
+                <input type="hidden" name="url_list_inv" id="url_list_inv" value="{% url 'store:list_inv' %}">
+                <input type="hidden" name="url_update_detalle_inv" id="url_update_detalle_inv" value="{% url 'store:add_update_detalle_inv' %}">
+                <input type="hidden" name="id_inventario" id="id_inventario" value="{{ id_inventario }}">
+            </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-10">
+
+            </div>
+            <div class="col-md-1">
+            <div class="form-group">
+                <button id="actualizar" type="button" class="btn btn-success form-control">Actualizar</button>
+            </div>              
+            </div>
+            <div class="col-md-1">
+            <div class="form-group">
+                <a  class="btn btn-danger form-control" href="{% url 'store:list_inv' %}">Salir</a>
+            </div>              
+            </div>
+        </div>
+        </form>
+    </section
+    <section>
+    <br>
+    </section>
+    <section class="section">
+    <div class="row">
+        <div class="col-lg-12">
+
+        <div class="card">
+            <div class="card-body">
+            <h5 class="card-title">Detalle Inventario</h5>
+            <!-- Table with stripped rows -->
+            <div class="table-responsive" style="height: 50vh;">
+                <table class="table">
+                <thead>
+                    <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Producto</th>
+                    <th scope="col">Presentacion</th>
+                    <th scope="col">Cantidad</th>
+                    <th scope="col">Costo</th>
+                    <th scope="col">Precio</th>
+                    <th scope="col">Total</th>
+                    <th scope="col">Accion</th>
+                    </tr>
+                </thead>
+                <tbody id="table-productos">
+                    {% for prod_suc in productos_inv %}
+                        <tr>
+                            <td><input class="form-control idprod" type="text" value="{{ prod_suc.producto.id }}" disabled>
+                                <input class="id_prod_inv" type="hidden" value="{{ prod_suc.id }}">
+                            </td>
+                            <td><input class="form-control" type="text" value="{{ prod_suc.producto.nombre_producto }}" disabled></td>
+                            <td>
+                                {% if presentaciones %}
+                                <select class="form-control select">
+                                    <option value="">Seleccione</option>
+                                    {% for pre in presentaciones %}
+                                        {% if prod_suc.presentacion.id == pre.id %}
+                                            <option value="{{ prod_suc.presentacion.id }}" selected>{{ pre.presentacion }}</option>
+                                        {% else %}
+                                            <option value="{{ prod_suc.presentacion.id }}">{{ pre.presentacion }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                                {% endif %}
+                            </td>
+                            <td><input class="form-control cant" type="text" value="{{ prod_suc.cantidad }}"></td>
+                            <td><input class="form-control cost" type="text" value="{{ prod_suc.costo }}"></td>
+                            <td><input class="form-control pre" type="text" value="{{ prod_suc.precio }}"></td>
+                            <td><input class="form-control tot" type="text" value="{{ prod_suc.total }}" disabled></td>
+                            <td><input class="btn btn-danger form-control delfila" type="button" value="Eliminar"></td>
+                        </tr>
+             
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th scope="row" colspan="6">Totals</th>
+                        <td id="total">${{ inventario_prod.total }}</td>
+                    </tr>
+                </tfoot>
+                </table>
+            </div>
+            <!-- End Table with stripped rows -->
+
+            </div>
+        </div>
+
+        </div>
+    </div>
+    </section>
+{% endblock %}
+
+{% load static %}
+{% block extra-script %}
+    <script src="{% static 'assets/js/toastr/toastr.js' %}"></script>
+    <script src="{% static 'assets/js/toastr/toastr.min.js' %}"></script>
+    <script src="{% static 'assets/js/jquery-ui/jquery-ui.js' %}"></script>
+    <script src="{% static 'assets/js/jquery-mask/jquery.mask.js' %}"></script>
+    <script src="{% static 'assets/js/select2/select2.js' %}"></script>
+
+    <script src="{% static 'assets/js/proces_crear_inventario/editar_inventario.js' %}"></script>
+    
+{% endblock %}

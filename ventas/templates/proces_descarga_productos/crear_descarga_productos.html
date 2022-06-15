@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% block extra-css %}
+      <link href="{% static 'assets/css/jquery-ui/jquery-ui.css' %}" rel="stylesheet">
+      <link href="{% static 'assets/css/select2/select2.css' %}" rel="stylesheet">
+      <link rel="stylesheet" href="{% static 'assets/css/toastr/toastr.css' %}">
+
+      <style>
+        .ui-autocomplete {
+          max-height: 500px;
+          overflow-y: auto;
+          /* prevent horizontal scrollbar */
+          overflow-x: hidden;
+        }
+        /* IE 6 doesn't support max-height
+         * we use height instead, but this forces the menu to always be this tall
+         */
+        * html .ui-autocomplete {
+          height: 100px;
+        }
+        </style>
+{% endblock %}
+
+{% block barra_superior %}
+
+{% endblock %}
+
+{# blocke para especificar los atributos del body y quitar la barra lateral #}
+{% block atributos_body %}
+        class="toggle-sidebar" {# este atributo quita el espacio de mas a la izquierda #}
+{% endblock %}
+
+{% block barra_lateral %}
+
+{% endblock %}
+
+{% block contenido %}
+  <div class="container">
+    <section class="section">
+      <form action="">
+        {% csrf_token %}
+        <div class="row">     
+          <div class="col-md-6 form-group">
+            <label for="">Descripcion</label>
+            <input class="form-control" type="text" name="descripcion" id="descripcion" value="">
+          </div>       
+        </div>
+        <div class="row">
+          <div class="col-md-4 ">
+            <div class="form-group">
+              <label for="">Escriba un producto</label>
+              <input class="form-control" type="text" name="producto" id="producto" placeholder="Escriba un producto" value="">
+              <input type="hidden" name="url_list_prod_a_descargar" id="url_list_prod_a_descargar" value="{% url 'store:list_prod_a_descargar' %}">
+              <input type="hidden" name="url_add_prod_a_descarga" id="url_add_prod_a_descarga" value="{% url 'store:add_prod_a_descarga' %}">
+              <input type="hidden" name="url_efectuar_descarga_prod" id="url_efectuar_descarga_prod" value="{% url 'store:efectuar_descarga_prod' %}">
+              <input type="hidden" name="url_listar_descarga_prod" id="url_listar_descarga_prod" value="{% url 'store:list_descarga_prod' %}">
+
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-9">
+
+          </div>
+          <div class="col-md-1">
+            <div class="form-group">                
+              <!-- Disabled Backdrop Modal -->
+              <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#disablebackdrop">
+                Cargar
+              </button>
+              <div class="modal fade" id="disablebackdrop" tabindex="-1" data-bs-backdrop="false">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">¿Esta seguro de desea realizar esta Descarga de Inventario?</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      Hacer esta carga de inventario inplicara afectar el stock de los productos ya existentes en el inventario
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                      <button type="button" class="btn btn-success" id="efectuar_descarga">Aplicar carga</button>
+                    </div>
+                  </div>
+                </div>
+              </div><!-- End Disabled Backdrop Modal-->
+            </div>              
+          </div>
+          <div class="col-md-1">
+            <div class="form-group">
+              <a  class="btn btn-danger form-control" href="{% url 'store:list_descarga_prod' %}">Salir</a>
+            </div>              
+          </div>
+        </div>
+      </form>
+  </section
+  <section>
+    <br>
+  </section>
+  <section class="section">
+    <div class="row">
+      <div class="col-lg-12">
+
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Detalle Carga de Producto</h5>
+            <!-- Table with stripped rows -->
+            <div class="table-responsive" style="height: 50vh;">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Producto</th>
+                    <th scope="col">Descripcion</th>
+                    <th scope="col">Presentacion</th>
+                    <th scope="col">Cantidad Actual</th>
+                    <th scope="col">Cantidad a Descargar</th>
+                    <th scope="col">Costo</th>
+                    <th scope="col">Total</th>
+                    <th scope="col">Accion</th>
+                  </tr>
+                </thead>
+                <tbody id="table-productos-descarga">
+
+                </tbody>
+                <tfoot>
+                  <tr>
+                      <th scope="row" colspan="5" style="text-align: right;">Total</th>
+                      <td id="total"></td>
+                  </tr>
+              </tfoot>
+              </table>
+            </div>
+            <!-- End Table with stripped rows -->
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+  </div>
+{% endblock %}
+
+{% load static %}
+{% block extra-script %}
+    <script src="{% static 'assets/js/jquery-ui/jquery-ui.js' %}"></script>
+    <script src="{% static 'assets/js/jquery-mask/jquery.mask.js' %}"></script>
+    <script src="{% static 'assets/js/select2/select2.js' %}"></script>
+    <script src="{% static 'assets/js/toastr/toastr.min.js' %}"></script>
+    <script src="{% static 'assets/js/proces_descarga_productos/crear_descarga_productos.js' %}"></script>
+    
+{% endblock %}
