@@ -17,7 +17,8 @@ from ventas.proces_venta.crud_venta import ListarVentas, ViewCrearVenta, ViewDet
 from ventas.proces_venta.crud_venta import agregar_producto_a_detalle_por_codigo
 from ventas.proces_reportes.reportes import  ViewSelectReporteVentas ,PrintViewReporteVentas
 from ventas.proces_reportes.reportes import grafico_reporte_ventas
-from ventas.proces_devoluciones_venta.crud_devoluciones_venta import ListarDevolucionesVentas, ViewCrearDevolucionVenta
+from ventas.proces_devoluciones_venta.crud_devoluciones_venta import ListarDevolucionesVentas, ViewCrearDevolucionVenta, obtener_ventas_autocomplete, listar_productos_de_venta
+
 # Create your views here.
 
 from django.db.models import Sum

@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Dashboard - NiceAdmin Bootstrap Template</title>
+  <title>Dashboard</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -51,8 +51,9 @@
 
       <div class="d-flex align-items-center justify-content-between">
         <a href="{% url 'store:index' %}" class="logo d-flex align-items-center">
-          <img src="assets/img/logo.png" alt="">
-          <span class="d-none d-lg-block">NiceAdmin</span>
+          {% load static %}
+          <img src="{% static 'assets/img/logo.png' %}" alt="">
+          <span class="d-none d-lg-block">Sistema de Inventario</span>
         </a>
         <i class="bi bi-list toggle-sidebar-btn"></i>
       </div><!-- End Logo -->
@@ -304,7 +305,7 @@
           {% if user.tipo_usuario.tipo_usuario == "administrador" %}{# se tiene que respetar los espacios #}
             <li class="nav-item">
               <a class="nav-link collapsed" data-bs-target="#user-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-journal-text"></i><span>Administrar Usuarios</span><i class="bi bi-chevron-down ms-auto"></i>
+                <i class="bi bi-person"></i><span>Administrar Usuarios</span><i class="bi bi-chevron-down ms-auto"></i>
               </a>
               <ul id="user-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                 <li class="nav-item">
@@ -324,7 +325,7 @@
             
             <li class="nav-item">
               <a class="nav-link collapsed" data-bs-target="#sucursal-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-journal-text"></i><span>Administrar Sucursales</span><i class="bi bi-chevron-down ms-auto"></i>
+                <i class="bi bi-building"></i><span>Administrar Sucursales</span><i class="bi bi-chevron-down ms-auto"></i>
               </a>
               <ul id="sucursal-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                 <li class="nav-item">
@@ -338,7 +339,7 @@
           
             <li class="nav-item">
               <a class="nav-link collapsed" data-bs-target="#cate-prod-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-journal-text"></i><span>Administrar Inventario</span><i class="bi bi-chevron-down ms-auto"></i>
+                <i class="bi bi-clipboard-data"></i><span>Administrar Inventario</span><i class="bi bi-chevron-down ms-auto"></i>
               </a>
               <ul id="cate-prod-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                 <li class="nav-item">
@@ -387,7 +388,7 @@
             </li><!-- End Forms Nav -->
             <li class="nav-item">
               <a class="nav-link collapsed" data-bs-target="#ventas-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-journal-text"></i><span>Administrar Ventas</span><i class="bi bi-chevron-down ms-auto"></i>
+                <i class="bi bi-shop"></i><span>Administrar Ventas</span><i class="bi bi-chevron-down ms-auto"></i>
               </a>
               <ul id="ventas-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                 <li class="nav-item">
@@ -413,7 +414,7 @@
             </li><!-- End Forms Nav -->
             <li class="nav-item">
               <a class="nav-link collapsed" data-bs-target="#reportes-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-journal-text"></i><span>Reporte</span><i class="bi bi-chevron-down ms-auto"></i>
+                <i class="bi bi-file-earmark-bar-graph-fill"></i><span>Reporte</span><i class="bi bi-chevron-down ms-auto"></i>
               </a>
               <ul id="reportes-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                 <li class="nav-item">
@@ -1072,14 +1073,14 @@
   <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">
     <div class="copyright">
-      &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
+      &copy; Copyright <strong><span>Ciber Gamers Solutions</span></strong>. 
     </div>
     <div class="credits">
       <!-- All the links in the footer should remain intact. -->
       <!-- You can delete the links only if you purchased the pro version. -->
       <!-- Licensing information: https://bootstrapmade.com/license/ -->
       <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
-      Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+    
     </div>
   </footer><!-- End Footer -->
 
