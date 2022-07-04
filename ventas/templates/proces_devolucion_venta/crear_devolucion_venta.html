@@ -66,6 +66,7 @@
               <input class="form-control" type="text" name="codigo_venta" id="codigo_venta" placeholder="Escriba el numero de factura" value="">
               <input type="hidden" name="url_autocomplete_venta" id="url_autocomplete_venta" value="{% url 'store:auto_ventas_list' %}">
               <input type="hidden" name="url_listar_productos_de_venta" id="url_listar_productos_de_venta" value="{% url 'store:list_prod_de_venta' %}">
+              <input type="hidden" id="id_venta" name="id_venta" value="">
             </div>
           </div>
           <div class="col-md-9">
@@ -78,7 +79,7 @@
           </div>
           <div class="col-md-1">
             <div class="form-group">                
-              <button id="efectuar_venta" type="button" class="btn btn-success form-control">Guardar</button>
+              <button id="efectuar_venta" type="button" class="btn btn-success form-control">Devolver</button>
             </div>           
           </div>
           <div class="col-md-1">
@@ -116,32 +117,13 @@
                     <th scope="col">Nuevo total de venta</th>
                   </tr>
                 </thead>
-                <tbody id="table-productos">
+                <tbody id="table-devolucion-productos">
 
                 </tbody>
                 <tfoot>
                   <tr>
-                      <th scope="row" colspan="8" style="text-align: right;">Totol IVA</th>
-                      <td id="total_iva"></td>
-                  </tr>
-                  <tr>
-                      <th scope="row" colspan="8" style="text-align: right;">Total sin iva</th>
-                      <td id="total_sin_iva"></td>
-                  </tr>
-                  <tr>
-                      <th scope="row" colspan="8" style="text-align: right;">Total</th>
+                      <th scope="row" colspan="8" style="text-align: right;">Total a devolver</th>
                       <td id="total"></td>
-                  </tr>
-                  <tr>
-                    <th scope="row" colspan="8" style="text-align:right;">Efectivo</th>
-                    <td>
-                      <input class="form-control" type="text" name="txt_efectivo" id="txt_efectivo" value="" style="display: none;" disabled>
-                      <input class="form-control" type="text" name="txt_efectivo_sin_ticket" id="txt_efectivo_sin_ticket" value="" disabled>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row" colspan="8" style="text-align:right;">cambio</th>
-                    <td><input class="form-control" type="text" name="txt_cambio" id="txt_cambio" value="" disabled></td>
                   </tr>
               </tfoot>
               </table>

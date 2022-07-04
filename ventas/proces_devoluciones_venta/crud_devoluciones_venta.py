@@ -45,7 +45,7 @@ def listar_productos_de_venta(request):
         filas_ventas+='<td>'+detalle.producto_stock.producto.nombre_producto+'</td>'
         filas_ventas+='<td>'+detalle.producto_stock.presentacion.presentacion+'</td>'
         filas_ventas+='<td class="cant_vendida">'+str(detalle.cantidad)+'</td>'
-        filas_ventas+='<td class="precio_prod">'+str(detalle.precio)+'</td>'
+        filas_ventas+='<td><input class="form-control precio_prod" value="$'+str(detalle.precio)+'" disabled></td>'
         filas_ventas+='<td>'+str(detalle.total)+'</td>'
         filas_ventas+='<td><input class="form-control cant_devo"></td>'
         filas_ventas+='<td class="nueva_cant"></td>'

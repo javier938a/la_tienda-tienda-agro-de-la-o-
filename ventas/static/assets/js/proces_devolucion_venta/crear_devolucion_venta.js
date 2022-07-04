@@ -59,8 +59,11 @@ $(document).ready(function(){
             dataType:'json',
             success:function(data){
                 let filas_ventas=data.filas_ventas;
-                $("#table-productos").empty();
-                $("#table-productos").prepend(filas_ventas);
+                console.log(filas_ventas);
+                //agregando el id de la venta en un campo oculto 
+                $("#id_venta").val(id_venta);
+                $("#table-devolucion-productos").empty();
+                $("#table-devolucion-productos").prepend(filas_ventas);
             
             }
         })
@@ -75,20 +78,64 @@ $(document).ready(function(){
         let cantidad_devolver= parseInt($(this).val());
         //obteniendo la nueva cantidad que queda en la venta que es la diferencia ente la cantidad vendida menos la cantidad a devolver
         let nueva_cantidad=cantidad_vendida-cantidad_devolver;
-        //mostrandolo la nueva cantidad en tiempo real
-        $(this).closest('tr').find('.nueva_cant').text(nueva_cantidad)
-        //obteniendo el precio del producto a devolver
-        let precio_prod=parseFloat($(this).closest('tr').find('.precio_prod').text());
-        //multiplicando el precio del producto por la cantidad de dinero a devolver
-        //esto daria el total de dinero a devolver
-        let dinero_devol=cantidad_devolver*precio_prod
-        //mostrando el total de dinero a devolver
-        $(this).closest('tr').find('.dinero_devol').text(dinero_devol);
-        //luego calculariamos el nuevo total que quedaria en la venta
-        let nuevo_total_de_venta=nueva_cantidad*precio_prod;
-        //mostrando la nueva cantidad que quedaria en la venta
-        $(this).closest('tr').find('.nuevo_total_venta').text(nuevo_total_de_venta);
-        
+        //Validando que la cantidad a devolver no sea mayor a la cantidad que se haya vendido
+        if($(this).val().length>0){
+            if( parseFloat(cantidad_devolver)>=0.0 && parseFloat(cantidad_devolver)<=parseFloat(cantidad_vendida)){
+                //mostrandolo la nueva cantidad en tiempo real
+                $(this).closest('tr').find('.nueva_cant').text(nueva_cantidad)
+                //obteniendo el precio del producto a devolver
+                let precio_prod=parseFloat($(this).closest('tr').find('.precio_prod').val().replace('$',''));
+                console.log($(this).closest('tr').find('.precio_prod'));
+                //multiplicando el precio del producto por la cantidad de dinero a devolver
+                //esto daria el total de dinero a devolver
+                let dinero_devol=cantidad_devolver*precio_prod
+                //mostrando el total de dinero a devolver
+                $(this).closest('tr').find('.dinero_devol').text("$"+dinero_devol);
+                //luego calculariamos el nuevo total que quedaria en la venta
+                let nuevo_total_de_venta=nueva_cantidad*precio_prod;
+                //mostrando la nueva cantidad que quedaria en la venta
+                $(this).closest('tr').find('.nuevo_total_venta').text("$"+nuevo_total_de_venta);
+                
+            }else{
+                $(this).val('');
+                $(this).closest('tr').find('.nueva_cant').text("");
+                $(this).closest('tr').find('.dinero_devol').text("");
+                $(this).closest('tr').find('.nuevo_total_venta').text("");                
+                toastr['info']('la cantidad a devolver tiene que ser mayor o igual a la cantidad que se ventido en esta venta');
+            }
+        }else{
+            $(this).closest('tr').find('.nueva_cant').text("");
+            $(this).closest('tr').find('.dinero_devol').text("");
+            $(this).closest('tr').find('.nuevo_total_venta').text("");
+        }
+        calculo_totales();
+
     });
+
+    function calculo_totales(){
+        let total_dinero_devoler=0.0;
+        $("#table-devolucion-productos tr").each(function(){
+            let cantidad_devolver_str=$(this).find('.cant_devo').val();
+            let precio_producto_str=$(this).find('.precio_prod').val();
+            let cantidad=0;
+            let precio=0.0;
+            if(cantidad_devolver_str!=''){
+                cantidad=parseInt(cantidad_devolver_str);
+            }
+            if(precio_producto_str!=''){
+                precio=parseFloat(precio_producto_str.replace('$',''));
+            }
+            
+            total_dinero_devoler+=(cantidad*precio);
+            console.log(precio_producto_str.replace("$",''));
+        });
+        $("#total").text("$"+redondear(total_dinero_devoler));  
+
+    }
+    //funcion para redondear cantidades a dos digitos
+    function redondear(num) {
+        var m = Number((Math.abs(num) * 100).toPrecision(15));
+        return Math.round(m) / 100 * Math.sign(num);
+    }
 
 });
