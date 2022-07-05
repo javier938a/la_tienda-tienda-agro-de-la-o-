@@ -41,12 +41,12 @@ def listar_productos_de_venta(request):
     
     for detalle in detalle_de_venta:
         filas_ventas+='<tr>'
-        filas_ventas+='<td>'+str(detalle.id)+'</td>'
+        filas_ventas+='<td class="id_detalle_venta">'+str(detalle.id)+'</td>'
         filas_ventas+='<td>'+detalle.producto_stock.producto.nombre_producto+'</td>'
         filas_ventas+='<td>'+detalle.producto_stock.presentacion.presentacion+'</td>'
         filas_ventas+='<td class="cant_vendida">'+str(detalle.cantidad)+'</td>'
         filas_ventas+='<td><input class="form-control precio_prod" value="$'+str(detalle.precio)+'" disabled></td>'
-        filas_ventas+='<td>'+str(detalle.total)+'</td>'
+        filas_ventas+='<td>$'+str(detalle.total)+'</td>'
         filas_ventas+='<td><input class="form-control cant_devo"></td>'
         filas_ventas+='<td class="nueva_cant"></td>'
         filas_ventas+='<td class="dinero_devol"></td>'
@@ -58,6 +58,17 @@ def listar_productos_de_venta(request):
 
 
     return JsonResponse(datos, safe=True)
+
+def efectuar_devolucion_venta(request):
+    res=False
+    id_venta=request.POST.get('id_venta')
+    descripcion_devo=request.POST.get('descripcion_devo')
+    sucursal=request.POST.get('id_sucursal')
+    detalles_devo=request.POST.get('detalles_devo')
+    print(detalles_devo)
+    return JsonResponse({
+        'res':res,
+    })
 
 
     

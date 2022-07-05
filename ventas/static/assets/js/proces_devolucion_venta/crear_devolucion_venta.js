@@ -137,5 +137,64 @@ $(document).ready(function(){
         var m = Number((Math.abs(num) * 100).toPrecision(15));
         return Math.round(m) / 100 * Math.sign(num);
     }
+    //efectuando la devolucion sobre venta
+    $("#efectuar_devolucion").click(function(evt){
+        let total=$("#total").text().replace('$', '');
+        console.log('hola: '+total)
+        if(total!=''){
+            if(parseFloat(total)>0){
+                let descripcion_devo=$("#descripcion_devo").val();
+                let id_sucursal=$("#sucursal").val();
+                if(descripcion_devo.length>0 && id_sucursal.length>0){//validando que haya una descripcion de la devolucion
+                    let id_venta=$("#id_venta").val();
+                    let tabla_datos=$("#table-devolucion-productos tr");
+                    let datos_devoluciones=obtener_producto_devolver(tabla_datos);
+                    console.log(datos_devoluciones);
+                    let detalles_devoluciones_json=JSON.stringify(datos_devoluciones);
+                    console.log(detalles_devoluciones_json);
+                    const csrftoken=getCookie('csrftoken');
+                    let datos={
+                        csrfmiddlewaretoken:csrftoken,
+                        'id_venta':id_venta,
+                        'descripcion_devo':descripcion_devo,
+                        'id_sucursal':id_sucursal,
+                        'detalles_devo':detalles_devoluciones_json
+                    };
+                    let url_efectuar_devolucion=$("#url_efectuar_devolucion").val();
+                    $.ajax({
+                        url:url_efectuar_devolucion, 
+                        type:'POST',
+                        data:datos,
+                        dataType:'json',
+                        success:function(data){
+                            console.log(data);
+                        }
+                    });
+                    
+
+                }else{
+                    toastr['warning']("Debe agregar una breve descripcion del porque se hizo esta devolucion");
+                }       
+            }else{
+                toastr['warning']('Para efectuar devolucion debe de devolver al menos un producto, no puede dejar los campos a cero');
+            }       
+        }
+    });
+
+    function obtener_producto_devolver(tabla_datos){
+        let datos=[];
+        tabla_datos.each(function(index){
+            let id_detalle_venta=$(this).find('.id_detalle_venta').text();
+            let cantidad_devolver=$(this).find('.cant_devo').val();
+            let nueva_cantidad=$(this).find('.nueva_cant').text();
+            let dinero_devolver=$(this).find('.dinero_devol').text().replace('$', '');
+            let nuevo_total_venta=$(this).find('.nuevo_total_venta').text().replace('$', '');
+            if(cantidad_devolver!=''){
+                let fila={'id_detalle_venta':id_detalle_venta, 'cantidad_devolver':cantidad_devolver, 'nueva_cantidad':nueva_cantidad, 'dinero_devolver':dinero_devolver, 'nuevo_total_venta':nuevo_total_venta};
+                datos.push(fila);
+            }
+        });
+        return datos;
+    }
 
 });

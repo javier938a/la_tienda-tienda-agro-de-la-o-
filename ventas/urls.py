@@ -16,7 +16,7 @@ from .views import ListarDescargasProductos, ViewCrearDescargaProducto, listar_p
 from .views import ListarInventario, ViewCrearInventario, ViewEditarInventario, EliminarInventario, obtener_productos_autocomplete, agregar_producto_detalle
 from .views import guardar_datos_inventario, actualizar_datos_inventario, update_producto_detalle, DetalleInventario
 from .views import ListarVentas, ViewCrearVenta, ViewDetalleVenta, verificar_stock_producto, obtener_productos_inventario_autocomplete, agregar_producto_detalle_venta, efectuar_venta
-from .views import ListarDevolucionesVentas, ViewCrearDevolucionVenta, obtener_ventas_autocomplete, listar_productos_de_venta
+from .views import ListarDevolucionesVentas, ViewCrearDevolucionVenta, obtener_ventas_autocomplete, listar_productos_de_venta, efectuar_devolucion_venta
 from .views import agregar_producto_a_detalle_por_codigo
 from .views import imprimir_ticket, Obtener_ticket
 from .views import ViewSelectReporteVentas, PrintViewReporteVentas
@@ -90,6 +90,7 @@ urlpatterns = [
     path('ventas/obtener_ticket', Obtener_ticket, name='get_ticket'),
     path('devoluciones_ventas/', ListarDevolucionesVentas.as_view(), name="dev_ventas"),
     path('devolucion/crear_devolucion_venta', ViewCrearDevolucionVenta.as_view(), name="crear_dev"),
+    path('devolucion/efectuar_devolucion_venta', efectuar_devolucion_venta, name='efect_dev'),
     path('devoluciones/obtener_ventas_autocomplete', obtener_ventas_autocomplete, name="auto_ventas_list"),
     path('devoluciones/listar_productos_de_venta', listar_productos_de_venta, name="list_prod_de_venta"),
     path('reporte/select_reporte_ventas', ViewSelectReporteVentas.as_view(), name="reporte_venta_view"),

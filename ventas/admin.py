@@ -2,6 +2,7 @@ from django.contrib import admin
 from .models import TipoUsuario, User, Sucursal, Categoria, Presentacion, Producto, ProductoStockSucursal, ProductoStockGlobal
 from .models import Venta, DetalleVenta, InventarioProductos, CargaProductos, DetalleCargaProductos
 from .models import DescargaProductos, DetalleDescargaProducto
+from .models import DevolucionVenta, DetalleDevolucionVenta
 # Register your models here.
 
 admin.site.register(User)
@@ -19,3 +20,5 @@ admin.site.register(CargaProductos)
 admin.site.register(DetalleCargaProductos)
 admin.site.register(DescargaProductos)
 admin.site.register(DetalleDescargaProducto)
+admin.site.register(DevolucionVenta)
+admin.site.register(DetalleDevolucionVenta)
