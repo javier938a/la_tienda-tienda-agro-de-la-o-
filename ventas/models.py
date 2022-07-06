@@ -171,21 +171,21 @@ class DevolucionVenta(models.Model):
     factura=models.ForeignKey(Venta, on_delete=models.SET_NULL, null=True)
     descripcion=models.TextField(help_text="ingrese la descripcion de la devolucion")
     sucursal=models.ForeignKey(Sucursal, help_text="Ingrese la sucursal en donde se realiza la devolucion", on_delete=models.SET_NULL, null=True)
-    fecha_devolucion=models.DateField(help_text="Ingrese la fecha de devolucion", blank=True, null=True)
+    fecha_devolucion=models.DateField(help_text="Ingrese la fecha de devolucion", blank=True, null=True, auto_now=True)
+    usuario=models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     total_devolucion=models.FloatField(help_text="Ingrese el total de la devolucion", null=True)
     def __str__(self):
         return "%s "%(self.descripcion)
 
 class DetalleDevolucionVenta(models.Model):
     devolucion_venta=models.ForeignKey(DevolucionVenta, on_delete=models.SET_NULL, null=True)
-    usuario=models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    producto=models.ForeignKey(Producto, on_delete=models.SET_NULL, null=True)
+    producto_stock_suc=models.ForeignKey(ProductoStockSucursal, on_delete=models.SET_NULL, null=True)
     cantidad_devolver=models.IntegerField(help_text="Ingrese la cantidad a devolver", null=True)
     precio=models.FloatField(help_text="Ingrese el precio del producto", blank=True, null=True)
     total=models.FloatField(help_text="Ingrese el total de la devolucion", blank=True,null=True)
 
     def __str__(self):
-        return "%s->%s->%s"%(str(self.devolucion_venta), str(self.producto), str(self.cantidad_devolver))
+        return "%s->%s->%s"%(str(self.devolucion_venta), str(self.producto_stock_suc), str(self.cantidad_devolver))
 
 
 

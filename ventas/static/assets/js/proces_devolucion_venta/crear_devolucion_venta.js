@@ -158,7 +158,8 @@ $(document).ready(function(){
                         'id_venta':id_venta,
                         'descripcion_devo':descripcion_devo,
                         'id_sucursal':id_sucursal,
-                        'detalles_devo':detalles_devoluciones_json
+                        'detalles_devo':detalles_devoluciones_json,
+                        'total':total
                     };
                     let url_efectuar_devolucion=$("#url_efectuar_devolucion").val();
                     $.ajax({
@@ -167,6 +168,16 @@ $(document).ready(function(){
                         data:datos,
                         dataType:'json',
                         success:function(data){
+                            let res=data.res;
+                            if(res==true){
+                                toastr['success']("Devolucion efectuada exitosamente");
+                                setTimeout(function(){
+                                    let url_listar_devoluciones=$("#url_listar_devoluciones").val();
+                                    window.location.href=url_listar_devoluciones;
+                                }, 1500);
+                            }else{
+                                toastr['warning']("Hubo un error de sistema favor llamar a soporte tecnico");
+                            }
                             console.log(data);
                         }
                     });

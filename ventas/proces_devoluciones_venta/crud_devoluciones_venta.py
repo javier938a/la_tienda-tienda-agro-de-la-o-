@@ -1,8 +1,12 @@
 from typing import List
+from unittest import result
 from django.views.generic import TemplateView, ListView
-from ventas.models import DevolucionVenta, Venta, DetalleVenta, Sucursal
-from django.db.models import Q
+from ventas.models import DevolucionVenta, DetalleDevolucionVenta, ProductoStockSucursal, Venta, DetalleVenta, Sucursal
+from django.db.models import Q, Sum
+
 from django.http import JsonResponse
+import json
+
 class ListarDevolucionesVentas(ListView):
     template_name="proces_devolucion_venta/listar_devoluciones_ventas.html"
     model=DevolucionVenta
@@ -60,12 +64,94 @@ def listar_productos_de_venta(request):
     return JsonResponse(datos, safe=True)
 
 def efectuar_devolucion_venta(request):
-    res=False
+    res=True
     id_venta=request.POST.get('id_venta')
     descripcion_devo=request.POST.get('descripcion_devo')
-    sucursal=request.POST.get('id_sucursal')
-    detalles_devo=request.POST.get('detalles_devo')
-    print(detalles_devo)
+    id_sucursal=request.POST.get('id_sucursal')
+    sucursal=Sucursal.objects.get(id=id_sucursal)
+    total=request.POST.get('total')
+    usuario=request.user
+    detalles_devo= json.loads(request.POST.get('detalles_devo'))
+    #Obteniendo la factura o venta que se registrara en la devolucion de venta
+    try:
+        factura=Venta.objects.get(id=id_venta)
+        devolucion_venta_obj=DevolucionVenta.objects.get_or_create(
+            factura=factura,
+            descripcion=descripcion_devo,
+            sucursal=sucursal,
+            usuario=usuario,
+            total_devolucion=total
+        )
+
+        resultado_devo=devolucion_venta_obj[1]
+        if resultado_devo==True:
+            devolucion_venta=devolucion_venta_obj[0]
+            for detalle_dev in detalles_devo:
+                #obteniendo el producto de cada venta 
+                id_detalle_venta=detalle_dev['id_detalle_venta']
+                #obteniendo el detalle de la venta por medio del ID del detalle de la venta para obtener el productostock
+                detalle_venta=DetalleVenta.objects.get(id=id_detalle_venta)
+                #obteniendo el producto stock
+                producto_stock_suc=detalle_venta.producto_stock
+                #obteniendo el precio del producto
+                precio_producto=producto_stock_suc.precio
+                #obteniendo la cantidad a devolver que es el total del dinero que se registrara en el campo total
+                cantidad_devolver=detalle_dev['cantidad_devolver']
+                #este seria la nueva cantidad que se registraria en la venta de donde se esta devolviendo
+                nueva_cantidad=detalle_dev['nueva_cantidad']
+                #aqui se obtendria el total del dinero a devolver que se registraria en total_devolucion
+                total_devolucion=detalle_dev['dinero_devolver']
+                #aqui se obtiene el nuevo total de venta que se utilizaria para actualizar la venta
+                nuevo_total_venta=detalle_dev['nuevo_total_venta']
+                #si la nueva cantidad de la venta es igual a cero entonces se elimina del detalle de la venta y se actualiza el total de la venta
+                if int(nueva_cantidad)==0:
+                        #se elimina la venta y se actualiza el total de le venta 
+                    DetalleVenta.objects.filter(id=id_detalle_venta).delete()
+                else:#de lo contrario se actualiza la nueva cantidad y el nuevo total de la venta
+                    DetalleVenta.objects.filter(id=id_detalle_venta).update(
+                        cantidad=nueva_cantidad,
+                        total=nuevo_total_venta  
+                    )
+                #actualizando el stock de los productos devueltos
+                prod_stock=ProductoStockSucursal.objects.get(id=producto_stock_suc.id)
+                stock_actual=int(prod_stock.cantidad)
+                print("Heheheh")
+                print(str(stock_actual))
+                nuevo_stock=int(cantidad_devolver)+stock_actual
+                ProductoStockSucursal.objects.filter(id=producto_stock_suc.id).update(
+                    cantidad=nuevo_stock
+                )
+                #creando la devolucion sobre venta por cada producto
+                devoluciones=DetalleDevolucionVenta.objects.create(
+                    devolucion_venta=devolucion_venta,
+                    producto_stock_suc=producto_stock_suc,
+                    cantidad_devolver=cantidad_devolver, 
+                    precio=precio_producto,
+                    total=total_devolucion          
+                )
+            #actualizando el total de la venta con los productos devueltos
+            
+            efectuar_nueva_total_de_venta=DetalleVenta.objects.filter(factura__id=id_venta).aggregate(Sum('total'))
+            print("Viendo que devuelve si se eliminan todas las ventas")
+            print(efectuar_nueva_total_de_venta)
+            if efectuar_nueva_total_de_venta['total__sum'] is not None:#si consular la venta y realizar la suma es diferente de None entonces se realiza la suma porque significa que hay productos que devolver
+                nuevo_total_sin_iva=float(efectuar_nueva_total_de_venta['total__sum'])
+                nuevo_total_iva=nuevo_total_sin_iva*0.13
+                nuevo_total_con_iva=nuevo_total_sin_iva+nuevo_total_iva
+                #actualizando venta
+                venta_a_actualizar=Venta.objects.filter(id=id_venta)
+                venta_a_actualizar.update(
+                    total_iva= round(nuevo_total_iva,2),
+                    total_sin_iva=round(nuevo_total_sin_iva, 2),
+                    total_con_iva=round(nuevo_total_con_iva, 2)
+                )
+            else:#si da none significa que todas las ventas quedaron a cero y eliminamos la venta
+                Venta.objects.filter(id=id_venta).delete()
+    except ValueError:
+        print("Hubo un error de sistema favor llamar a soporte tecnico")
+        res=False
+
+
     return JsonResponse({
         'res':res,
     })
