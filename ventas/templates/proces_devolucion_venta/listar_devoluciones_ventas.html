@@ -6,7 +6,7 @@
     <nav>
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'store:index' %}">Inicio</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'store:dev_ventas' %}">Listar Devoluciones sobre ventas</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'store:dev_ventas' %}">Listar devoluciones sobre venta</a></li>
       </ol>
     </nav>
   </div><!-- End Page Title -->
@@ -43,7 +43,7 @@
                                     </button>
                                     <ul class="dropdown-menu">
                                         {# <li><a class="dropdown-item" href="#">Detalle de Carga</a></li> #}
-                                        <li><a class="dropdown-item" href="#">Detalle de devolucion</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'store:detalle_dev' devolucion.id %}">Detalle de devolucion</a></li>
                                     </ul>
                                 </div>
                             </td>

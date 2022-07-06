@@ -82,7 +82,7 @@ $(document).ready(function(){
         if($(this).val().length>0){
             if( parseFloat(cantidad_devolver)>=0.0 && parseFloat(cantidad_devolver)<=parseFloat(cantidad_vendida)){
                 //mostrandolo la nueva cantidad en tiempo real
-                $(this).closest('tr').find('.nueva_cant').text(nueva_cantidad)
+                $(this).closest('tr').find('.nueva_cant').text(redondear(nueva_cantidad))
                 //obteniendo el precio del producto a devolver
                 let precio_prod=parseFloat($(this).closest('tr').find('.precio_prod').val().replace('$',''));
                 console.log($(this).closest('tr').find('.precio_prod'));
@@ -90,11 +90,11 @@ $(document).ready(function(){
                 //esto daria el total de dinero a devolver
                 let dinero_devol=cantidad_devolver*precio_prod
                 //mostrando el total de dinero a devolver
-                $(this).closest('tr').find('.dinero_devol').text("$"+dinero_devol);
+                $(this).closest('tr').find('.dinero_devol').text("$"+redondear(dinero_devol));
                 //luego calculariamos el nuevo total que quedaria en la venta
                 let nuevo_total_de_venta=nueva_cantidad*precio_prod;
                 //mostrando la nueva cantidad que quedaria en la venta
-                $(this).closest('tr').find('.nuevo_total_venta').text("$"+nuevo_total_de_venta);
+                $(this).closest('tr').find('.nuevo_total_venta').text("$"+redondear(nuevo_total_de_venta));
                 
             }else{
                 $(this).val('');

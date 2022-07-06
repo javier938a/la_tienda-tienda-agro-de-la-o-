@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+    <section class="section">
+        <div class="row align-items-top">
+            <div class="col-lg-2">
+
+            </div>
+            <div class="col-lg-8">
+    
+              <!-- Default Card -->
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Detalle de devolucion sobre venta</h5>
+                  {% if devolucion %}
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col" colspan="4">Devolucion realizada en la fecha {{ devolucion.fecha_devolucion }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>                            
+                            <td>Usuario:</td>
+                            <td>{{ devolucion.usuario }}</td>
+                            <td>No de factura</td>
+                            <td>{{ devolucion.factura.numero_factura }}</td>
+                        </tr>
+                        <tr>                        
+                            <td>Sucursal:</td>
+                            <td>{{ devolucion.sucursal }}</td>
+                            <td>Fecha de venta:</td>
+                            <td>{{ devolucion.fecha_devolucion }}</td>
+                        </tr>
+                        </tbody>
+                    </table> 
+                    {% endif %}
+                </div>
+              </div><!-- End Default Card -->
+    
+              <!-- Card with header and footer -->
+              <div class="card">
+                <div class="card-header">Detalle</div>
+                <div class="card-body">
+                  <h5 class="card-title">Detalle</h5>
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Producto</th>
+                        <th scope="col">Presentacion</th>
+                        <th scope="col">Cantidad</th>
+                        <th scope="col">Precio</th>
+                        <th scope="col">Total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% if detalle_devolucion %}
+                            {% for detalle_devo in detalle_devolucion %}
+                                <tr>
+                                    <th scope="row">{{ detalle_devo.id }}</th>
+                                    <td>{{ detalle_devo.producto_stock_suc.producto }}</td>
+                                    <td>{{ detalle_devo.producto_stock_suc.presentacion }}</td>
+                                    <td>{{ detalle_devo.cantidad_devolver }}</td>
+                                    <td>${{ detalle_devo.precio }}</td>
+                                    <td>${{ detalle_devo.total }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                        <p>No hay productos registrados para este inventario</p>
+                      {% endif %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            {% if devolucion %}
+                                <th scope="row" colspan="5" style="text-align: right;">Totol devuelto</th>
+                                <td id="total_iva">${{ devolucion.total_devolucion }}</td>
+                            {% endif %}
+                        </tr>
+                    </tfoot>
+                  </table>
+                  <!-- End Active Table -->
+                </div>
+                <div class="card-footer">
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a class="btn btn-success" href="{% url 'store:dev_ventas' %}">Salir</a>                        
+                    </div>                    
+                </div>
+              </div><!-- End Card with header and footer -->
+            </div>
+        </div>
+    
+    </div>
+    </section>
+
+
+{% endblock %}
+
+{% load  static %}
+{% block extra-script %}
+  
+    
+{% endblock %}

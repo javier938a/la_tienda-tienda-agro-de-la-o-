@@ -1,6 +1,7 @@
+from email import contentmanager
 from typing import List
 from unittest import result
-from django.views.generic import TemplateView, ListView
+from django.views.generic import TemplateView, ListView, DetailView
 from ventas.models import DevolucionVenta, DetalleDevolucionVenta, ProductoStockSucursal, Venta, DetalleVenta, Sucursal
 from django.db.models import Q, Sum
 
@@ -19,6 +20,18 @@ class ViewCrearDevolucionVenta(TemplateView):
     def get_context_data(self, **kwargs):
         context=super(ViewCrearDevolucionVenta, self).get_context_data(**kwargs)
         context['suc']=Sucursal.objects.filter(id=self.request.user.sucursal.id)
+        return context
+
+class ViewDetalleDevolucion(DetailView):
+    template_name="proces_devolucion_venta/detalle_devolucion_venta.html"
+    model=DevolucionVenta
+    context_object_name="devolucion"
+    def get_context_data(self, **kwargs):
+        context=super(ViewDetalleDevolucion, self).get_context_data(**kwargs)
+        devolucion=DevolucionVenta.objects.get(id=self.kwargs['pk'])
+        detalle_devolucion=DetalleDevolucionVenta.objects.filter(devolucion_venta=devolucion)
+        context['detalle_devolucion']=detalle_devolucion
+        
         return context
 
 def obtener_ventas_autocomplete(request):
@@ -103,12 +116,8 @@ def efectuar_devolucion_venta(request):
                 total_devolucion=detalle_dev['dinero_devolver']
                 #aqui se obtiene el nuevo total de venta que se utilizaria para actualizar la venta
                 nuevo_total_venta=detalle_dev['nuevo_total_venta']
-                #si la nueva cantidad de la venta es igual a cero entonces se elimina del detalle de la venta y se actualiza el total de la venta
-                if int(nueva_cantidad)==0:
-                        #se elimina la venta y se actualiza el total de le venta 
-                    DetalleVenta.objects.filter(id=id_detalle_venta).delete()
-                else:#de lo contrario se actualiza la nueva cantidad y el nuevo total de la venta
-                    DetalleVenta.objects.filter(id=id_detalle_venta).update(
+                #actualizando la nueva cantidad y el nuevo total de la venta
+                DetalleVenta.objects.filter(id=id_detalle_venta).update(
                         cantidad=nueva_cantidad,
                         total=nuevo_total_venta  
                     )
@@ -134,19 +143,17 @@ def efectuar_devolucion_venta(request):
             efectuar_nueva_total_de_venta=DetalleVenta.objects.filter(factura__id=id_venta).aggregate(Sum('total'))
             print("Viendo que devuelve si se eliminan todas las ventas")
             print(efectuar_nueva_total_de_venta)
-            if efectuar_nueva_total_de_venta['total__sum'] is not None:#si consular la venta y realizar la suma es diferente de None entonces se realiza la suma porque significa que hay productos que devolver
-                nuevo_total_sin_iva=float(efectuar_nueva_total_de_venta['total__sum'])
-                nuevo_total_iva=nuevo_total_sin_iva*0.13
-                nuevo_total_con_iva=nuevo_total_sin_iva+nuevo_total_iva
-                #actualizando venta
-                venta_a_actualizar=Venta.objects.filter(id=id_venta)
-                venta_a_actualizar.update(
-                    total_iva= round(nuevo_total_iva,2),
-                    total_sin_iva=round(nuevo_total_sin_iva, 2),
-                    total_con_iva=round(nuevo_total_con_iva, 2)
-                )
-            else:#si da none significa que todas las ventas quedaron a cero y eliminamos la venta
-                Venta.objects.filter(id=id_venta).delete()
+            #actualizando la venta si la venta queda a cero todos los productos quedaran a cero y la venta cero se justificara con la devolucion degistrada
+            nuevo_total_sin_iva=float(efectuar_nueva_total_de_venta['total__sum'])
+            nuevo_total_iva=nuevo_total_sin_iva*0.13
+            nuevo_total_con_iva=nuevo_total_sin_iva+nuevo_total_iva
+            #actualizando venta
+            venta_a_actualizar=Venta.objects.filter(id=id_venta)
+            venta_a_actualizar.update(
+                total_iva= round(nuevo_total_iva,2),
+                total_sin_iva=round(nuevo_total_sin_iva, 2),
+                total_con_iva=round(nuevo_total_con_iva, 2)
+            )
     except ValueError:
         print("Hubo un error de sistema favor llamar a soporte tecnico")
         res=False
@@ -157,6 +164,6 @@ def efectuar_devolucion_venta(request):
     })
 
 
-    
+
 
 
