@@ -67,6 +67,8 @@ class Producto(models.Model):
     def __str__(self) -> str:
         return "%s"%self.nombre_producto
 
+
+
 class Presentacion(models.Model):
     presentacion=models.CharField(max_length=50, help_text="Ingrese la presentacion")
 
@@ -156,6 +158,13 @@ class Venta(models.Model):
     def __str__(self):
         return "Factura N# %s | Total: %s"%(self.numero_factura, self.total_con_iva)
 
+class DetalleVentaServicio(models.Model):
+    factura=models.ForeignKey(Venta, on_delete=models.SET_NULL, null=True)
+    descripcion_servicio=models.TextField(help_text="ingrese la descripcion del servicio", null=True)#almacenara la descripcion del servicio
+    precio=models.FloatField(help_text="Ingrese el precio del servicio")#almacenara el costo total del servicio
+
+    def __str__(self):
+        return "Servicio: %s | Precio: %s "%(self.descripcion_servicio, self.precio)
 
 class DetalleVenta(models.Model):
     factura=models.ForeignKey(Venta, on_delete=models.SET_NULL, null=True)

@@ -29,14 +29,58 @@ $(document).ready(function(){
             $("#producto").css({
                 'display':'none',
             })
+            $("#servicio").css({
+                'display':'none',
+            });
+            $("#precio_servicio").css({
+                'display':'none',
+            });
+            $("#titulo_precio").css({
+                'display':'none',
+            });
+            $("#agregar_servicio_venta").css({
+                'display':'none',
+            });
         }else if(num_tipo==="2"){
             $("#producto").css({
-                'display':'block'
+                'display':'block',
             });
             $("#codigo_barra").css({
                 'display':'none',
             });
+            $("#servicio").css({
+                'display':'none',
+            });
+            $("#precio_servicio").css({
+                'display':'none',
+            });
+            $("#titulo_precio").css({
+                'display':'none',
+            });
+            $("#agregar_servicio_venta").css({
+                'display':'none',
+            });
+        }else if(num_tipo=="3"){
+           $("#codigo_barra").css({
+            'display':'none',
+           });
+           $("#producto").css({
+            'display':'none',
+           });
+           $("#servicio").css({
+            'display':'block',
+           });
+           $("#precio_servicio").css({
+            'display':'block'
+            });
+            $("#titulo_precio").css({
+                'display':'block',
+            });
+            $("#agregar_servicio_venta").css({
+                'display':'block',
+            });
         }
+
     });
 
     $("#tipo_venta").change(function(){
@@ -58,6 +102,31 @@ $(document).ready(function(){
                 'display':'block',
             });
         }
+    });
+
+    
+    $("#agregar_servicio_venta").click(function(evt){
+        let descripcion_servicio=$("#servicio").val();
+        let precio_servicio=$("#precio_servicio").val();
+        if(descripcion_servicio.length>0 && precio_servicio.length>0){
+            fila='<tr>';
+            fila+='<td><input class="form-control" disabled><input type="hidden" class="tipo_venta" value="service" disabled></td>';
+            fila+='<td><input class="form-control descrip" value="'+descripcion_servicio+'" disabled></td>'
+            fila+='<td><input class="form-control" disabled></td>';
+            fila+='<td><input class="form-control cant" value="1" disabled></td>';
+            fila+='<td><input class="form-control pre" value="$'+precio_servicio+'" disabled></td>';
+            fila+='<td><input class="form-control tot" value="$'+precio_servicio+'" disabled></td>';
+            fila+='<td><input class="btn btn-danger form-control delfila" type="button" value="Eliminar"></td>';
+            fila+='</tr>'
+            $("#table-productos-venta").prepend(fila);
+            $("#servicio").val('');
+            $("#precio_servicio").val('');
+
+        }else{
+            toastr['error']("Debe de llenar la descripcion del servicio y debe de ingresar el precio del servicio");
+
+        }
+        
     });
 
     $("#codigo_barra").keypress(function(evt){
@@ -411,10 +480,12 @@ $(document).ready(function(){
         let datos=[];
         tabla_detalle.each(function(){
             let id_producto_stock=$(this).find('.id_prod_stock').val();
+            let descripcion=$(this).find('.descrip').val();
+            let tipo_venta_prod=$(this).find('.tipo_venta').val();
             let cantidad=$(this).find('.cant').val();
             let precio=$(this).find('.pre').val().replace('$','');
             let total=$(this).find('.tot').val().replace('$','');
-            fila={'id_prod_stock':id_producto_stock, 'cantidad':cantidad, 'precio':precio, 'total':total};
+            fila={'id_prod_stock':id_producto_stock,'descripcion':descripcion,'tipo_venta':tipo_venta_prod, 'cantidad':cantidad, 'precio':precio, 'total':total};
             datos.push(fila);
         });
         return datos;

@@ -1,5 +1,5 @@
 from django.views.generic import ListView, TemplateView, DetailView
-from ventas.models import Venta, DetalleVenta, Sucursal, ProductoStockSucursal, User
+from ventas.models import Venta, DetalleVenta, DetalleVentaServicio, Sucursal, ProductoStockSucursal, User
 from django.db.models import Q
 from django.http import JsonResponse
 from django.core.serializers import serialize
@@ -23,7 +23,9 @@ class ViewDetalleVenta(DetailView):
     def get_context_data(self, **kwargs):
         context = super(ViewDetalleVenta, self).get_context_data(**kwargs)
         detalle_venta=DetalleVenta.objects.filter(factura__id=self.kwargs['pk'])
+        detalle_venta_servicios=DetalleVentaServicio.objects.filter(factura__id=self.kwargs['pk'])
         context['detalle_venta']=detalle_venta
+        context['detalle_venta_servicios']=detalle_venta_servicios
         return context
 
 class ListarVentas(ListView):
@@ -61,7 +63,7 @@ def agregar_producto_a_detalle_por_codigo(request):
         existencia=producto_a_agregar.cantidad
         if int(existencia)>0:
             fila="<tr>"
-            fila+="<td><input class='form-control id_prod_stock' value='"+str(producto_a_agregar.id)+"' disabled></td>"
+            fila+="<td><input class='form-control id_prod_stock' value='"+str(producto_a_agregar.id)+"' disabled><input type='hidden' class='tipo_venta' value='producto' disabled></td>"
             fila+="<td><input class='form-control' value='"+str(producto_a_agregar.producto)+"' disabled></td>"
             fila+="<td><input class='form-control' value='"+str(producto_a_agregar.presentacion)+"' disabled></td>"
             fila+="<td><input class='form-control cant' value='1'></td>"
@@ -92,8 +94,8 @@ def agregar_producto_detalle_venta(request):
     res=False#esta variable confirmara si hay existencia si es False es porque no hay en existencia si cambia True es porque hay en existencia
     if int(existencia)>0:#si es mayor que cero se crea la fila con sus valores y por defencto con cantidad 1
         fila="<tr>"
-        fila+="<td><input class='form-control id_prod_stock' value='"+str(producto_stock_ubi.id)+"' disabled></td>"
-        fila+="<td><input class='form-control' value='"+str(producto_stock_ubi.producto)+"' disabled></td>"
+        fila+="<td><input class='form-control id_prod_stock' value='"+str(producto_stock_ubi.id)+"' disabled><input type='hidden' class='tipo_venta' value='producto' disabled></td>"
+        fila+="<td><input class='form-control descrip' value='"+str(producto_stock_ubi.producto)+"' disabled></td>"
         fila+="<td><input class='form-control' value='"+str(producto_stock_ubi.presentacion)+"' disabled></td>"
         fila+="<td><input class='form-control cant' value='1'></td>"
         fila+="<td><input class='form-control pre' value='$"+str(producto_stock_ubi.precio)+"' disabled></td>"
@@ -139,24 +141,36 @@ def efectuar_venta(request):
     print(factura_objeto)
     if(resutado_venta==True):
         for prod_stock in destalles_de_ventas:
-            id_prod_stock=prod_stock['id_prod_stock']
-            producto_stock=ProductoStockSucursal.objects.get(id=id_prod_stock)
+            
+            tipo_venta=prod_stock['tipo_venta']
+            descripcion=prod_stock['descripcion']
             cantidad=prod_stock['cantidad']
             precio=prod_stock['precio']
             total=prod_stock['total']
-            DetalleVenta.objects.create(
-                factura=factura,
-                producto_stock=producto_stock,
-                cantidad=cantidad,
-                precio=precio,
-                total=total
-            )
-            #cuando la venta de un producto se efectua se debe de alterar el stock restandole la cantidad que se vende
-            nueva_cantidad_disponible=int(producto_stock.cantidad)-int(cantidad)
-            #teniendo la cantidad disponible se actualiza el producto_stock_ubicacion
-            ProductoStockSucursal.objects.filter(id=id_prod_stock).update(
-                cantidad=nueva_cantidad_disponible
-            )
+            if tipo_venta=='producto':
+                id_prod_stock=prod_stock['id_prod_stock']
+                producto_stock=ProductoStockSucursal.objects.get(id=id_prod_stock)
+                DetalleVenta.objects.create(
+                    factura=factura,
+                    producto_stock=producto_stock,
+                    cantidad=cantidad,
+                    precio=precio,
+                    total=total
+                )
+                #cuando la venta de un producto se efectua se debe de alterar el stock restandole la cantidad que se vende
+                nueva_cantidad_disponible=int(producto_stock.cantidad)-int(cantidad)
+                #teniendo la cantidad disponible se actualiza el producto_stock_ubicacion
+                ProductoStockSucursal.objects.filter(id=id_prod_stock).update(
+                    cantidad=nueva_cantidad_disponible
+                )
+            elif tipo_venta=='service':
+                DetalleVentaServicio.objects.create(
+                    factura=factura,
+                    descripcion_servicio=descripcion,
+                    precio=total 
+
+                )
+
             cuenta_prod=cuenta_prod+1
             if cuenta_prod==len(destalles_de_ventas):
                 res=True

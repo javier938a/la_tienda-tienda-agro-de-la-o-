@@ -66,6 +66,7 @@
               <select name="tipo_busqueda" id="tipo_busqueda" class="form-control">
                 <option value="1">Codigo de Barra</option>
                 <option value="2" selected>Nombre del producto</option>
+                <option value="3">Servicio</option>
               </select>
             </div>
           </div>
@@ -88,6 +89,7 @@
               <label for="">Escriba un producto</label>
               <input class="form-control" type="text" name="producto" id="producto" placeholder="Escriba un producto" value="">
               <input class="form-control" type="text" name="codigo_barra" id="codigo_barra" placeholder="Ingrese el codigo de barra" value="" style="display: none;">
+              <textarea class="form-control" name="servicio" id="servicio" cols="30" rows="1" style="display: none;"></textarea>
               <input type="hidden" id="url_productos_inv_autocomplete" name="url_productos_inv_autocomplete" value="{% url 'store:prod_inv_autocomplete' %}">
               <input type="hidden" name="url_add_prod_venta" id="url_add_prod_venta" value="{% url 'store:add_prod_venta' %}"> 
               <input type="hidden" name="url_efectuar_venta" id="url_efectuar_venta" value="{% url 'store:efectuar_venta' %}">
@@ -97,8 +99,21 @@
               <input type="hidden" name="url_agregar_prod_barra" id="url_agregar_prod_barra" value="{% url 'store:add_prod_barra' %}">
             </div>
           </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="precio" style="display: none;" id="titulo_precio">Precio</label>
+              <input class="form-control" type="text" id="precio_servicio" name="precio_servicio" placeholder="Precio del servicio" style="display: none;">
+            </div>
+          </div>
+          <div class="col-md-1">
+            <div class="form-group">
+              <label for=""></label>
+              <br>
+              <button id="agregar_servicio_venta" type="button" class="btn btn-success form-control" style="display: none;" >Agregar</button>
+            </div>
+          </div>
           <div class="col-md-9">
-
+            
           </div>
           <div class="col-md-1">
               <div class="form-group">
@@ -134,7 +149,7 @@
                 <thead>
                   <tr>
                     <th scope="col">ID</th>
-                    <th scope="col">Producto</th>
+                    <th scope="col">Producto o servicio</th>
                     <th scope="col">Presentacion</th>
                     <th scope="col">Cantidad</th>
                     <th scope="col">Precio</th>
