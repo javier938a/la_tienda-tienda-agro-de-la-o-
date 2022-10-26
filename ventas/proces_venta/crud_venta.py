@@ -36,10 +36,24 @@ class ViewDetalleVenta(LoginRequiredMixin, DetailView):
 class ListarVentas(LoginRequiredMixin, ListView):
     login_url="/ventas/login/"
     redirect_field_name="redirect_to"
-    
+
     template_name="proces_venta/listar_venta.html"
     model=Venta
     context_object_name="ventas"
+
+
+    def get_queryset(self):
+        tipo_de_usuario=str(self.request.user.tipo_usuario)
+        sucursal_usuario=self.request.user.sucursal
+        ventas=None
+        print("Este es el "+tipo_de_usuario)
+        if tipo_de_usuario=="administrador":#validando que si es administrador pueda ver todas las ventas de todas las sucursales
+            ventas=self.model.objects.all()
+        elif tipo_de_usuario=="usuario":#si es usuario solo podra las ventas de la sucursal a la que se le ha creado su usuario
+            ventas=self.model.objects.filter(sucursal=sucursal_usuario)
+
+        return ventas
+
 
 def obtener_productos_inventario_autocomplete(request):
     id_sucursal=request.POST.get('id_sucursal')

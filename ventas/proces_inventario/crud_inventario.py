@@ -63,8 +63,13 @@ class ListarInventario(LoginRequiredMixin, ListView):
     context_object_name="inventario"
 
     def get_queryset(self):
-        sucursal=self.request.user.sucursal
-        return self.model.objects.filter(sucursal=sucursal)
+        tipo_usuario=str(self.request.user.tipo_usuario)
+        sucursal=self.request.user.sucursal#validando que el administrador pueda ver su inventario total de todas las sucursales
+        if tipo_usuario=="administrador":
+            listado_inventario=self.model.objects.all()
+        elif tipo_usuario=="usuario":
+            listado_inventario=self.model.objects.filter(sucursal=sucursal)#de lo contrario si es usuario solo vera el inventario de su sucursal
+        return listado_inventario
 
 def obtener_productos_autocomplete(request):
     clave=request.GET.get('term').strip()

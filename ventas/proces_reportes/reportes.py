@@ -111,15 +111,24 @@ class DynamicNameView(WeasyTemplateResponseMixin, DetalleReporteVentas):
 
 def grafico_reporte_ventas(request):
     fecha_hoy=ti.now().strftime("%Y-%m-%d")
-    reporte_ventas_hoy=Venta.objects.filter(Q(fecha_venta__date=fecha_hoy))
+    tipo_usuario=str(request.user.tipo_usuario)
+    reporte_ventas_hoy=None
+    if tipo_usuario != None:
+        if tipo_usuario=="administrador":
+            reporte_ventas_hoy=Venta.objects.filter(Q(fecha_venta__date=fecha_hoy))
+        elif tipo_usuario=="usuario":
+            sucursal_usuario=request.user.sucursal
+            reporte_ventas_hoy=Venta.objects.filter(Q(fecha_venta__date=fecha_hoy)).filter(Q(sucursal=sucursal_usuario))
+
     datos=[]
-    for venta in reporte_ventas_hoy:
-        datos.append({
-            'x':venta.fecha_venta,
-            'y':venta.total_con_iva
-        })
-    print("se imprimio..")
-    print(datos)
+    if reporte_ventas_hoy!=None:
+        for venta in reporte_ventas_hoy:
+            datos.append({
+                'x':venta.fecha_venta,
+                'y':venta.total_con_iva
+            })
+        print("se imprimio..")
+        print(datos)
     
     return JsonResponse(datos, safe=False)
 

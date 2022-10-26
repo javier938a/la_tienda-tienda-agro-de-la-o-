@@ -218,7 +218,7 @@
           <li class="nav-item dropdown pe-3">
 
             <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-              <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
+              <img src="assets/img/profile-img.jpg" alt="Perfil" class="rounded-circle">
               <span class="d-none d-md-block dropdown-toggle ps-2">{{ user.username }}</span>
             </a><!-- End Profile Iamge Icon -->
               <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
@@ -427,8 +427,21 @@
             </li><!-- End Forms Nav -->
           {% elif user.tipo_usuario.tipo_usuario == "usuario" %}
             <li class="nav-item">
+              <a class="nav-link collapsed" data-bs-target="#cate-prod-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-clipboard-data"></i><span>Inventario</span><i class="bi bi-chevron-down ms-auto"></i>
+              </a>
+              <ul id="cate-prod-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li class="nav-item">
+                  <a class="nav-link collapsed" href="{% url 'store:list_inv' %}">
+                    <i class="bi bi-card-list"></i>
+                    <span>Inventario</span>
+                  </a>
+                </li><!-- End Register Page Nav -->
+              </ul>
+            </li><!-- End Forms Nav -->
+            <li class="nav-item">
               <a class="nav-link collapsed" data-bs-target="#ventas-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-journal-text"></i><span>Administrar Ventas</span><i class="bi bi-chevron-down ms-auto"></i>
+                <i class="bi bi-shop"></i><span>Administrar Ventas</span><i class="bi bi-chevron-down ms-auto"></i>
               </a>
               <ul id="ventas-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                 <li class="nav-item">
