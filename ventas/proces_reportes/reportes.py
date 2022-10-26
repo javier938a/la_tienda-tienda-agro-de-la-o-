@@ -8,7 +8,7 @@ from django.utils.timezone import make_aware
 from django_weasyprint.utils import django_url_fetcher
 import functools
 import ssl
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.conf import settings
 from django.views.generic import DetailView, ListView, TemplateView
@@ -20,7 +20,9 @@ from django.db.models import Sum, Q
 from django.http import JsonResponse
 
 
-class ViewSelectReporteVentas(TemplateView):
+class ViewSelectReporteVentas(LoginRequiredMixin, TemplateView):
+    login_url="/ventas/login/"
+    redirect_field_name="redirect_to"
     template_name="reportes/view_select_reporte_ventas.html"
 
 class DetalleReporteVentas(TemplateView):

@@ -2,16 +2,21 @@ from itertools import product
 from django.views.generic import ListView, TemplateView
 from ventas.models import CargaProductos, ProductoStockSucursal
 from ventas.models import DescargaProductos, DetalleDescargaProducto
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.http import JsonResponse
 import json
 
-class ListarDescargasProductos(ListView):
+class ListarDescargasProductos(LoginRequiredMixin, ListView):
+    login_url="/ventas/login/"
+    redirect_field_name="redirect_to"
     template_name="proces_descarga_productos/listar_descargas_productos.html"
     model=DescargaProductos
     context_object_name="descarga_prod"
 
-class ViewCrearDescargaProducto(TemplateView):
+class ViewCrearDescargaProducto(LoginRequiredMixin, TemplateView):
+    login_url="/ventas/login/"
+    redirect_field_name="redirect_to"
     template_name="proces_descarga_productos/crear_descarga_productos.html"
 
 

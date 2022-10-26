@@ -6,34 +6,45 @@ from django.http import Http404
 from ventas.models import User
 from ventas.forms import UserForm
 from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class DetalleUsuario(DetailView):
+class DetalleUsuario(LoginRequiredMixin, DetailView):
+    login_url="/ventas/login/"
+    redirect_field_name="redirect_to"
     model=User
     template_name="proces_usuario/detalle_usuario.html"
     context_object_name="usuario"
 
-class CrearUsuario(CreateView):
+class CrearUsuario(LoginRequiredMixin, CreateView):
+    login_url="/ventas/login/"
+    redirect_field_name="redirect_to"
     template_name="proces_usuario/crear_usuario.html"
     model=User
     form_class=UserForm
     context_object_name="form"
     success_url=reverse_lazy('store:user')
 
-class EditarUsuario(UpdateView):
+class EditarUsuario(LoginRequiredMixin, UpdateView):
+    login_url="/ventas/login/"
+    redirect_field_name="redirect_to"
     template_name="proces_usuario/editar_usuario.html"
     model=User
     form_class=UserForm
     context_object_name="form"
     success_url=reverse_lazy("store:user")
 
-class EliminarUsuario(DeleteView):
+class EliminarUsuario(LoginRequiredMixin, DeleteView):
+    login_url="/ventas/login/"
+    redirect_field_name="redirect_to"
     template_name="proces_usuario/eliminar_usuario.html"
     model=User
     context_object_name="user"
     success_url=reverse_lazy("store:user")
 
-class ListarUsuarios(ListView):
+class ListarUsuarios(LoginRequiredMixin, ListView):
+    login_url="/ventas/login/"
+    redirect_field_name="redirect_to"
     template_name='proces_usuario/listar_usuario.html'
     model=User
     context_object_name="entity"

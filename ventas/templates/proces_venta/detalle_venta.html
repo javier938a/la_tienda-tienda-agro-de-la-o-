@@ -70,16 +70,18 @@
                                 </tr>
                             {% endfor %}
                         {% else %}
-                        <p>No hay productos registrados para este inventario</p>
+                        <p>No hay productos registrados para esta venta</p>
                       {% endif %}
                       {% if detalle_venta_servicios %}
                           {% for detalle_service in detalle_venta_servicios %}
-                            <th scope="row">{{ detalle_service.id }}</th>
-                            <td>{{ detalle_service.descripcion_servicio }}</td>
-                            <td>Servicio</td>
-                            <td>1</td>
-                            <td>{{ detalle_service.precio }}</td>
-                            <td>{{ detalle_service.precio }}</td>                               
+                            <tr>
+                              <th scope="row">{{ detalle_service.id }}</th>
+                              <td>{{ detalle_service.descripcion_servicio }}</td>
+                              <td>Servicio</td>
+                              <td>1</td>
+                              <td>{{ detalle_service.precio }}</td>
+                              <td>{{ detalle_service.precio }}</td> 
+                            </tr>                              
                           {% endfor %}
                       {% endif %}
                     </tbody>

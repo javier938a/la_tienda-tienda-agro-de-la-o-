@@ -1,11 +1,14 @@
 import json
 from django.views.generic import TemplateView, CreateView, ListView, UpdateView, DeleteView, DetailView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from ventas.models import InventarioProductos, Sucursal, Producto, Presentacion, User, ProductoStockSucursal
 from django.http import request, JsonResponse
 from django.db.models import Q
 from django.core.serializers import serialize
 
-class ViewCrearInventario(TemplateView):
+class ViewCrearInventario(LoginRequiredMixin, TemplateView):
+    login_url="/ventas/login/"
+    redirect_field_name="redirect_to"
     template_name="proces_inventario/crear_inventario.html"
     def get_context_data(self, **kwargs) :
         context=super(ViewCrearInventario, self).get_context_data()
@@ -13,7 +16,9 @@ class ViewCrearInventario(TemplateView):
         context['suc']=sucursales
         return context
 
-class ViewEditarInventario(TemplateView):
+class ViewEditarInventario(LoginRequiredMixin, TemplateView):
+    login_url="/ventas/login/"
+    redirect_field_name="redirect_to"
     template_name="proces_inventario/editar_inventario.html"
 
     def get_context_data(self, **kwargs):
@@ -29,7 +34,9 @@ class ViewEditarInventario(TemplateView):
         context['id_inventario']=self.kwargs['pk']
         return context
 
-class DetalleInventario(DetailView):
+class DetalleInventario(LoginRequiredMixin, DetailView):
+    login_url="/ventas/login/"
+    redirect_field_name="redirect_to"
     model=InventarioProductos
     template_name="proces_inventario/detalle_inventario.html"
     context_object_name="inventario"
@@ -43,10 +50,14 @@ class DetalleInventario(DetailView):
         return context
 
 
-class EliminarInventario(TemplateView):
+class EliminarInventario(LoginRequiredMixin, TemplateView):
+    login_url="/ventas/login/"
+    redirect_field_name="redirect_to"
     pass
 
-class ListarInventario(ListView):
+class ListarInventario(LoginRequiredMixin, ListView):
+    login_url="/ventas/login/"
+    redirect_field_name="redirect_to"
     template_name="proces_inventario/listar_inventario.html"
     model=ProductoStockSucursal
     context_object_name="inventario"

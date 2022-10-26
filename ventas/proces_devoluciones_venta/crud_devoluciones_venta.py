@@ -4,17 +4,22 @@ from unittest import result
 from django.views.generic import TemplateView, ListView, DetailView
 from ventas.models import DevolucionVenta, DetalleDevolucionVenta, ProductoStockSucursal, Venta, DetalleVenta, Sucursal
 from django.db.models import Q, Sum
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.http import JsonResponse
 import json
 
-class ListarDevolucionesVentas(ListView):
+class ListarDevolucionesVentas(LoginRequiredMixin, ListView):
+    login_url="/ventas/login/"
+    redirect_field_name="redirect_to"
     template_name="proces_devolucion_venta/listar_devoluciones_ventas.html"
     model=DevolucionVenta
     context_object_name="devolucionVenta"
 
 
-class ViewCrearDevolucionVenta(TemplateView):
+class ViewCrearDevolucionVenta(LoginRequiredMixin, TemplateView):
+    login_url="/ventas/login/"
+    redirect_field_name="redirect_to"
     template_name="proces_devolucion_venta/crear_devolucion_venta.html"
 
     def get_context_data(self, **kwargs):
@@ -22,7 +27,9 @@ class ViewCrearDevolucionVenta(TemplateView):
         context['suc']=Sucursal.objects.filter(id=self.request.user.sucursal.id)
         return context
 
-class ViewDetalleDevolucion(DetailView):
+class ViewDetalleDevolucion(LoginRequiredMixin, DetailView):
+    login_url="/ventas/login/"
+    redirect_field_name="redirect_to"
     template_name="proces_devolucion_venta/detalle_devolucion_venta.html"
     model=DevolucionVenta
     context_object_name="devolucion"

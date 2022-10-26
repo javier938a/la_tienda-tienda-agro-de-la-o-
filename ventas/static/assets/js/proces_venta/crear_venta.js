@@ -121,6 +121,7 @@ $(document).ready(function(){
             $("#table-productos-venta").prepend(fila);
             $("#servicio").val('');
             $("#precio_servicio").val('');
+            calcular_totales();
 
         }else{
             toastr['error']("Debe de llenar la descripcion del servicio y debe de ingresar el precio del servicio");

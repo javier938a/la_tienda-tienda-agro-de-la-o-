@@ -4,9 +4,12 @@ from multiprocessing import context
 from django.views.generic import TemplateView, ListView, CreateView, DetailView
 from ventas.models import CargaProductos, DetalleCargaProductos, User, Presentacion, Sucursal, ProductoStockSucursal, Producto
 from django.http import JsonResponse
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 
-class ViewCargaInventario(TemplateView):
+class ViewCargaInventario(LoginRequiredMixin, TemplateView):
+    login_url="/ventas/login/"
+    redirect_field_name="redirect_to"
     template_name="proces_carga_productos/crear_carga_producto.html"
     def get_context_data(self, **kwargs):
         context=super(ViewCargaInventario, self).get_context_data(**kwargs)
@@ -14,12 +17,16 @@ class ViewCargaInventario(TemplateView):
         context['suc']=sucursal
         return context
 
-class ListarCargaProductos(ListView):
+class ListarCargaProductos(LoginRequiredMixin, ListView):
+    login_url="/ventas/login/"
+    redirect_field_name="redirect_to"
     template_name="proces_carga_productos/listar_carga_productos.html"
     model=CargaProductos
     context_object_name="cargas_prod"
 
-class DetalleCargaInventario(DetailView):
+class DetalleCargaInventario(LoginRequiredMixin, DetailView):
+    login_url="/ventas/login/"
+    redirect_field_name="redirect_to"
     template_name="proces_carga_productos/detalle_carga_producto.html"
     model=CargaProductos
     context_object_name="carga_prod"

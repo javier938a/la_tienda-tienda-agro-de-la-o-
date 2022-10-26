@@ -1,9 +1,13 @@
 from django.urls import reverse_lazy
 from ventas.models import Producto, User
 from ventas.forms import ProductoForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 
-class CrearProducto(CreateView):
+class CrearProducto(LoginRequiredMixin, CreateView):
+    login_url="/ventas/login/"
+    redirect_field_name="redirect_to"
+
     template_name="proces_producto/crear_producto.html"
     model=Producto
     form_class=ProductoForm
@@ -15,7 +19,9 @@ class CrearProducto(CreateView):
         context['form'].fields['usuario'].queryset=User.objects.filter(id=self.request.user.id)#filtrando que solo se muestre el usuario logiado
         return context
 
-class EditarProducto(UpdateView):
+class EditarProducto(LoginRequiredMixin, UpdateView):
+    login_url="/ventas/login/"
+    redirect_field_name="redirect_to"
     template_name="proces_producto/editar_producto.html"
     model=Producto
     form_class=ProductoForm
@@ -28,13 +34,17 @@ class EditarProducto(UpdateView):
         context['form'].fields['usuario'].queryset=User.objects.filter(id=self.request.user.id)
         return context
 
-class EliminarProducto(DeleteView):
+class EliminarProducto(LoginRequiredMixin, DeleteView):
+    login_url="/ventas/login/"
+    redirect_field_name="redirect_to"
     template_name="proces_producto/eliminar_producto.html"
     model=Producto
     context_object_name="prod"
     success_url=reverse_lazy("store:list_prod")
 
-class ListarProductos(ListView):
+class ListarProductos(LoginRequiredMixin, ListView):
+    login_url="/ventas/login/"
+    redirect_field_name="redirect_to"
     template_name="proces_producto/listar_producto.html"
     model=Producto
     context_object_name="producto"

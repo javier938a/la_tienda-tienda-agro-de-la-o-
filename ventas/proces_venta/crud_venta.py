@@ -1,5 +1,6 @@
 from django.views.generic import ListView, TemplateView, DetailView
 from ventas.models import Venta, DetalleVenta, DetalleVentaServicio, Sucursal, ProductoStockSucursal, User
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.http import JsonResponse
 from django.core.serializers import serialize
@@ -7,7 +8,9 @@ import json
 
 from escpos.printer import Usb
 
-class ViewCrearVenta(TemplateView):
+class ViewCrearVenta(LoginRequiredMixin, TemplateView):
+    login_url = '/ventas/login/'
+    redirect_field_name = 'redirect_to'
     template_name="proces_venta/crear_venta.html"
     def get_context_data(self, **kwargs):
         context=super(ViewCrearVenta, self).get_context_data(**kwargs)
@@ -15,7 +18,9 @@ class ViewCrearVenta(TemplateView):
         context['suc']=Sucursal.objects.filter(id=self.request.user.sucursal.id)
         return context
 
-class ViewDetalleVenta(DetailView):
+class ViewDetalleVenta(LoginRequiredMixin, DetailView):
+    login_url='/ventas/login/'
+    redirect_field_name='redirect_to'
     template_name="proces_venta/detalle_venta.html"
     model=Venta
     context_object_name="venta"
@@ -28,7 +33,10 @@ class ViewDetalleVenta(DetailView):
         context['detalle_venta_servicios']=detalle_venta_servicios
         return context
 
-class ListarVentas(ListView):
+class ListarVentas(LoginRequiredMixin, ListView):
+    login_url="/ventas/login/"
+    redirect_field_name="redirect_to"
+    
     template_name="proces_venta/listar_venta.html"
     model=Venta
     context_object_name="ventas"
