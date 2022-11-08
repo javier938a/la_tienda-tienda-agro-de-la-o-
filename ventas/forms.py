@@ -5,6 +5,7 @@ from django import forms
 from django.contrib.admin import widgets as wd
 from django.contrib.auth.forms import UserCreationForm
 from .models import User, Sucursal, Categoria, Producto, Presentacion, Proveedor, TipoUsuario
+from .models import AperturaCorte
 
 class TipoUsuarioForm(forms.ModelForm):
     class Meta:

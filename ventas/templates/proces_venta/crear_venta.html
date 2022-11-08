@@ -41,12 +41,6 @@
       <form action="">
         {% csrf_token %}
         <div class="row">            
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="">No de Documento</label>
-              <input class="form-control" type="text" name="no_documento" id="no_documento" value="">
-            </div>
-          </div>
           <div class="col-md-6 form-group">
             <select name="sucursal" id="sucursal" class="form-control " disabled>
               {% if suc %}

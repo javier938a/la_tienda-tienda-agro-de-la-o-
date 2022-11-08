@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% block extra-css %}
+      <link href="{% static 'assets/css/jquery-ui/jquery-ui.css' %}" rel="stylesheet">
+      <link href="{% static 'assets/css/select2/select2.css' %}" rel="stylesheet">
+      <link rel="stylesheet" href="{% static 'assets/css/toastr/toastr.css' %}">
+
+      <style>
+
+        </style>
+{% endblock %}
+
+{% block barra_superior %}
+
+{% endblock %}
+
+{# blocke para especificar los atributos del body y quitar la barra lateral #}
+{% block atributos_body %}
+        class="toggle-sidebar" {# este atributo quita el espacio de mas a la izquierda #}
+{% endblock %}
+
+{% block barra_lateral %}
+
+{% endblock %}
+
+{% block contenido %}
+  <div class="container">
+    <div class="card text-center">
+        <div class="card-header">
+          APERTURA DE CAJA
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">El corte anterior estubo a cargo de {{ usuario_anterior }}</h5>
+          <p class="card-text">Cuadro con <b>${{ monto_corte_anterior }}</b>.</p>
+        </div>
+        <div class="card-footer text-muted" id="mostrar_cuadratura">
+            
+        </div>
+      </div>
+    <section class="section">
+      <form action="">
+        {% csrf_token %}
+        <div class="row">     
+          <div class="col-md-6 form-group">
+            <label for="">Monto de Apertura</label>
+            <input class="form-control" type="text" name="descripcion" id="descripcion" value="{{ monto_corte_anterior }}" disabled>
+          </div>       
+          <div class="col-md-6 form-group">
+            <label for="">Monto en Caja</label>
+            <input class="form-control" type="text" name="descripcion" id="descripcion" value="">
+          </div>  
+        </div>
+        <div class="row">
+            <div class="col-md-6 form-group">
+                <label for="">Usuario</label>
+                <select name="sucursal" id="sucursal" class="form-control select">
+                  <option value="">Seleccione</option>
+    
+                    <option value="">No hay sucursales</option>
+                </select>
+              </div>
+          <div class="col-md-4 ">
+            <div class="form-group">
+              <label for="">Escriba un producto</label>
+              <input class="form-control" type="text" name="producto" id="producto" placeholder="Escriba un producto" value="">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+            <div class="col-md-9">
+
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <a  class="btn btn-success form-control" href="{% url 'store:list_carga_prod' %}">Crear apertura</a>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <div class="form-group">
+                    <a  class="btn btn-danger form-control" href="{% url 'store:list_apertura_corte' %}">Salir</a>
+                </div>
+            </div>
+        </div>
+      </form>
+    </section>
+  </div>
+{% endblock %}
+
+{% load static %}
+{% block extra-script %}
+    <script src="{% static 'assets/js/jquery-ui/jquery-ui.js' %}"></script>
+    <script src="{% static 'assets/js/jquery-mask/jquery.mask.js' %}"></script>
+    <script src="{% static 'assets/js/select2/select2.js' %}"></script>
+    <script src="{% static 'assets/js/toastr/toastr.min.js' %}"></script>
+    <script src="{% static 'assets/js/proces_apertura_corte/crear_apertura_corte.js' %}"></script>
+    
+{% endblock %}

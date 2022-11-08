@@ -387,6 +387,19 @@
               </ul>
             </li><!-- End Forms Nav -->
             <li class="nav-item">
+              <a class="nav-link collapsed" data-bs-target="#apertura-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-cash-coin"></i><span>Administrar Aperturas</span><i class="bi bi-chevron-down ms-auto"></i>
+              </a>
+              <ul id="apertura-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li class="nav-item">
+                  <a class="nav-link collapsed" href="{% url 'store:list_apertura_corte' %}">
+                    <i class="bi bi-card-list"></i>
+                    <span>Aperturas</span>
+                  </a>
+                </li><!-- End Register Page Nav -->
+              </ul>
+            </li><!-- End Forms Nav -->
+            <li class="nav-item">
               <a class="nav-link collapsed" data-bs-target="#ventas-nav" data-bs-toggle="collapse" href="#">
                 <i class="bi bi-shop"></i><span>Administrar Ventas</span><i class="bi bi-chevron-down ms-auto"></i>
               </a>

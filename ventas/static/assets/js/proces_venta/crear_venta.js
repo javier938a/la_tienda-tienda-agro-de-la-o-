@@ -148,11 +148,18 @@ $(document).ready(function(){
               if(res==true){
                 let fila_producto=data.fila_producto;
                 let id_prod_stock=data.id_prod_stock;
-     
-                console.log(fila_producto);
-                $("#table-productos-venta").prepend(fila_producto);//y se agrega la fila a la tabla
-                $("#codigo_barra").val("");
-                calcular_totales();
+                console.log("Este es el ID: "+id_prod_stock)
+                let detalle_productos=$("#table-productos-venta tr")
+                let esta_agregado=validar_producto_unico(detalle_productos, id_prod_stock);
+                if(esta_agregado){
+                    console.log(fila_producto);
+                    $("#table-productos-venta").prepend(fila_producto);//y se agrega la fila a la tabla
+                    $("#codigo_barra").val("");
+                    calcular_totales();
+                }else{
+                    $("#producto").val("");//limpiando el campo de producto
+                    toastr['error']("Este producto ya esta agregado en la venta, porfavor ingrese otro producto");
+                }
 
               }else{
                   //toastr['warning']("No existe el producto ó no este codigo de barra no se a asignado a un producto especifico.")
@@ -316,23 +323,18 @@ $(document).ready(function(){
     }
     let ticket=null;//esta variable es para cuando el usuario le de guardar a la venta almacene los datos de la venta devueltos
                     //para posteriormento imprimirlo en el evento del teclado
-    $("#efectuar_venta").click(function(evt){
-        console.log("Hola");
-        let no_documento=$("#no_documento").val();
-        console.log(no_documento.length);          
+    $("#efectuar_venta").click(function(evt){       
             let detalles_venta_prod=$("#table-productos-venta tr");
             let res_validad_detalles=validar_detalles_ventas(detalles_venta_prod);
             if(res_validad_detalles==false){///si resultado es igual false entonces es porque todos los campos de ingresar cantidades es correcto y hay al menos un producto ingresado
                 const csrftoken=getCookie("csrftoken");
                 let detalles_de_facturas=obtener_detalles_productos(detalles_venta_prod);
-                let numero_factura=$("#no_documento").val();
                 let total_iva=$("#total_iva").text().replace('$','');
                 let total_sin_iva=$("#total_sin_iva").text().replace('$', '');
                 let total=$("#total").text().replace('$','');         
                 let id_sucursal=$("#sucursal").val();
                 let datos={
                     csrfmiddlewaretoken:csrftoken,
-                    'numero_factura':numero_factura,
                     'id_sucursal':id_sucursal,
                     'total_iva':total_iva,
                     'total_sin_iva':total_sin_iva,
@@ -495,9 +497,9 @@ $(document).ready(function(){
     function validar_producto_unico(tabla, id){
         res=true;
         tabla.each(function(index){
-            id_producto_stock=$(this).find('.id_prod_stock').val();
+            let id_producto_stock=$(this).find('.id_prod_stock').val();
             
-            console.log("este es el id: "+id_prod_stock)
+            console.log("este es el id: "+id_producto_stock)
             if(id_producto_stock===id){
                res=false 
             }
