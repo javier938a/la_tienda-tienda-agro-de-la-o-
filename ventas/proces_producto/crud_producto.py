@@ -13,7 +13,8 @@ class CrearProducto(LoginRequiredMixin, CreateView):
     form_class=ProductoForm
     context_object_name="form"
     success_url=reverse_lazy("store:list_prod")
-    def get_context_data(self, **kwargs: any) -> dict[str, any]:
+
+    def get_context_data(self, **kwargs):
         context=super(CrearProducto, self).get_context_data(**kwargs)
         context['form'].fields['usuario'].empty_label=None #Eliminando el '------'
         context['form'].fields['usuario'].queryset=User.objects.filter(id=self.request.user.id)#filtrando que solo se muestre el usuario logiado
@@ -28,7 +29,7 @@ class EditarProducto(LoginRequiredMixin, UpdateView):
     context_object_name="form"
     success_url=reverse_lazy("store:list_prod")
 
-    def get_context_data(self, **kwargs: any) -> dict[str, any]:
+    def get_context_data(self, **kwargs):
         context=super(EditarProducto, self).get_context_data(**kwargs)
         context['form'].fields['usuario'].empty_label=None
         context['form'].fields['usuario'].queryset=User.objects.filter(id=self.request.user.id)

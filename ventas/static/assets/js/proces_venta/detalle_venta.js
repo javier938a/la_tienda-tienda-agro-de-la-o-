@@ -36,7 +36,8 @@ $(document).ready(function(){
                 if(resultado){                            
                     datos_ticket= JSON.stringify(data.datos_ticket);//se obtienen los datos luego hay que hacer otra peticion a donde se va imprimir el ticket
                     //console.log(datos_fact);
-                    let url_print_ticket=$("#url_print_ticket").val();
+                    //let url_print_ticket=$("#url_print_ticket").val();
+                    let url_print_ticket="http://127.0.0.1:8081/imprimir/"
                     const csrftoken=getCookie('csrftoken');
                     datos={
                         csrfmiddlewaretoken:csrftoken,

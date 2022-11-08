@@ -424,7 +424,8 @@ $(document).ready(function(){
         console.log(ticket);
         let num_tecla_enter=evt.which;
         if(num_tecla_enter===13){
-            url_print_ticket=$("#url_print_ticket").val();
+            //url_print_ticket=$("#url_print_ticket").val();
+            url_print_ticket="http://127.0.0.1:8081/imprimir/";
             const csrftoken=getCookie('csrftoken');
             let datos={
                         csrfmiddlewaretoken:csrftoken,

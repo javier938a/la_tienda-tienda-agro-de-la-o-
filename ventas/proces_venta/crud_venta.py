@@ -86,7 +86,7 @@ def agregar_producto_a_detalle_por_codigo(request):
         if int(existencia)>0:
             fila="<tr>"
             fila+="<td><input class='form-control id_prod_stock' value='"+str(producto_a_agregar.id)+"' disabled><input type='hidden' class='tipo_venta' value='producto' disabled></td>"
-            fila+="<td><input class='form-control' value='"+str(producto_a_agregar.producto)+"' disabled></td>"
+            fila+="<td><input class='form-control descrip' value='"+str(producto_a_agregar.producto)+"' disabled></td>"
             fila+="<td><input class='form-control' value='"+str(producto_a_agregar.presentacion)+"' disabled></td>"
             fila+="<td><input class='form-control cant' value='1'></td>"
             fila+="<td><input class='form-control pre' value='$"+str(producto_a_agregar.precio)+"' disabled></td>"
