@@ -202,7 +202,7 @@ $(document).ready(function(){
     function agregar_producto_detalle_venta(id_prod_stock){
         let url_add_prod_venta=$('#url_add_prod_venta').val();
         const csrftoken=getCookie('csrftoken');
-        datos={
+        let datos={
             csrfmiddlewaretoken:csrftoken,
             'id_prod_stock':id_prod_stock
         }
@@ -245,13 +245,14 @@ $(document).ready(function(){
         let cantidad= parseInt($(this).val());//obteniendo el total que se esta ingresando
         let precio=$(this).closest('tr').find('.pre').val().replace('$', '');//obtenendo el costo que esta en el canpo costo no se convierte porque pueda quee este vacio
                                         //closest devuelve el primer antecesor del elemento
-
+        
         if(!isNaN(cantidad)){//si el el campo costo no esta vacio verifica el stock de este producto y si hay en existencia multiplica el costo por el total
             //datos para calcular el stock en tiempo real
             let id_prod_stock=$(this).closest('tr').find('.id_prod_stock').val();//id del producto de la fila
+            
             const csrftoken=getCookie('csrftoken');
             let url_verificar_stock=$("#url_verificar_stock").val();//aqui se almacena la url que consulta el stock
-            datos_prod={
+            let datos_prod={
                         csrfmiddlewaretoken:csrftoken,
                         'id_prod_stock':id_prod_stock,//se le envia el id de producto stock ubicacion
             }
@@ -260,7 +261,7 @@ $(document).ready(function(){
             $.ajax({                  //que consulta el stock
                 url:url_verificar_stock,
                 type:'POST',
-                data:datos,
+                data:datos_prod,
                 dataType:'json',
                 success:function(data){
                     let cantidad_real=parseInt(data.cantidad_real);
@@ -309,7 +310,7 @@ $(document).ready(function(){
         let total_iva= redondear(total*0.13);
         $("#total_iva").text("$"+total_iva);
         //aqui iria el total sin iva
-        $("#total_sin_iva").text("$"+total);
+        $("#total_sin_iva").text("$"+redondear(total));
         let total_con_iva=total_iva+redondear(total);
         $("#total").text("$"+ redondear(total_con_iva));
     }

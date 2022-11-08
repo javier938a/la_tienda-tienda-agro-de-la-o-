@@ -134,6 +134,7 @@ def agregar_producto_detalle_venta(request):
 
 def verificar_stock_producto(request):
     id_prod_stock=request.POST.get('id_prod_stock')
+    print("Este es el id del producto "+str(id_prod_stock))
     producto_stock=ProductoStockSucursal.objects.get(id=id_prod_stock)
     cantidad_real=producto_stock.cantidad
     datos={
