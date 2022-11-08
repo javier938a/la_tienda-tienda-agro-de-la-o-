@@ -1,5 +1,6 @@
 from django.views.generic import ListView, TemplateView, DetailView
 from ventas.models import Venta, DetalleVenta, DetalleVentaServicio, Sucursal, ProductoStockSucursal, User
+from ventas.models import Correlativos
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.http import JsonResponse
@@ -144,6 +145,16 @@ def verificar_stock_producto(request):
 
 def efectuar_venta(request):
     res=False
+    #obteniendo el numero de correlativo actual
+    correlativos=Correlativos.objects.filter(nombre_documento="ticket")[0]
+    num_correlativo_actual=int(correlativos.numero_correlativo_actual)
+    #al numero correlativo actual se convierte en integer y posteriormente se le suma 1
+    nuevo_correlativo_entero=num_correlativo_actual + 1
+    #luego se convierte en cadena y se le agregan ceros a la izquierda 
+    nuevo_numero_correlativo=str(nuevo_correlativo_entero).zfill(8)
+    #luego actualizamos el numero correlativo actual en la tabla correlativos para que cuando se cree otro ticket agarre el ultimo correlativo generado
+    Correlativos.objects.filter(nombre_documento="ticket").update(numero_correlativo_actual=nuevo_numero_correlativo)
+    
     id_sucursal=request.POST.get('id_sucursal')
     sucursal=Sucursal.objects.get(id=id_sucursal)
     no_factura=request.POST.get('numero_factura')
@@ -152,7 +163,7 @@ def efectuar_venta(request):
     total=request.POST.get('total')
     destalles_de_ventas=json.loads(request.POST.get('detalles_de_facturas'))
     factura_objeto=Venta.objects.get_or_create(usuario=request.user, 
-                                        numero_factura=no_factura,
+                                        numero_factura=nuevo_numero_correlativo,
                                         sucursal=sucursal,
                                         total_iva=total_iva,
                                         total_sin_iva=total_sin_iva,

@@ -68,6 +68,13 @@ class Producto(models.Model):
         return "%s"%self.nombre_producto
 
 
+class Correlativos(models.Model):
+    nombre_documento=models.CharField(max_length=100, help_text="Ingrese el nombre del documento")
+    numero_correlativo_actual=models.CharField(max_length=100,help_text="Ingrese el numero de correlativo actual")
+    
+    def __str__(self):
+        return "%s --> %s"%(self.nombre_documento, self.numero_correlativo_actual)
+
 
 class Presentacion(models.Model):
     presentacion=models.CharField(max_length=50, help_text="Ingrese la presentacion")

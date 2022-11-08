@@ -319,8 +319,7 @@ $(document).ready(function(){
     $("#efectuar_venta").click(function(evt){
         console.log("Hola");
         let no_documento=$("#no_documento").val();
-        console.log(no_documento.length);
-        if(no_documento.length>0){            
+        console.log(no_documento.length);          
             let detalles_venta_prod=$("#table-productos-venta tr");
             let res_validad_detalles=validar_detalles_ventas(detalles_venta_prod);
             if(res_validad_detalles==false){///si resultado es igual false entonces es porque todos los campos de ingresar cantidades es correcto y hay al menos un producto ingresado
@@ -368,9 +367,7 @@ $(document).ready(function(){
             }else{
                 toastr['error']("Debe de ingresar al menos un producto y debe de ingresar todas las cantidades de todos los productos ingresados");
             }
-        }else{
-            toastr['error']("Debe de ingresar un numero de factura");
-        }
+
     });
 
     //calculando cambio

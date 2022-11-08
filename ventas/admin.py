@@ -3,6 +3,7 @@ from .models import TipoUsuario, User, Sucursal, Categoria, Presentacion, Produc
 from .models import Venta, DetalleVenta, DetalleVentaServicio, InventarioProductos, CargaProductos, DetalleCargaProductos
 from .models import DescargaProductos, DetalleDescargaProducto
 from .models import DevolucionVenta, DetalleDevolucionVenta
+from .models import Correlativos
 # Register your models here.
 
 admin.site.register(User)
@@ -23,3 +24,4 @@ admin.site.register(DetalleDescargaProducto)
 admin.site.register(DevolucionVenta)
 admin.site.register(DetalleVentaServicio)
 admin.site.register(DetalleDevolucionVenta)
+admin.site.register(Correlativos)
