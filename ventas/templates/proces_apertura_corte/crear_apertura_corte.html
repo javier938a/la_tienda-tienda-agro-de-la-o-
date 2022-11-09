@@ -35,7 +35,7 @@
           <p class="card-text">Cuadro con <b>${{ monto_corte_anterior }}</b>.</p>
         </div>
         <div class="card-footer text-muted" id="mostrar_cuadratura">
-            
+            <h5>Debe de contar el dinero en caja y contarlo y luego ingresar el monto para aperturar caja</h5>
         </div>
       </div>
     <section class="section">
@@ -43,29 +43,21 @@
         {% csrf_token %}
         <div class="row">     
           <div class="col-md-6 form-group">
-            <label for="">Monto de Apertura</label>
-            <input class="form-control" type="text" name="descripcion" id="descripcion" value="{{ monto_corte_anterior }}" disabled>
-          </div>       
-          <div class="col-md-6 form-group">
             <label for="">Monto en Caja</label>
-            <input class="form-control" type="text" name="descripcion" id="descripcion" value="">
-          </div>  
+            <input class="form-control" type="text" name="descripcion" id="monto_apertura" value="">
+          </div> 
+          <div class="col-md-6 form-group">
+            <label for="">Monto de Apertura</label>
+            <input class="form-control" type="text" name="descripcion" id="corte_anterior" value="{{ monto_corte_anterior }}" disabled>
+          </div>        
         </div>
         <div class="row">
             <div class="col-md-6 form-group">
                 <label for="">Usuario</label>
-                <select name="sucursal" id="sucursal" class="form-control select">
-                  <option value="">Seleccione</option>
-    
-                    <option value="">No hay sucursales</option>
+                <select name="usuario" id="usuario" class="form-control select" disabled>
+                    <option value="{{ user.pk }}" selected>{{ user.username }}</option>
                 </select>
               </div>
-          <div class="col-md-4 ">
-            <div class="form-group">
-              <label for="">Escriba un producto</label>
-              <input class="form-control" type="text" name="producto" id="producto" placeholder="Escriba un producto" value="">
-            </div>
-          </div>
         </div>
         <div class="row">
             <div class="col-md-9">
@@ -73,7 +65,7 @@
             </div>
             <div class="col-md-2">
                 <div class="form-group">
-                    <a  class="btn btn-success form-control" href="{% url 'store:list_carga_prod' %}">Crear apertura</a>
+                    <a  class="btn btn-success form-control" href="">Crear apertura</a>
                 </div>
             </div>
             <div class="col-md-1">

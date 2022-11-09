@@ -16,7 +16,11 @@ class CrearApertura(LoginRequiredMixin, TemplateView):
 
         context['usuario_anterior']=usuario_anterior
         context['monto_corte_anterior']=monto_corte_anterior
+        
         return context
+
+def proces_efectuar_apertura_caja(request):
+    pass
 
 class ListarAperturaCorte(LoginRequiredMixin, ListView):
     login_url="/ventas/login/"
