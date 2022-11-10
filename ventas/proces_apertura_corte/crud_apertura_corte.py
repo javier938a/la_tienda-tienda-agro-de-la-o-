@@ -10,8 +10,8 @@ class CrearApertura(LoginRequiredMixin, TemplateView):
     template_name="proces_apertura_corte/crear_apertura_corte.html"
     def get_context_data(self, **kwargs):
         context=super(CrearApertura, self).get_context_data(**kwargs)
-        if AperturaCorte.objects.filter(Q(ultima_apertura=True) & Q(usuario=self.request.user)).exists():
-            corte_anterior=AperturaCorte.objects.get(Q(ultima_apertura=True) & Q(usuario=self.request.user))
+        if AperturaCorte.objects.filter(Q(ultima_apertura=True) & Q(usuario__caja=self.request.user.caja)).exists():
+            corte_anterior=AperturaCorte.objects.get(Q(ultima_apertura=True) & Q(usuario__caja=self.request.user.caja))
             usuario_anterior=corte_anterior.usuario
             monto_corte_anterior=corte_anterior.monto_de_corte
             print(monto_corte_anterior)
