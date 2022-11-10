@@ -1,4 +1,13 @@
 {% extends "base.html" %}
+
+{% load static %}
+
+{% block extra-css %}
+      <link href="{% static 'assets/css/jquery-ui/jquery-ui.css' %}" rel="stylesheet">
+      <link href="{% static 'assets/css/select2/select2.css' %}" rel="stylesheet">
+      <link rel="stylesheet" href="{% static 'assets/css/toastr/toastr.css' %}">
+
+{% endblock %}
 {% block contenido %}
     <div class="pagetitle">
       <h1>Listar Ventas</h1>
@@ -17,7 +26,7 @@
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">Ventas</h5>
-              <a class="btn btn-primary pull-right" href="{% url 'store:crear_venta' %}">Crear Venta</a>
+              <button class="btn btn-primary pull-right" id="btn_crear_venta">Crear Venta</button>
               <!-- Table with stripped rows -->
               <table class="table datatable">
                 <thead>
@@ -60,7 +69,8 @@
                 </tbody>
               </table>
               <!-- End Table with stripped rows -->
-
+              <input type="hidden" name="url_verificar_apertura_activa_usuario" id="url_verificar_apertura_activa_usuario" value="{% url 'store:ver_ape_act_user' %}">
+              <input type="hidden" name="url_crear_venta" id="url_crear_venta" value="{% url 'store:crear_venta' %}">
             </div>
           </div>
 
@@ -73,5 +83,11 @@
 {% load static %}
 
 {% block extra-script %}
-    <script src="{% static 'assets/js/proces_venta/listar_venta.js' %}"></script>
-{% endblock %}
+
+  <script src="{% static 'assets/js/jquery-ui/jquery-ui.js' %}"></script>
+  <script src="{% static 'assets/js/jquery-mask/jquery.mask.js' %}"></script>
+  <script src="{% static 'assets/js/select2/select2.js' %}"></script>
+  <script src="{% static 'assets/js/toastr/toastr.min.js' %}"></script>
+  <script src="{% static 'assets/js/proces_venta/listar_venta.js' %}"></script>
+
+  {% endblock %}

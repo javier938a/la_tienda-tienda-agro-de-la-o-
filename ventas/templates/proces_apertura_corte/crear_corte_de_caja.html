@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% block extra-css %}
+      <link href="{% static 'assets/css/jquery-ui/jquery-ui.css' %}" rel="stylesheet">
+      <link href="{% static 'assets/css/select2/select2.css' %}" rel="stylesheet">
+      <link rel="stylesheet" href="{% static 'assets/css/toastr/toastr.css' %}">
+
+      <style>
+
+        </style>
+{% endblock %}
+
+{% block barra_superior %}
+
+{% endblock %}
+
+{# blocke para especificar los atributos del body y quitar la barra lateral #}
+{% block atributos_body %}
+        class="toggle-sidebar" {# este atributo quita el espacio de mas a la izquierda #}
+{% endblock %}
+
+{% block barra_lateral %}
+
+{% endblock %}
+
+{% block contenido %}
+  <div class="container">
+    <div class="card text-center">
+        <div class="card-header">
+          CORTE DE CAJA
+        </div>
+        <div class="card-body">
+
+            <h5 class="card-title">Monto de Apertura: ${{ monto_de_apertura }}</h5>
+            <h5 class="card-title">Monto total de las ventas realizadas: ${{ suma_ventas_apertura }} <b></b></h5>
+
+            <h5 class="card-title">Monto en caja: ${{ monto_en_caja }} </h5>
+            <p class="card-text"></b></p>
+
+        </div>
+        <div class="card-footer text-muted">
+            <h5 class="card-title" id="mostrar_cuadratura"></h5>
+        </div>
+      </div>
+    <section class="section">
+      <form action="">
+        {% csrf_token %}
+        <div class="row">     
+          <div class="col-md-6 form-group">
+            <label for="">Ingrese el monto que debe de tener en caja</label>
+            <input class="form-control" type="text" name="monto_real_en_caja" id="monto_real_en_caja" value="">
+          </div>     
+        </div>
+        <div class="row">
+            <div class="col-md-6 form-group">
+                <label for="">Usuario responsable</label>
+                <select name="usuario" id="usuario" class="form-control select" disabled>
+                    <option value="{{ apertura.user.pk }}" selected>{{ apertura.usuario }}</option>
+                </select>
+              </div>
+        </div>
+        <div class="row">
+            <div class="col-md-9">
+
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                  <button class="btn btn-success form-control" id="btn_efectuar_apertura">Realizar Corte</button>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <div class="form-group">
+                    <a  class="btn btn-danger form-control" href="{% url 'store:list_apertura_corte' %}">Salir</a>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" name="monto_que_debe_haber_en_caja" id="monto_que_debe_haber_en_caja" value="{{ monto_en_caja  }}">
+      </form>
+    </section>
+  </div>
+{% endblock %}
+
+{% load static %}
+{% block extra-script %}
+    <script src="{% static 'assets/js/jquery-ui/jquery-ui.js' %}"></script>
+    <script src="{% static 'assets/js/jquery-mask/jquery.mask.js' %}"></script>
+    <script src="{% static 'assets/js/select2/select2.js' %}"></script>
+    <script src="{% static 'assets/js/toastr/toastr.min.js' %}"></script>
+    <script src="{% static 'assets/js/proces_apertura_corte/crear_corte_de_caja.js' %}"></script>
+    
+{% endblock %}

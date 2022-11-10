@@ -69,7 +69,7 @@
                                         <ul class="dropdown-menu">
                                           
                                           {% if apcaja.estado_de_apertura == True and apcaja.usuario.caja.numero_de_caja == user.caja.numero_de_caja %}
-                                            <li><a class="dropdown-item" href="">Hacer corte</a></li>
+                                            <li><a class="dropdown-item" href="{% url 'store:realizar_corte' apcaja.id %}">Hacer corte</a></li>
                                           {% endif %}
                                         </ul>
                                     </div>

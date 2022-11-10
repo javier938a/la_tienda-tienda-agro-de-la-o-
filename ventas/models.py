@@ -158,10 +158,24 @@ class ProductoStockSucursal(models.Model):
     def __str__(self) -> str:
         return "%s -> %s"%(str(self.sucursal), self.producto)
 
-        
+class AperturaCorte(models.Model):
+    usuario=models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    fecha_de_apertura=models.DateTimeField(help_text="fecha y hora de apertura se generara automaticamente porque se registra el mismo momento que se habre apertura" ,auto_now=True)
+    monto_de_apertura=models.FloatField(help_text="Ingrese el monto de apertura de su turno")
+    monto_de_corte=models.FloatField(help_text="Ingrese el monto de corte de su turno", null=True,blank=True)
+    fecha_de_corte=models.DateTimeField(help_text="Ingrese la fecha que se realizara el corte", null=True,blank=True)
+    estado_de_apertura=models.BooleanField(help_text="Estado de la apertura, servira para saber si hay una apertura activa para empezar a vender")
+    ultima_apertura=models.BooleanField(help_text="Este estado servira para saber si es la ultima apertura", null=True)
+    diferencia=models.FloatField(help_text="Sirve para agregar alguna diferencia que haya en este el corte", blank=True, null=True)
+    observacion=models.TextField(help_text="Servira para agregarle una observaciones en las aperturas", blank=True, null=True)
+    def __str__(self):
+        return  "Apertura del Usuario %s estado %s "%(self.usuario, str(self.estado_de_apertura))
+
+
 class Venta(models.Model):
     fecha_venta=models.DateTimeField(help_text="Ingrese la fecha de la venta", auto_now=True)
     usuario=models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    apertura_corte=models.ForeignKey(AperturaCorte, on_delete=models.SET_NULL, null=True)
     numero_factura=models.CharField(help_text="Ingrese el numero de factura", max_length=50, null=True)
     sucursal=models.ForeignKey(Sucursal, on_delete=models.SET_NULL, null=True)
     total_iva=models.FloatField(help_text="Total resultante de multiplicar el total por el procentaje de iva", null=True)
@@ -171,16 +185,6 @@ class Venta(models.Model):
     def __str__(self):
         return "Factura N# %s | Total: %s"%(self.numero_factura, self.total_con_iva)
 
-class AperturaCorte(models.Model):
-    usuario=models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    fecha_de_apertura=models.DateTimeField(help_text="fecha y hora de apertura se generara automaticamente porque se registra el mismo momento que se habre apertura" ,auto_now=True)
-    monto_de_apertura=models.FloatField(help_text="Ingrese el monto de apertura de su turno")
-    monto_de_corte=models.FloatField(help_text="Ingrese el monto de corte de su turno", null=True,blank=True)
-    fecha_de_corte=models.DateTimeField(help_text="Ingrese la fecha que se realizara el corte", null=True,blank=True)
-    estado_de_apertura=models.BooleanField(help_text="Estado de la apertura, servira para saber si hay una apertura activa para empezar a vender")
-    ultima_apertura=models.BooleanField(help_text="Este estado servira para saber si es la ultima apertura", null=True)
-    def __str__(self):
-        return  "Apertura del Usuario %s estado %s "%(self.usuario, str(self.estado_de_apertura))
 
 class DetalleVentaServicio(models.Model):
     factura=models.ForeignKey(Venta, on_delete=models.SET_NULL, null=True)
@@ -192,7 +196,6 @@ class DetalleVentaServicio(models.Model):
 
 class DetalleVenta(models.Model):
     factura=models.ForeignKey(Venta, on_delete=models.SET_NULL, null=True)
-    apertura_corte=models.ForeignKey(AperturaCorte, on_delete=models.SET_NULL, null=True)
     producto_stock=models.ForeignKey(ProductoStockSucursal, on_delete=models.SET_NULL, null=True)
     cantidad=models.IntegerField(help_text="Ingrese la cantidad a comprar")
     precio=models.FloatField(help_text="Ingrese el precio del producto", null=True)
