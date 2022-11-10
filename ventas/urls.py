@@ -17,7 +17,8 @@ from .views import ListarInventario, ViewCrearInventario, ViewEditarInventario, 
 from .views import guardar_datos_inventario, actualizar_datos_inventario, update_producto_detalle, DetalleInventario
 from .views import ListarVentas, ViewCrearVenta, ViewDetalleVenta, verificar_stock_producto, obtener_productos_inventario_autocomplete, agregar_producto_detalle_venta, efectuar_venta
 from .views import ListarDevolucionesVentas, ViewCrearDevolucionVenta, ViewDetalleDevolucion, obtener_ventas_autocomplete, listar_productos_de_venta, efectuar_devolucion_venta
-from .views import ListarAperturaCorte, CrearApertura
+from .views import ListarAperturaCorte, CrearApertura, proces_efectuar_apertura_caja, proces_verificar_si_hay_apertura_de_caja
+from .views import ListarCajas, CrearCaja, EditarCaja, EliminarCaja
 from .views import agregar_producto_a_detalle_por_codigo
 from .views import imprimir_ticket, Obtener_ticket
 from .views import ViewSelectReporteVentas, PrintViewReporteVentas
@@ -96,8 +97,14 @@ urlpatterns = [
     path('devolucion/detalle_devolucion/<int:pk>', ViewDetalleDevolucion.as_view(), name='detalle_dev'),
     path('devoluciones/obtener_ventas_autocomplete', obtener_ventas_autocomplete, name="auto_ventas_list"),
     path('devoluciones/listar_productos_de_venta', listar_productos_de_venta, name="list_prod_de_venta"),
+    path('cajas/', ListarCajas.as_view(), name="list_caja"),
+    path('cajas/crear_caja', CrearCaja.as_view(), name="crear_caja"),
+    path('cajas/editar_caja/<int:pk>', EditarCaja.as_view(), name="edit_caja"),
+    path('cajas/eliminar_caja/<int:pk>', EliminarCaja.as_view(), name="del_caja"),
     path('apertura_corte/', ListarAperturaCorte.as_view(), name="list_apertura_corte"),
     path('apertura_corte/crear_apertura_corte', CrearApertura.as_view(), name="crear_apertura"),
+    path('apertura_corte/efectuar_apertura', proces_efectuar_apertura_caja, name="efect_ape"),
+    path('apertura_corte/verificar_apertura_caja', proces_verificar_si_hay_apertura_de_caja, name="verificar_apertura_activa"),
     path('reporte/select_reporte_ventas', ViewSelectReporteVentas.as_view(), name="reporte_venta_view"),
     path('reporte/print_reporte_venta', PrintViewReporteVentas.as_view(), name="print_report_venta"),
     path('reporte/grafico_reporte', grafico_reporte_ventas, name="url_grafico"),

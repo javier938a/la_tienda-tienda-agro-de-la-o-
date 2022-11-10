@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 
+{% load static %}
+{% block extra-css %}
+      <link href="{% static 'assets/css/jquery-ui/jquery-ui.css' %}" rel="stylesheet">
+      <link href="{% static 'assets/css/select2/select2.css' %}" rel="stylesheet">
+      <link rel="stylesheet" href="{% static 'assets/css/toastr/toastr.css' %}">
+{% endblock %}
+
 {% block contenido %}
     <div class="pagetitle">
       <h1>Aperturas de Caja</h1>
@@ -18,15 +25,17 @@
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">Aperturas de caja</h5>
-              <a class="btn btn-primary pull-right" href="{% url 'store:crear_apertura' %}">Crear Apertura</a>
+              <button class="btn btn-primary pull-right" id="btn_nueva_apertura">Crear Apertura</button>
               <!-- Table with stripped rows -->
               <table class="table datatable">
                 <thead>
                   <tr>
                     <th scope="col">ID</th>
+                    <th scope="col">Caja</th>
                     <th scope="col">Usuario</th>
                     <th scope="col">Fecha de Apertura</th>
                     <th scope="col">Monto de Apertura</th>
+                    <th scope="col">Fecha de Corte</th>
                     <th scope="col">Monto de Corte</th>
                     <th scope="col">Estado de Apertura</th>
                     <th scope="col" colspan="2">Acciones</th>
@@ -37,11 +46,16 @@
                         {% for apcaja in apertura_caja %}
                             <tr>                    
                                 <th scope="row">{{ apcaja.id }}</th>
+                                <td>{{ apcaja.usuario.caja }}</td>
                                 <td>{{ apcaja.usuario }}</td>
                                 <td>{{ apcaja.fecha_de_apertura }}</td>
                                 <td>{{ apcaja.monto_de_apertura }}</td>
                                 <td>{{ apcaja.monto_de_corte }}</td>
-                                <td>{{ apcaja.fecha_de_corte }}</td>
+                                {% if apcaja.fecha_de_corte == None %}
+                                  <td>No hay corte</td>
+                                {% else %}
+                                  <td>{{ apcaja.fecha_de_corte }}</td>
+                                {% endif %}
                                 {% if apcaja.estado_de_apertura == True %}
                                     <td>Activo</td>
                                 {% else %}
@@ -53,8 +67,10 @@
                                             Action
                                         </button>
                                         <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="">Editar</a></li>
-                                            <li><a class="dropdown-item" href="">Eliminar</a></li>
+                                          
+                                          {% if apcaja.estado_de_apertura == True and apcaja.usuario.caja.numero_de_caja == user.caja.numero_de_caja %}
+                                            <li><a class="dropdown-item" href="">Hacer corte</a></li>
+                                          {% endif %}
                                         </ul>
                                     </div>
                                 </td>
@@ -68,6 +84,8 @@
               <!-- End Table with stripped rows -->
 
             </div>
+            <input type="hidden" name="url_verificar_apertura_caja_activa" id="url_verificar_apertura_caja_activa" value="{% url 'store:verificar_apertura_activa' %}">
+            <input type="hidden" name="url_crear_apertura" id="url_crear_apertura" value="{% url 'store:crear_apertura' %}">
           </div>
 
         </div>
@@ -79,5 +97,9 @@
 {% load static %}
 
 {% block extra-script %}
-    
+<script src="{% static 'assets/js/jquery-ui/jquery-ui.js' %}"></script>
+<script src="{% static 'assets/js/jquery-mask/jquery.mask.js' %}"></script>
+<script src="{% static 'assets/js/select2/select2.js' %}"></script>
+<script src="{% static 'assets/js/toastr/toastr.min.js' %}"></script>
+<script src="{% static 'assets/js/proces_apertura_corte/listar_apertura_corte.js' %}"></script>
 {% endblock %}

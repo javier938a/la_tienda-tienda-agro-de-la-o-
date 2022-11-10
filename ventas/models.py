@@ -21,11 +21,17 @@ class TipoUsuario(models.Model):
 
     def __str__(self):
         return self.tipo_usuario
+class Caja(models.Model):
+    numero_de_caja=models.CharField(help_text="Ingrese el numero",max_length=100)
+
+    def __str__(self):
+        return "%s"%self.numero_de_caja
 
 class User(AbstractUser):
     objects=UserManager()
     sucursal=models.ForeignKey(Sucursal, on_delete=models.SET_NULL, null=True)
     tipo_usuario=models.ForeignKey(TipoUsuario, help_text="Ingrese el tipo de Usuario", on_delete=models.SET_NULL, null=True)
+    caja=models.ForeignKey(Caja, on_delete=models.SET_NULL, null=True)
     fecha_nacimiento=models.DateField(null=True, blank=True, help_text="Ingrese la fecha de nacimiento")
     telefono=models.CharField(max_length=11, help_text="Ingrese su numero de telefono", null=True, blank=True)
     dui=models.CharField(max_length=10, help_text="Ingrese el numero de dui", null=True, blank=True)
@@ -172,7 +178,7 @@ class AperturaCorte(models.Model):
     monto_de_corte=models.FloatField(help_text="Ingrese el monto de corte de su turno", null=True,blank=True)
     fecha_de_corte=models.DateTimeField(help_text="Ingrese la fecha que se realizara el corte", null=True,blank=True)
     estado_de_apertura=models.BooleanField(help_text="Estado de la apertura, servira para saber si hay una apertura activa para empezar a vender")
-    
+    ultima_apertura=models.BooleanField(help_text="Este estado servira para saber si es la ultima apertura", null=True)
     def __str__(self):
         return  "Apertura del Usuario %s estado %s "%(self.usuario, str(self.estado_de_apertura))
 

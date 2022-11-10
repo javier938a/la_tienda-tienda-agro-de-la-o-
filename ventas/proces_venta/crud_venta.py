@@ -1,6 +1,7 @@
 from django.views.generic import ListView, TemplateView, DetailView
 from ventas.models import Venta, DetalleVenta, DetalleVentaServicio, Sucursal, ProductoStockSucursal, User
 from ventas.models import Correlativos
+from ventas.models import AperturaCorte
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.http import JsonResponse
@@ -149,6 +150,7 @@ def efectuar_venta(request):
     correlativos=Correlativos.objects.filter(nombre_documento="ticket")[0]
     num_correlativo_actual=int(correlativos.numero_correlativo_actual)
     #al numero correlativo actual se convierte en integer y posteriormente se le suma 1
+    
     nuevo_correlativo_entero=num_correlativo_actual + 1
     #luego se convierte en cadena y se le agregan ceros a la izquierda 
     nuevo_numero_correlativo=str(nuevo_correlativo_entero).zfill(8)
@@ -157,7 +159,6 @@ def efectuar_venta(request):
     
     id_sucursal=request.POST.get('id_sucursal')
     sucursal=Sucursal.objects.get(id=id_sucursal)
-    no_factura=request.POST.get('numero_factura')
     total_iva=request.POST.get('total_iva')
     total_sin_iva=request.POST.get('total_sin_iva')
     total=request.POST.get('total')
@@ -173,6 +174,10 @@ def efectuar_venta(request):
     resutado_venta=factura_objeto[1]
     cuenta_prod=0
     print(factura_objeto)
+    #aqui se obtendria la apertura de esta cajero y se le asignaria a cada venta que ralize, cuando se haga un corte se obtendria 
+    #la suma de todos esos producto que tienen asignada esta apertura el total mas la apertura seria el monto total que deberia tener en caja
+    #y eso se registraria en el campor de monto de corte de la tabla Apertura corte
+    apertura_corte=AperturaCorte.objects.get(Q(usuario=request.user) & Q(estado_de_apertura=True))
     if(resutado_venta==True):
         for prod_stock in destalles_de_ventas:
             
@@ -186,6 +191,7 @@ def efectuar_venta(request):
                 producto_stock=ProductoStockSucursal.objects.get(id=id_prod_stock)
                 DetalleVenta.objects.create(
                     factura=factura,
+                    apertura_corte=apertura_corte,
                     producto_stock=producto_stock,
                     cantidad=cantidad,
                     precio=precio,

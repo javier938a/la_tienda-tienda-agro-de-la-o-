@@ -225,7 +225,8 @@
                 {% if user.is_authenticated %}
                   <li class="dropdown-header">
                     <h6>{{ user.username }}</h6>
-                    <span>{{ user.sucursal }}</span>
+                    <span>{{ user.sucursal }}</span><br>
+                    <span>{{ user.caja }}</span>
                   </li>
                   <li>
                     <hr class="dropdown-divider">
@@ -322,7 +323,19 @@
                 </li><!-- End Register Page Nav -->
               </ul>
             </li><!-- End Forms Nav -->
-            
+            <li class="nav-item">
+              <a class="nav-link collapsed" data-bs-target="#caja-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-wallet2"></i><span>Administrar Caja</span><i class="bi bi-chevron-down ms-auto"></i>
+              </a>
+              <ul id="caja-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li class="nav-item">
+                  <a class="nav-link collapsed" href="{% url 'store:list_caja' %}">
+                    <i class="bi bi-card-list"></i>
+                    <span>Cajas</span>
+                  </a>
+                </li><!-- End Register Page Nav -->
+              </ul>
+            </li><!-- End Forms Nav -->
             <li class="nav-item">
               <a class="nav-link collapsed" data-bs-target="#sucursal-nav" data-bs-toggle="collapse" href="#">
                 <i class="bi bi-building"></i><span>Administrar Sucursales</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -382,19 +395,6 @@
                   <a class="nav-link collapsed" href="{% url 'store:list_inv' %}">
                     <i class="bi bi-card-list"></i>
                     <span>Inventario</span>
-                  </a>
-                </li><!-- End Register Page Nav -->
-              </ul>
-            </li><!-- End Forms Nav -->
-            <li class="nav-item">
-              <a class="nav-link collapsed" data-bs-target="#apertura-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-cash-coin"></i><span>Administrar Aperturas</span><i class="bi bi-chevron-down ms-auto"></i>
-              </a>
-              <ul id="apertura-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                <li class="nav-item">
-                  <a class="nav-link collapsed" href="{% url 'store:list_apertura_corte' %}">
-                    <i class="bi bi-card-list"></i>
-                    <span>Aperturas</span>
                   </a>
                 </li><!-- End Register Page Nav -->
               </ul>
@@ -480,6 +480,19 @@
             </li><!-- End Forms Nav -->
 
           {% endif %}
+          <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#apertura-nav" data-bs-toggle="collapse" href="#">
+              <i class="bi bi-cash-coin"></i><span>Administrar Aperturas</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="apertura-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+              <li class="nav-item">
+                <a class="nav-link collapsed" href="{% url 'store:list_apertura_corte' %}">
+                  <i class="bi bi-card-list"></i>
+                  <span>Aperturas</span>
+                </a>
+              </li><!-- End Register Page Nav -->
+            </ul>
+          </li><!-- End Forms Nav -->
         </ul>
       {% endif %}
 

@@ -3,7 +3,9 @@ $(document).ready(function(){
     $("#id_fecha_nacimiento").datepicker({
         dateFormat:'yy-mm-dd',
     });
+    $("#id_caja").select2();
     $("#id_sucursal").select2();
+    $("#id_tipo_usuario").select2();
     //enmascarando todos los input con jquery-mask
     $("#id_fecha_nacimiento").mask("0000-00-00");
     $("#id_telefono").mask("0000-0000");

@@ -18,7 +18,9 @@ from ventas.proces_venta.crud_venta import agregar_producto_a_detalle_por_codigo
 from ventas.proces_reportes.reportes import  ViewSelectReporteVentas ,PrintViewReporteVentas
 from ventas.proces_reportes.reportes import grafico_reporte_ventas
 from ventas.proces_devoluciones_venta.crud_devoluciones_venta import ListarDevolucionesVentas, ViewCrearDevolucionVenta, ViewDetalleDevolucion, obtener_ventas_autocomplete, listar_productos_de_venta, efectuar_devolucion_venta
-from ventas.proces_apertura_corte.crud_apertura_corte import ListarAperturaCorte, CrearApertura
+from ventas.proces_apertura_corte.crud_apertura_corte import ListarAperturaCorte, CrearApertura, proces_efectuar_apertura_caja, proces_verificar_si_hay_apertura_de_caja
+from ventas.proces_caja.crud_caja import ListarCajas,CrearCaja, EditarCaja, EliminarCaja
+
 # Create your views here.
 
 from django.db.models import Sum

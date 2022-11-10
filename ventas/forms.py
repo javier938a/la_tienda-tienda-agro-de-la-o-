@@ -5,7 +5,7 @@ from django import forms
 from django.contrib.admin import widgets as wd
 from django.contrib.auth.forms import UserCreationForm
 from .models import User, Sucursal, Categoria, Producto, Presentacion, Proveedor, TipoUsuario
-from .models import AperturaCorte
+from .models import AperturaCorte, Caja
 
 class TipoUsuarioForm(forms.ModelForm):
     class Meta:
@@ -18,13 +18,14 @@ class TipoUsuarioForm(forms.ModelForm):
 class UserForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ('username','email', 'first_name','last_name','sucursal', 'tipo_usuario','fecha_nacimiento', 'telefono', 'dui', 'nit')
+        fields = ('username','email', 'first_name','last_name','sucursal','caja', 'tipo_usuario','fecha_nacimiento', 'telefono', 'dui', 'nit')
         labels={
             'username':'Nombre de Usuario',
             'email':'Correo',
             'first_name':'Nombres',
             'last_name':'Apellidos',
             'sucursal':'Sucursal',
+            'caja':'No de Caja',
             'tipo_usuario':'Tipo de Usuario',
             'fecha_nacimiento':'Fecha de Nacimiento',
             'telefono':'telefono',
@@ -83,4 +84,12 @@ class PresentacionForm(forms.ModelForm):
         fields=('presentacion',)
         labels={
             'presentacion':'Presentacion'
+        }
+
+class CajaForm(forms.ModelForm):
+    class Meta:
+        model=Caja
+        fields=('numero_de_caja',)
+        labels={
+            'numero_de_caja':'Numero de caja'
         }

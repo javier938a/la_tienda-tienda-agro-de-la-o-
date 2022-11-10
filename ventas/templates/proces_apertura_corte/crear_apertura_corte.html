@@ -31,11 +31,16 @@
           APERTURA DE CAJA
         </div>
         <div class="card-body">
-          <h5 class="card-title">El corte anterior estubo a cargo de {{ usuario_anterior }}</h5>
-          <p class="card-text">Cuadro con <b>${{ monto_corte_anterior }}</b>.</p>
+          {% if usuario_anterior != "ninguno" %}
+            <h5 class="card-title">El corte anterior estubo a cargo de {{ usuario_anterior }}</h5>
+            <p class="card-text">Cuadro con <b>${{ monto_corte_anterior }}</b></p>
+          {% else %}
+            <h5 class="card-title">Aun no se ha realizado ninguna apertura de caja para {{ user.caja }}</h5>
+            <p class="card-text"></b></p>
+          {% endif %}
         </div>
         <div class="card-footer text-muted" id="mostrar_cuadratura">
-            <h5>Debe de contar el dinero en caja y contarlo y luego ingresar el monto para aperturar caja</h5>
+            <h5></h5>
         </div>
       </div>
     <section class="section">
@@ -65,7 +70,7 @@
             </div>
             <div class="col-md-2">
                 <div class="form-group">
-                    <a  class="btn btn-success form-control" href="">Crear apertura</a>
+                  <button class="btn btn-success form-control" id="btn_efectuar_apertura">Crear Apertura</button>
                 </div>
             </div>
             <div class="col-md-1">
@@ -74,6 +79,14 @@
                 </div>
             </div>
         </div>
+        {% comment %}
+          estado_primera_vez servira para saber si el usuario es primera apertura que va realizar se le asigna el valor de ninguno porque quiere decir que va empezar con un monto que no corresponde
+          a ningun corte anterior
+        {% endcomment %} 
+        <input type="hidden" name="estado_primeravez" id="estado_primeravez" value="{{ usuario_anterior }}">
+        <input type="hidden" name="url_efectuar_apertura" id="url_efectuar_apertura" value="{% url 'store:efect_ape' %}">
+        <input type="hidden" name="url_listar_apertura_corte" id="url_listar_apertura_corte" value="{% url 'store:list_apertura_corte' %}">
+        <input type="hidden" name="diferencia_oculta" id="diferencia_oculta" value="">
       </form>
     </section>
   </div>
