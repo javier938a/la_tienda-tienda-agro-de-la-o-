@@ -27,62 +27,69 @@
               <h5 class="card-title">Aperturas de caja</h5>
               <button class="btn btn-primary pull-right" id="btn_nueva_apertura">Crear Apertura</button>
               <!-- Table with stripped rows -->
-              <table class="table datatable">
-                <thead>
-                  <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Caja</th>
-                    <th scope="col">Usuario</th>
-                    <th scope="col">Fecha de Apertura</th>
-                    <th scope="col">Monto de Apertura</th>
-                    <th scope="col">Fecha de Corte</th>
-                    <th scope="col">Monto de Corte</th>
-                    <th scope="col">Estado de Apertura</th>
-                    <th scope="col" colspan="2">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                    {% if apertura_caja %}
-                        {% for apcaja in apertura_caja %}
-                            <tr>                    
-                                <th scope="row">{{ apcaja.id }}</th>
-                                <td>{{ apcaja.usuario.caja }}</td>
-                                <td>{{ apcaja.usuario }}</td>
-                                <td>{{ apcaja.fecha_de_apertura }}</td>
-                                <td>{{ apcaja.monto_de_apertura }}</td>
-                                <td>{{ apcaja.monto_de_corte }}</td>
-                                {% if apcaja.fecha_de_corte == None %}
-                                  <td>No hay corte</td>
-                                {% else %}
-                                  <td>{{ apcaja.fecha_de_corte }}</td>
-                                {% endif %}
-                                {% if apcaja.estado_de_apertura == True %}
-                                    <td>Activo</td>
-                                {% else %}
-                                    <td>Finalizado</td>
-                                {% endif %}
-                                <td>
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                            Action
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                          
-                                          {% if apcaja.estado_de_apertura == True and apcaja.usuario.caja.numero_de_caja == user.caja.numero_de_caja %}
-                                            <li><a class="dropdown-item" href="{% url 'store:realizar_corte' apcaja.id %}">Hacer corte</a></li>
-                                          {% endif %}
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    {% else %}
-                        <p>No hay registros que mostrar</p>
-                  {% endif %}
-                </tbody>
-              </table>
-              <!-- End Table with stripped rows -->
-
+              <div class="table-responsive">
+                <table class="table datatable">
+                  <thead>
+                    <tr>
+                      <th scope="col">ID</th>
+                      <th scope="col">Caja</th>
+                      <th scope="col">Usuario</th>
+                      <th scope="col">Fecha de Apertura</th>
+                      <th scope="col">Monto de Apertura</th>
+                      <th scope="col">Diferencia de apertura</th>
+                      <th scope="col">Fecha de Corte</th>
+                      <th scope="col">Monto de Corte</th>
+                      <th scope="col">Diferencia de corte</th>
+                      <th scope="col">Estado de Apertura</th>
+                      <th scope="col" colspan="2">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                      {% if apertura_caja %}
+                          {% for apcaja in apertura_caja %}
+                              <tr>                    
+                                  <th scope="row">{{ apcaja.id }}</th>
+                                  <td>{{ apcaja.usuario.caja }}</td>
+                                  <td>{{ apcaja.usuario }}</td>
+                                  <td>{{ apcaja.fecha_de_apertura }}</td>
+                                  <td>{{ apcaja.monto_de_apertura }}</td>
+                                  <td>{{ apcaja.diferencia_de_apertura}}</td>
+                                  
+                                  
+                                  {% if apcaja.fecha_de_corte == None %}
+                                    <td>No hay corte</td>
+                                  {% else %}
+                                    <td>{{ apcaja.fecha_de_corte }}</td>
+                                  {% endif %}
+                                  <td>{{ apcaja.monto_de_corte}}</td>
+                                  <td>{{ apcaja.diferencia_de_corte }}</td>
+                                  {% if apcaja.estado_de_apertura == True %}
+                                      <td>Activo</td>
+                                  {% else %}
+                                      <td>Finalizado</td>
+                                  {% endif %}
+                                  <td>
+                                      <div class="btn-group">
+                                          <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                              Action
+                                          </button>
+                                          <ul class="dropdown-menu">
+                                            
+                                            {% if apcaja.estado_de_apertura == True and apcaja.usuario.caja.numero_de_caja == user.caja.numero_de_caja %}
+                                              <li><a class="dropdown-item" href="{% url 'store:realizar_corte' apcaja.id %}">Hacer corte</a></li>
+                                            {% endif %}
+                                          </ul>
+                                      </div>
+                                  </td>
+                              </tr>
+                          {% endfor %}
+                      {% else %}
+                          <p>No hay registros que mostrar</p>
+                    {% endif %}
+                  </tbody>
+                </table>
+                <!-- End Table with stripped rows -->
+              </div>
             </div>
             <input type="hidden" name="url_verificar_apertura_caja_activa" id="url_verificar_apertura_caja_activa" value="{% url 'store:verificar_apertura_activa' %}">
             <input type="hidden" name="url_crear_apertura" id="url_crear_apertura" value="{% url 'store:crear_apertura' %}">

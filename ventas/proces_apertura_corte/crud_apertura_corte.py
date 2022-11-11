@@ -3,6 +3,7 @@ from ventas.models import AperturaCorte, Venta
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q, Sum
 from django.http import JsonResponse
+import django.utils.timezone as timezone
 
 class CrearApertura(LoginRequiredMixin, TemplateView):
     login_url="/ventas/login/"
@@ -36,6 +37,9 @@ class ViewRealizarCorteCaja(LoginRequiredMixin, TemplateView):
         monto_de_apertura=apertura.monto_de_apertura
         suma_ventas_apertura=suma_venta_de_esta_apertura['total_con_iva__sum']
         print("Suma")
+        if suma_ventas_apertura == None:
+            suma_ventas_apertura=0.0
+        print(suma_ventas_apertura)
         print(type(suma_venta_de_esta_apertura))
         monto_en_caja=float(monto_de_apertura)+float(suma_ventas_apertura)
         print("Monto en caja: "+str(monto_en_caja))
@@ -48,9 +52,42 @@ class ViewRealizarCorteCaja(LoginRequiredMixin, TemplateView):
         print("Total de todas las ventas realizadas "+str(suma_venta_de_esta_apertura['total_con_iva__sum']))
         return context
 
+def efectuar_corte_de_caja(request):
+    id_apertura=request.POST.get('id_apertura')
+    monto_de_corte=float(request.POST.get('monto_de_corte'))
+    diferencia_de_corte=float(request.POST.get('diferencia_de_corte'))
+    observacion=""
+    fecha_y_hora_de_corte=timezone.now()
+    res=False
+    if diferencia_de_corte==0:
+        observacion="La caja esta cuadrada diferencia es "+str(diferencia_de_corte)
+    elif diferencia_de_corte>0:
+        observacion="La caja no esta cuadrada hay un faltante de "+str(diferencia_de_corte)
+    elif diferencia_de_corte<0:
+        observacion="La caja no esta cuadrada hay un sobrante de "+str(diferencia_de_corte)
+    
+    AperturaCorte.objects.filter(id=id_apertura).update(
+        monto_de_corte=monto_de_corte,
+        fecha_de_corte=fecha_y_hora_de_corte,
+        estado_de_apertura=False,
+        diferencia_de_corte=diferencia_de_corte,
+        observacion=observacion
+    )
+    res=True
+    print("Hola!!!")
+
+    datos={
+        'res':res,
+    }
+    print(datos)
+    return JsonResponse(
+        datos, safe=False
+    )
+
 def proces_efectuar_apertura_caja(request):
     monto_de_apertura=request.POST.get('monto_de_apertura')
     caja_del_usuario=request.user.caja
+    diferencia_de_apertura=request.POST.get('diferencia_de_apertura')
     res=False
     datos={}
     ##poniendo en false la ultima apertura
@@ -62,7 +99,8 @@ def proces_efectuar_apertura_caja(request):
         monto_de_apertura=monto_de_apertura,
         monto_de_corte=0.0,
         estado_de_apertura=True,
-        ultima_apertura=True
+        ultima_apertura=True,
+        diferencia_de_apertura=diferencia_de_apertura,
     )
     new_apertura=nueva_apertura[0]
     res_apertura=nueva_apertura[1]
@@ -119,6 +157,8 @@ def verificar_apertura_activa_de_usuario(request):
         apertura=apertura_vigente[0]
         nombre_usuario=str(apertura.usuario.username)
         print(apertura_vigente)
+    else:
+        res=3
     datos={}
 
     if res==1:
@@ -127,6 +167,8 @@ def verificar_apertura_activa_de_usuario(request):
     elif res==2:
         datos['res']=res
         datos['nombre_usuario']=nombre_usuario
+    else:
+        datos['res']=res
     return JsonResponse(
         datos, safe=False
     )

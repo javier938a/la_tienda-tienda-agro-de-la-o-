@@ -166,7 +166,8 @@ class AperturaCorte(models.Model):
     fecha_de_corte=models.DateTimeField(help_text="Ingrese la fecha que se realizara el corte", null=True,blank=True)
     estado_de_apertura=models.BooleanField(help_text="Estado de la apertura, servira para saber si hay una apertura activa para empezar a vender")
     ultima_apertura=models.BooleanField(help_text="Este estado servira para saber si es la ultima apertura", null=True)
-    diferencia=models.FloatField(help_text="Sirve para agregar alguna diferencia que haya en este el corte", blank=True, null=True)
+    diferencia_de_apertura=models.FloatField(help_text="servira para registrar la diferencia de apertura por si hay meno o mas dinero", blank=True, null=True)
+    diferencia_de_corte=models.FloatField(help_text="Sirve para agregar alguna diferencia que haya en este el corte", blank=True, null=True)
     observacion=models.TextField(help_text="Servira para agregarle una observaciones en las aperturas", blank=True, null=True)
     def __str__(self):
         return  "Apertura del Usuario %s estado %s "%(self.usuario, str(self.estado_de_apertura))

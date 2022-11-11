@@ -16,11 +16,11 @@ function getCookie(name) {
 
 $(document).ready(function(){
     $("#monto_apertura").on('input', function(){
-        this.value=this.value.replace(/[^0-9]/g,'');
+        this.value=this.value.replace(/[^0-9,.]/g, '').replace(/,/g, '.');
     });
     $("#monto_apertura").keyup(function(evt){
         let monto_de_apertura=parseFloat($(this).val());
-        let corte_anterior=parseFloat($("#corte_anterior").val());
+        let corte_anterior=parseFloat($("#corte_anterior").val().replace(',', '.'));
         let diferencia= redondear((corte_anterior-monto_de_apertura));
         let estado_primeravez=$("#estado_primeravez").val();
         if(estado_primeravez=="ninguno"){
@@ -53,15 +53,15 @@ $(document).ready(function(){
         let estado_primeravez=$("#estado_primeravez").val();
         alert(estado_primeravez)
         if(estado_primeravez!="ninguno"){
-            if(diferencia==0){
-                let url_efectuar_apertura=$("#url_efectuar_apertura").val()
-                let monto_de_apertura=$("#monto_apertura").val();
-                const csrftoken=getCookie('csrftoken');
-                let datos={
+            let url_efectuar_apertura=$("#url_efectuar_apertura").val()
+            let monto_de_apertura=$("#monto_apertura").val();
+            const csrftoken=getCookie('csrftoken');
+            let datos={
                     csrfmiddlewaretoken:csrftoken,
-                    'monto_de_apertura':monto_de_apertura
+                    'monto_de_apertura':redondear(monto_de_apertura),
+                    'diferencia_de_apertura':redondear(diferencia)
                 }
-                $.ajax({
+            $.ajax({
                     url:url_efectuar_apertura,
                     type:'POST',
                     data:datos,
@@ -77,17 +77,15 @@ $(document).ready(function(){
                             toastr['warning']("Hubo un error de sistema favor consulte con soporte tecnico");
                         }
                     }
-                });
-            }else{
-               toastr['error']("Para realizar apertura la apertura la diferencia debe de ser cero") 
-            }
+             });
+            
         }else{
             let url_efectuar_apertura=$("#url_efectuar_apertura").val()
             let monto_de_apertura=$("#monto_apertura").val();
             const csrftoken=getCookie('csrftoken');
             let datos={
                 csrfmiddlewaretoken:csrftoken,
-                'monto_de_apertura':monto_de_apertura
+                'monto_de_apertura':redondear(monto_de_apertura)
             }
             $.ajax({
                 url:url_efectuar_apertura,

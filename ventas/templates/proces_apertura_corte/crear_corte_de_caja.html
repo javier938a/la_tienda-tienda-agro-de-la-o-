@@ -76,6 +76,9 @@
             </div>
         </div>
         <input type="hidden" name="monto_que_debe_haber_en_caja" id="monto_que_debe_haber_en_caja" value="{{ monto_en_caja  }}">
+        <input type="hidden" name="id_apertura" id="id_apertura" value="{{ apertura.id }}">
+        <input type="hidden" name="url_op_corte_caja" id="url_op_corte_caja" value="{% url 'store:op_corte' %}">
+        <input type="hidden" name="url_listar_apertura_corte" id="url_listar_apertura_corte" value="{% url 'store:list_apertura_corte' %}">
       </form>
     </section>
   </div>

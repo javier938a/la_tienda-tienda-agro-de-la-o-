@@ -36,6 +36,8 @@ $(document).ready(function(){
                 console.log("Hola Entro aqui");
                 let nombre_usuario_de_la_apertura_responsable=data.nombre_usuario;
                 toastr['warning']("Hay una apertura activa a cargo de "+nombre_usuario_de_la_apertura_responsable+" para que usted pueda seguir vendiendo es necesario que este usuario se cuadre y haga corte");
+              }else if(res==3){
+                toastr['error']("No hay apertura activa para poder realizar venta, porfavor crea una apertura de caja, antes de crear una venta");
               }
               
             }
