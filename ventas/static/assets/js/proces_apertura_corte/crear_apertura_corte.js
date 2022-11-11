@@ -51,7 +51,6 @@ $(document).ready(function(){
         evt.preventDefault();
         let diferencia= parseFloat($("#diferencia_oculta").val())
         let estado_primeravez=$("#estado_primeravez").val();
-        alert(estado_primeravez)
         if(estado_primeravez!="ninguno"){
             let url_efectuar_apertura=$("#url_efectuar_apertura").val()
             let monto_de_apertura=$("#monto_apertura").val();

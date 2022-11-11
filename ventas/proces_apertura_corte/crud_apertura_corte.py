@@ -43,9 +43,9 @@ class ViewRealizarCorteCaja(LoginRequiredMixin, TemplateView):
         print(type(suma_venta_de_esta_apertura))
         monto_en_caja=float(monto_de_apertura)+float(suma_ventas_apertura)
         print("Monto en caja: "+str(monto_en_caja))
-        context['monto_de_apertura']=monto_de_apertura
-        context['suma_ventas_apertura']=suma_ventas_apertura
-        context['monto_en_caja']=monto_en_caja
+        context['monto_de_apertura']=round(monto_de_apertura, 2)
+        context['suma_ventas_apertura']= round(suma_ventas_apertura, 2)
+        context['monto_en_caja']= round(monto_en_caja, 2)
         context['apertura']=apertura
 
         print("Monto de esta apertura: "+str(monto_de_apertura))
