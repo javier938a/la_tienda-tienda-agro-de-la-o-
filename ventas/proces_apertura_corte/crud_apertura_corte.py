@@ -230,3 +230,8 @@ class ListarAperturaCorte(LoginRequiredMixin, ListView):
     template_name="proces_apertura_corte/listar_apertura_corte.html"
     model=AperturaCorte
     context_object_name="apertura_caja"
+
+    def get_queryset(self):
+        sucursal=self.request.user.sucursal
+        print(self.model.objects.filter(Q(usuario__sucursal=sucursal)))
+        return self.model.objects.filter(Q(usuario__sucursal=sucursal))

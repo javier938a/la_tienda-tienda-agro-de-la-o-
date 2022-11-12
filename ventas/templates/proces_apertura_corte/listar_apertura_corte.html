@@ -41,7 +41,9 @@
                       <th scope="col">Monto de Corte</th>
                       <th scope="col">Diferencia de corte</th>
                       <th scope="col">Usuario de corte</th>
-                      <th scope="col">Estado de Apertura</th>
+                      <th scope="col">Ultimo Cierre</th>
+                      <th scope="col">Cierre de caja</th>
+                      <th scope="col">Utimo corte</th>
                       <th scope="col" colspan="2">Acciones</th>
                     </tr>
                   </thead>
@@ -90,6 +92,11 @@
                                     <td>Es cierre de Caja</td>
                                   {% else %}
                                     <td>No es Cierre de Caja</td>
+                                  {% endif %}
+                                  {% if apcaja.ultima_apertura == True %}
+                                    <td>si</td>
+                                  {% else %}
+                                    <td>no</td>
                                   {% endif %}
                                   <td>
                                       <div class="btn-group">
