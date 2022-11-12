@@ -17,7 +17,7 @@ from .views import ListarInventario, ViewCrearInventario, ViewEditarInventario, 
 from .views import guardar_datos_inventario, actualizar_datos_inventario, update_producto_detalle, DetalleInventario
 from .views import ListarVentas, ViewCrearVenta, ViewDetalleVenta, verificar_stock_producto, obtener_productos_inventario_autocomplete, agregar_producto_detalle_venta, efectuar_venta
 from .views import ListarDevolucionesVentas, ViewCrearDevolucionVenta, ViewDetalleDevolucion, obtener_ventas_autocomplete, listar_productos_de_venta, efectuar_devolucion_venta
-from .views import ListarAperturaCorte, CrearApertura, ViewRealizarCorteCaja, proces_efectuar_apertura_caja, proces_verificar_si_hay_apertura_de_caja, verificar_apertura_activa_de_usuario, efectuar_corte_de_caja
+from .views import ListarAperturaCorte, CrearApertura, ViewRealizarCorteCaja, ViewCierreDeCaja, proces_efectuar_apertura_caja, proces_verificar_si_hay_apertura_de_caja, verificar_apertura_activa_de_usuario, efectuar_corte_de_caja, efectuar_cierre_de_caja
 from .views import ListarCajas, CrearCaja, EditarCaja, EliminarCaja
 from .views import agregar_producto_a_detalle_por_codigo
 from .views import imprimir_ticket, Obtener_ticket
@@ -107,7 +107,9 @@ urlpatterns = [
     path('apertura_corte/verificar_apertura_caja', proces_verificar_si_hay_apertura_de_caja, name="verificar_apertura_activa"),
     path('apertura_corte/verificar_apertura_activa_de_usuario', verificar_apertura_activa_de_usuario, name="ver_ape_act_user"),
     path('apertura_corte/realizar_corte_de_caja/<int:pk>', ViewRealizarCorteCaja.as_view(), name="realizar_corte"),
+    path('apertura_corte/realizar_cierre_de_caja/<int:pk>', ViewCierreDeCaja.as_view(), name="cierre_caja"),
     path('apertura_corte/efectuar_corte_caja', efectuar_corte_de_caja, name="op_corte"),
+    path('apertura_corte/efectuar_cierre_de_caja', efectuar_cierre_de_caja, name='efectuar_cierre'),
     path('reporte/select_reporte_ventas', ViewSelectReporteVentas.as_view(), name="reporte_venta_view"),
     path('reporte/print_reporte_venta', PrintViewReporteVentas.as_view(), name="print_report_venta"),
     path('reporte/grafico_reporte', grafico_reporte_ventas, name="url_grafico"),

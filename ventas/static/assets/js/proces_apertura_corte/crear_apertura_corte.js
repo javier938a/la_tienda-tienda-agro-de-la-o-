@@ -52,15 +52,47 @@ $(document).ready(function(){
         let diferencia= parseFloat($("#diferencia_oculta").val())
         let estado_primeravez=$("#estado_primeravez").val();
         if(estado_primeravez!="ninguno"){
+        
             let url_efectuar_apertura=$("#url_efectuar_apertura").val()
             let monto_de_apertura=$("#monto_apertura").val();
-            const csrftoken=getCookie('csrftoken');
-            let datos={
+            if(monto_de_apertura.length>0){//verificamos si se ha ingresado un monto de apertura
+                const csrftoken=getCookie('csrftoken');
+                let datos={
+                        csrfmiddlewaretoken:csrftoken,
+                        'monto_de_apertura':redondear(monto_de_apertura),
+                        'diferencia_de_apertura':redondear(diferencia)
+                    }
+                $.ajax({
+                        url:url_efectuar_apertura,
+                        type:'POST',
+                        data:datos,
+                        dataType:'json',
+                        success:function(data){
+                            console.log(data)
+                            let res = data.res;
+                            if(res==true){
+                                toastr['success']("Apertura realizada correctamente!");
+                                let url_listar_apertura_corte=$("#url_listar_apertura_corte").val();
+                                window.open(url_listar_apertura_corte, '_parent');
+                            }else{
+                                toastr['warning']("Hubo un error de sistema favor consulte con soporte tecnico");
+                            }
+                        }
+                 });
+            }else{
+                toastr['warning']("Debe de ingresar el monto de apertura de caja")
+            }
+            
+        }else{
+            let url_efectuar_apertura=$("#url_efectuar_apertura").val()
+            let monto_de_apertura=$("#monto_apertura").val();
+            if(monto_de_apertura.length>0){//verificamos si se ha ingresado un monto de aperura
+                const csrftoken=getCookie('csrftoken');
+                let datos={
                     csrfmiddlewaretoken:csrftoken,
-                    'monto_de_apertura':redondear(monto_de_apertura),
-                    'diferencia_de_apertura':redondear(diferencia)
+                    'monto_de_apertura':redondear(monto_de_apertura)
                 }
-            $.ajax({
+                $.ajax({
                     url:url_efectuar_apertura,
                     type:'POST',
                     data:datos,
@@ -76,33 +108,12 @@ $(document).ready(function(){
                             toastr['warning']("Hubo un error de sistema favor consulte con soporte tecnico");
                         }
                     }
-             });
-            
-        }else{
-            let url_efectuar_apertura=$("#url_efectuar_apertura").val()
-            let monto_de_apertura=$("#monto_apertura").val();
-            const csrftoken=getCookie('csrftoken');
-            let datos={
-                csrfmiddlewaretoken:csrftoken,
-                'monto_de_apertura':redondear(monto_de_apertura)
+                });
+            }else{
+                toastr['warning']("Debe de ingresar el monto de apertura de caja")
+                
             }
-            $.ajax({
-                url:url_efectuar_apertura,
-                type:'POST',
-                data:datos,
-                dataType:'json',
-                success:function(data){
-                    console.log(data)
-                    let res = data.res;
-                    if(res==true){
-                        toastr['success']("Apertura realizada correctamente!");
-                        let url_listar_apertura_corte=$("#url_listar_apertura_corte").val();
-                        window.open(url_listar_apertura_corte, '_parent');
-                    }else{
-                        toastr['warning']("Hubo un error de sistema favor consulte con soporte tecnico");
-                    }
-                }
-            });
+
         }
     });
 

@@ -11,13 +11,24 @@ class CrearApertura(LoginRequiredMixin, TemplateView):
     template_name="proces_apertura_corte/crear_apertura_corte.html"
     def get_context_data(self, **kwargs):
         context=super(CrearApertura, self).get_context_data(**kwargs)
-        if AperturaCorte.objects.filter(Q(ultima_apertura=True) & Q(usuario__caja=self.request.user.caja)).exists():
-            corte_anterior=AperturaCorte.objects.get(Q(ultima_apertura=True) & Q(usuario__caja=self.request.user.caja))
-            usuario_anterior=corte_anterior.usuario
-            monto_corte_anterior=corte_anterior.monto_de_corte
-            print(monto_corte_anterior)
-            context['usuario_anterior']=usuario_anterior
-            context['monto_corte_anterior']=monto_corte_anterior
+        #promero verificamos si hay una apertura anterior que haya quedado como ultima apertura
+        #con estado de apertura=False y estado de ultima_apertura=True
+        #si existe es porque ya se creo un corte con esa apertura
+        if AperturaCorte.objects.filter(Q(ultima_apertura=True) & Q(estado_de_apertura=False) & Q(usuario__caja=self.request.user.caja)).exists():
+            #luego verificamos si este corte no es el corte global o el ultimo corte hecho en el dia 
+            #ya que de ser asi no se tomaria en cuenta para realizar esta apertura ya que corresponde 
+            #a un nuevo inicio del dia y el dueño decidira con cuanto efectivo necesita iniciar el dia
+            if AperturaCorte.objects.filter(Q(ultima_apertura=True) & Q(estado_de_apertura=False) & Q(corte_global=True) & Q(usuario__caja=self.request.user.caja)).exists():
+                context['usuario_anterior']="ninguno"
+                context['monto_corte_anterior']="0"
+            else:#si no existe entonces agarramos esa ultima apertura y tomamos el valor
+                #del monto de apertura anterior para indicar al usuario que eso debe de tener en caja
+                corte_anterior=AperturaCorte.objects.get(Q(ultima_apertura=True) & Q(usuario__caja=self.request.user.caja))
+                usuario_anterior=corte_anterior.usuario
+                monto_corte_anterior=corte_anterior.monto_de_corte
+                print(monto_corte_anterior)
+                context['usuario_anterior']=usuario_anterior
+                context['monto_corte_anterior']=monto_corte_anterior
         else:
             context['usuario_anterior']="ninguno"
             context['monto_corte_anterior']="0"
@@ -52,6 +63,39 @@ class ViewRealizarCorteCaja(LoginRequiredMixin, TemplateView):
         print("Total de todas las ventas realizadas "+str(suma_venta_de_esta_apertura['total_con_iva__sum']))
         return context
 
+class ViewCierreDeCaja(LoginRequiredMixin, TemplateView):
+    login_url="/ventas/login/"
+    redirect_field_name="redirect_to"
+    template_name="proces_apertura_corte/crear_cierre_de_caja.html"
+    def get_context_data(self, **kwargs):
+        context=super(ViewCierreDeCaja, self).get_context_data(**kwargs)
+        apertura=AperturaCorte.objects.get(id=self.kwargs['pk'])
+        monto_de_cierre=apertura.monto_de_corte
+        id_apertura=apertura.id
+        context['id_apertura']=id_apertura
+        context['monto_de_cierre']=monto_de_cierre
+        return context 
+
+
+def efectuar_cierre_de_caja(request):
+    idapertura=request.POST.get('id_apertura')
+    res=False
+    AperturaCorte.objects.filter(id=idapertura).update(
+        nombre_usuario_cierre=str(request.user),
+        corte_global=True
+    )  
+    res=True
+    data={
+        'res':res
+    }     
+
+    return JsonResponse(
+        data,
+        safe=False
+    )
+
+
+
 def efectuar_corte_de_caja(request):
     id_apertura=request.POST.get('id_apertura')
     monto_de_corte=float(request.POST.get('monto_de_corte'))
@@ -71,6 +115,7 @@ def efectuar_corte_de_caja(request):
         fecha_de_corte=fecha_y_hora_de_corte,
         estado_de_apertura=False,
         diferencia_de_corte=diferencia_de_corte,
+        nombre_usuario_corte=str(request.user),
         observacion=observacion
     )
     res=True
@@ -100,6 +145,7 @@ def proces_efectuar_apertura_caja(request):
         monto_de_corte=0.0,
         estado_de_apertura=True,
         ultima_apertura=True,
+        corte_global=False,
         diferencia_de_apertura=diferencia_de_apertura,
     )
     new_apertura=nueva_apertura[0]

@@ -44,34 +44,39 @@ $(document).ready(function(){
         evt.preventDefault();
         let id_apertura=$("#id_apertura").val();
         let monto_real_en_caja=$("#monto_real_en_caja").val();
-        let monto_que_debe_haber_en_caja= parseFloat($("#monto_que_debe_haber_en_caja").val().replace(',', '.'));
-        let diferencia_de_corte=monto_que_debe_haber_en_caja - monto_real_en_caja;
-        let url_op_corte_caja=$("#url_op_corte_caja").val();
-        const csrftoken=getCookie('csrftoken');
-        let datos={
-            csrfmiddlewaretoken:csrftoken,
-            'id_apertura':id_apertura,
-            'monto_de_corte': redondear(monto_real_en_caja),
-            'diferencia_de_corte': redondear(diferencia_de_corte),
-        }
-        console.log("Hola")
-        $.ajax({
-            url:url_op_corte_caja,
-            type:'POST',
-            data:datos,
-            dataType:'json',
-            success:function(data){
-                console.log("Hola Mundo!!")
-                console.log(data)
-                let res = data.res;
-                
-                if(res==true){
-                    toastr['success']("Corte realizado correctamente!!")
-                    let url_listar_apertura_corte=$("#url_listar_apertura_corte").val();
-                    window.open(url_listar_apertura_corte, '_parent');
-                }
+        console.log(monto_real_en_caja.length)
+        if(monto_real_en_caja.length>0){
+            let monto_que_debe_haber_en_caja= parseFloat($("#monto_que_debe_haber_en_caja").val().replace(',', '.'));
+            let diferencia_de_corte=monto_que_debe_haber_en_caja - monto_real_en_caja;
+            let url_op_corte_caja=$("#url_op_corte_caja").val();
+            const csrftoken=getCookie('csrftoken');
+            let datos={
+                csrfmiddlewaretoken:csrftoken,
+                'id_apertura':id_apertura,
+                'monto_de_corte': redondear(monto_real_en_caja),
+                'diferencia_de_corte': redondear(diferencia_de_corte),
             }
-        })
+            console.log("Hola")
+            $.ajax({
+                url:url_op_corte_caja,
+                type:'POST',
+                data:datos,
+                dataType:'json',
+                success:function(data){
+                    console.log("Hola Mundo!!")
+                    console.log(data)
+                    let res = data.res;
+                    
+                    if(res==true){
+                        toastr['success']("Corte realizado correctamente!!")
+                        let url_listar_apertura_corte=$("#url_listar_apertura_corte").val();
+                        window.open(url_listar_apertura_corte, '_parent');
+                    }
+                }
+            })
+        }else{
+            toastr['warning']("Debe ingresar un monto de corte");
+        }
     });
 
     function redondear(num) {

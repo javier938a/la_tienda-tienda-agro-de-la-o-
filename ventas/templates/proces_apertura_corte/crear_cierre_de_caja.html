@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% block extra-css %}
+      <link href="{% static 'assets/css/jquery-ui/jquery-ui.css' %}" rel="stylesheet">
+      <link href="{% static 'assets/css/select2/select2.css' %}" rel="stylesheet">
+      <link rel="stylesheet" href="{% static 'assets/css/toastr/toastr.css' %}">
+
+      <style>
+
+        </style>
+{% endblock %}
+
+{% block barra_superior %}
+
+{% endblock %}
+
+{# blocke para especificar los atributos del body y quitar la barra lateral #}
+{% block atributos_body %}
+        class="toggle-sidebar" {# este atributo quita el espacio de mas a la izquierda #}
+{% endblock %}
+
+{% block barra_lateral %}
+
+{% endblock %}
+
+{% block contenido %}
+  <div class="container">
+    <div class="card text-center">
+        <div class="card-header">
+          CORTE DE CAJA
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Usted va cerrar el dia con: </h5>
+            <h5 class="card-title">Monto de Cierre: ${{ monto_de_cierre }}</h5>
+            <p class="card-text"></b></p>
+
+        </div>
+        <div class="card-footer text-muted">
+            <h5 class="card-title" id="mostrar_cuadratura"></h5>
+        </div>
+      </div>
+    <section class="section">
+      <form action="">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <div class="form-group">
+                  <button type="button" class="btn btn-success form-control" data-bs-toggle="modal" data-bs-target="#confirmCierre">
+                    Cerrar Caja
+                  </button>
+                  
+                  <!-- Modal -->
+                  <div class="modal fade" id="confirmCierre" tabindex="-1" aria-labelledby="confirmCierreLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="confirmCierreLabel">Advertencia</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert alert-danger" role="alert">
+                                <h5>Usted esta a punto de hacer un Cierre de Caja, una vez efectuada esta operacion, la caja volveria a cero</h5>
+                              </div>
+                          
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                          <button type="button" class="btn btn-primary" id="btn_cerrar_caja">Cerrar Caja</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <div class="form-group">
+                    <a  class="btn btn-danger form-control" href="{% url 'store:list_apertura_corte' %}">Salir</a>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" name="monto_que_debe_haber_en_caja" id="monto_que_debe_haber_en_caja" value="{{ monto_de_corte  }}">
+        <input type="hidden" name="id_apertura" id="id_apertura" value="{{ id_apertura }}">
+        <input type="hidden" name="url_cerrar_caja" id="url_cerrar_caja" value="{% url 'store:efectuar_cierre' %}">
+        <input type="hidden" name="list_apertura_corte" id="list_apertura_corte" value="{% url 'store:list_apertura_corte' %}">
+    </form>
+    </section>
+  </div>
+{% endblock %}
+
+{% load static %}
+{% block extra-script %}
+    <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.js' %}"></script>
+    <script src="{% static 'assets/js/jquery-ui/jquery-ui.js' %}"></script>
+    <script src="{% static 'assets/js/jquery-mask/jquery.mask.js' %}"></script>
+    <script src="{% static 'assets/js/select2/select2.js' %}"></script>
+    <script src="{% static 'assets/js/toastr/toastr.min.js' %}"></script>
+    <script src="{% static 'assets/js/proces_apertura_corte/crear_cierre_de_caja.js' %}"></script>
+    
+{% endblock %}
