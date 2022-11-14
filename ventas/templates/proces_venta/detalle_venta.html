@@ -86,15 +86,15 @@
                       {% endif %}
                     </tbody>
                     <tfoot>
-                        <tr>
+                        <tr style="display: none;">
                             <th scope="row" colspan="5" style="text-align: right;">Totol IVA</th>
                             <td id="total_iva">{{ venta.total_iva }}</td>
                         </tr>
                         <tr>
-                            <th scope="row" colspan="5" style="text-align: right;">Total sin iva</th>
+                            <th scope="row" colspan="5" style="text-align: right;">Total</th>
                             <td id="total_sin_iva">{{ venta.total_sin_iva }}</td>
                         </tr>
-                        <tr>
+                        <tr style="display: none;">
                             <th scope="row" colspan="5" style="text-align: right;">Total</th>
                             <td id="total">{{ venta.total_con_iva }}</td>
                         </tr>

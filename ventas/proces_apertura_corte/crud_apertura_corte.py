@@ -44,9 +44,9 @@ class ViewRealizarCorteCaja(LoginRequiredMixin, TemplateView):
         print("ID apertura: "+str(self.kwargs['pk']))
         apertura=AperturaCorte.objects.get(id=self.kwargs['pk'])
         ventas_de_esta_apertura=Venta.objects.filter(apertura_corte=apertura)
-        suma_venta_de_esta_apertura=ventas_de_esta_apertura.aggregate(Sum('total_con_iva'))
+        suma_venta_de_esta_apertura=ventas_de_esta_apertura.aggregate(Sum('total_sin_iva'))
         monto_de_apertura=apertura.monto_de_apertura
-        suma_ventas_apertura=suma_venta_de_esta_apertura['total_con_iva__sum']
+        suma_ventas_apertura=suma_venta_de_esta_apertura['total_sin_iva__sum']
         print("Suma")
         if suma_ventas_apertura == None:
             suma_ventas_apertura=0.0
@@ -60,7 +60,7 @@ class ViewRealizarCorteCaja(LoginRequiredMixin, TemplateView):
         context['apertura']=apertura
 
         print("Monto de esta apertura: "+str(monto_de_apertura))
-        print("Total de todas las ventas realizadas "+str(suma_venta_de_esta_apertura['total_con_iva__sum']))
+        print("Total de todas las ventas realizadas "+str(suma_venta_de_esta_apertura['total_sin_iva__sum']))
         return context
 
 class ViewCierreDeCaja(LoginRequiredMixin, TemplateView):
@@ -230,6 +230,36 @@ class ListarAperturaCorte(LoginRequiredMixin, ListView):
     template_name="proces_apertura_corte/listar_apertura_corte.html"
     model=AperturaCorte
     context_object_name="apertura_caja"
+    def get_context_data(self, **kwargs):
+        context=super(ListarAperturaCorte, self).get_context_data(**kwargs)
+        apertura_activa=None
+        apertura_de_corte=None
+        es_corte_de_caja=0#servira para saber si el ultimo corte de caja hecho en el dia
+        if AperturaCorte.objects.filter(Q(estado_de_apertura=True) & Q(usuario=self.request.user) & Q(corte_global=False)).exists():
+            es_corte_de_caja=1
+            apertura_activa= AperturaCorte.objects.get(Q(estado_de_apertura=True) & Q(usuario__caja=self.request.user.caja) & Q(corte_global=False))
+        elif AperturaCorte.objects.filter(Q(estado_de_apertura=True) & Q(usuario__caja=self.request.user.caja)).exists():
+            es_corte_de_caja=1
+            apertura_activa= AperturaCorte.objects.get(Q(estado_de_apertura=True) & Q(usuario__caja=self.request.user.caja))
+        elif AperturaCorte.objects.filter(Q(estado_de_apertura=False) & Q(ultima_apertura=True) & Q(corte_global=False) & Q(usuario=self.request.user)).exists():
+            es_corte_de_caja=2
+            apertura_de_corte= AperturaCorte.objects.get(Q(estado_de_apertura=False) & Q(ultima_apertura=True) & Q(corte_global=False) & Q(usuario=self.request.user))
+        elif AperturaCorte.objects.filter(Q(estado_de_apertura=False) & Q(ultima_apertura=True) & Q(corte_global=False) & Q(usuario__caja=self.request.user.caja)).exists():
+            es_corte_de_caja=2
+            apertura_de_corte=AperturaCorte.objects.get(Q(estado_de_apertura=False) & Q(ultima_apertura=True) & Q(corte_global=False) & Q(usuario__caja=self.request.user.caja))
+        else:
+            es_corte_de_caja=3
+
+        if es_corte_de_caja==1:
+            context['es_corte_de_caja']=es_corte_de_caja
+            context['apertura_activa']=apertura_activa
+        elif es_corte_de_caja==2:
+            context['es_corte_de_caja']=es_corte_de_caja
+            context['apertura_de_corte']=apertura_de_corte
+        elif es_corte_de_caja==3:
+            context['es_corte_de_caja']=es_corte_de_caja
+        return context
+
 
     def get_queryset(self):
         sucursal=self.request.user.sucursal

@@ -377,12 +377,12 @@ $(document).ready(function(){
         let total=0;
         let efectivo=0;
         if($("#total").text().replace("$", "")!=''){
-            total=parseFloat($("#total").text().replace("$", ""));
+            total_sin_iva=parseFloat($("#total_sin_iva").text().replace("$", ""));
         }
         if($("#txt_efectivo").val().replace("$", "")!=''){
             efectivo=parseFloat($("#txt_efectivo").val().replace("$", ""));
         }
-        let cambio=efectivo-total;
+        let cambio=efectivo-total_sin_iva;
         console.log("total "+total);
         console.log("efectivo "+efectivo);
         console.log("cambio "+cambio);
@@ -395,7 +395,7 @@ $(document).ready(function(){
         let total=0;
         let efectivo=0;
         if($("#total").text().replace("$", "")!=''){
-            total=parseFloat($("#total").text().replace("$", ""));
+            total=parseFloat($("#total_sin_iva").text().replace("$", ""));
         }
         if($("#txt_efectivo_sin_ticket").val().replace("$", "")!=''){
             efectivo=parseFloat($("#txt_efectivo_sin_ticket").val().replace("$", ""));

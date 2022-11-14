@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils import timezone
 from django.shortcuts import render
 from django.views.generic import TemplateView
@@ -28,22 +29,28 @@ from django.db.models import Q
 from .models import Venta
 
 
-class Index(TemplateView):
+class Index(TemplateView, LoginRequiredMixin):
     template_name="ventas/index.html"
-
+    login_url = '/ventas/login/'
+    redirect_field_name = 'redirect_to'
     def get_context_data(self, **kwargs):
         context= super(Index, self).get_context_data(**kwargs)
         fecha_hoy=timezone.now().strftime("%Y-%m-%d")
         print("hola.......")
         print(type(fecha_hoy))
         print(fecha_hoy)
-        ventas_hoy=Venta.objects.filter(Q(fecha_venta__date=fecha_hoy))
-        print(ventas_hoy)
-        suma_ventas=ventas_hoy.aggregate(Sum('total_con_iva'))
-        total=suma_ventas.get('total_con_iva__sum')
-        total_ventas=0
-        if total is not None:
-            total_ventas=round(suma_ventas.get('total_con_iva__sum'), 2)
-        
+        print("Usuario")
+        print( str(self.request.user))
+        if str(self.request.user)!="AnonymousUser":
+
+            ventas_hoy=Venta.objects.filter(Q(fecha_venta__date=fecha_hoy))
+            print(ventas_hoy)
+            suma_ventas=ventas_hoy.aggregate(Sum('total_sin_iva'))
+            total=suma_ventas.get('total_sin_iva__sum')
+            total_ventas=0
+            if total is not None:
+                total_ventas=round(suma_ventas.get('total_sin_iva__sum'), 2)
+        else:
+            total_ventas="0.0"  
         context['total_con_iva']=total_ventas
         return context

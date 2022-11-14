@@ -69,9 +69,34 @@
 
             </div>
             <div class="col-md-2">
-                <div class="form-group">
-                  <button class="btn btn-success form-control" id="btn_efectuar_apertura">Crear Apertura</button>
-                </div>
+                <div class="form-group">                  
+                  <button type="button" class="btn btn-success form-control" data-bs-toggle="modal" data-bs-target="#confirmCierre">
+                    Crear Apertura
+                  </button>
+                  
+                  <!-- Modal -->
+                  <div class="modal fade" id="confirmCierre" tabindex="-1" aria-labelledby="confirmCierreLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="confirmCierreLabel">Advertencia</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert alert-danger" role="alert">
+                                <h5>Si se equivoca al ingresar el monto de apertura no podra editarlo</h5>
+                                <h5>¿Esta seguro de querer realizar apertura de caja?</h5>
+                              </div>
+                          
+                        </div>
+                        <div class="modal-footer">
+                          <button class="btn btn-success" id="btn_efectuar_apertura">Crear Apertura</button>
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>                
             </div>
             <div class="col-md-1">
                 <div class="form-group">

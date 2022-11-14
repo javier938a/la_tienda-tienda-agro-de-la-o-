@@ -14,9 +14,9 @@
         <tr>
           <th>Fecha de Venta</th>
           <th>Numero de Factura</th>
-          <th>total IVA</th>
-          <th>Total sin Iva</th>
-          <th>Total con iva</th>
+          <th style="display: none;">total IVA</th>
+          <th>Total</th>
+          <th style="display: none;">Total</th>
         </tr>
       </thead>
       <tbody>
@@ -25,16 +25,16 @@
                 <tr>
                     <td>{{ venta.fecha_venta|date:"d-m-Y" }}</td>
                     <td>{{ venta.numero_factura }}</td>
-                    <td>${{ venta.total_iva }}</td>
+                    <td style="display: none;">${{ venta.total_iva }}</td>
                     <td>${{ venta.total_sin_iva }}</td>
-                    <td>${{ venta.total_con_iva }}</td>
+                    <td style="display: none;">${{ venta.total_con_iva }}</td>
                 </tr>
             {% endfor %}
             <tr>
               <td colspan="2">Totales</td>
-              <td>${{ total_iva_sum }}</td>
+              <td style="display: none;">${{ total_iva_sum }}</td>
               <td>${{ total_sin_iva_sum }}</td>
-              <td>${{ total_con_iva_sum }}</td>
+              <td style="display: none;">${{ total_con_iva_sum }}</td>
             </tr>
           {% else %}
                 <tr>
