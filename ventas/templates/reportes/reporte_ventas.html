@@ -13,6 +13,8 @@
       <thead>
         <tr>
           <th>Fecha de Venta</th>
+          <th>Usuario</th>
+          <th>Sucursal</th>
           <th>Numero de Factura</th>
           <th style="display: none;">total IVA</th>
           <th>Total</th>
@@ -24,6 +26,8 @@
             {% for venta in ventas %}
                 <tr>
                     <td>{{ venta.fecha_venta|date:"d-m-Y" }}</td>
+                    <td>{{ venta.usuario }}</td>
+                    <td>{{ venta.sucursal }}</td>
                     <td>{{ venta.numero_factura }}</td>
                     <td style="display: none;">${{ venta.total_iva }}</td>
                     <td>${{ venta.total_sin_iva }}</td>

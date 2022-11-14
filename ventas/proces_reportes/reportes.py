@@ -15,6 +15,8 @@ from django.views.generic import DetailView, ListView, TemplateView
 from django_weasyprint import WeasyTemplateResponseMixin
 from django_weasyprint.views import WeasyTemplateResponse
 from ventas.models import Venta
+from ventas.models import Sucursal
+from ventas.models import User
 
 from django.db.models import Sum, Q
 from django.http import JsonResponse
@@ -24,6 +26,14 @@ class ViewSelectReporteVentas(LoginRequiredMixin, TemplateView):
     login_url="/ventas/login/"
     redirect_field_name="redirect_to"
     template_name="reportes/view_select_reporte_ventas.html"
+    
+    def get_context_data(self, **kwargs):
+        context=super(ViewSelectReporteVentas, self).get_context_data(**kwargs)
+        sucursales=Sucursal.objects.all()
+        usuarios=User.objects.all()
+        context['usuarios']=usuarios
+        context['sucursales']=sucursales
+        return context
 
 class DetalleReporteVentas(TemplateView):
     template_name="reportes/reporte_ventas.html"
@@ -52,6 +62,9 @@ class PrintViewReporteVentas(WeasyTemplateResponseMixin, DetalleReporteVentas):
         context=super(PrintViewReporteVentas, self).get_context_data(**kwargs)
         fecha_inicial=self.request.GET['fecha_inicial']
         fecha_final=self.request.GET['fecha_final']
+        tipo_reporte=self.request.GET['tipo_reporte']
+        id_usuario=self.request.GET['id_usuario']
+        id_sucursal=self.request.GET['id_sucursal']
         context['fecha_inicial']=fecha_inicial
         context['fecha_final']=fecha_final
         todas_las_ventas=None
@@ -59,7 +72,15 @@ class PrintViewReporteVentas(WeasyTemplateResponseMixin, DetalleReporteVentas):
         total_sin_iva=0.0
         total_con_iva=0.0
         if fecha_inicial==fecha_final:
-            todas_las_ventas=Venta.objects.filter(Q(fecha_venta__date=fecha_inicial))
+            todas_las_ventas=None
+            if tipo_reporte=="2" and id_usuario!="0":
+                usuario_responsable=User.objects.get(id=id_usuario)
+                todas_las_ventas=Venta.objects.filter(Q(fecha_venta__date=fecha_inicial) & Q(usuario=usuario_responsable))
+            elif tipo_reporte=="1" and id_sucursal!="0":
+                sucursal=Sucursal.objects.get(id=id_sucursal)
+                todas_las_ventas=Venta.objects.filter(Q(fecha_venta__date=fecha_inicial) & Q(sucursal=sucursal))
+            elif tipo_reporte=="0":
+                todas_las_ventas=Venta.objects.filter(Q(fecha_venta__date=fecha_inicial))
             print("Estas...")
             print(todas_las_ventas)
             context['ventas']=todas_las_ventas
@@ -79,23 +100,34 @@ class PrintViewReporteVentas(WeasyTemplateResponseMixin, DetalleReporteVentas):
                 context['total_con_iva_sum']= ""
 
         else:
-            todas_las_ventas=Venta.objects.filter(Q(fecha_venta__gte=fecha_inicial) & Q(fecha_venta__lte=fecha_final))
-            total_iva_sum_dic=todas_las_ventas.aggregate(Sum('total_iva'))#obteniendo la suma total del iva
-            total_sin_iva_dic=todas_las_ventas.aggregate(Sum('total_sin_iva'))#obteniendo la suma total sin iva
-            total_sin_iva=total_sin_iva_dic['total_sin_iva__sum']
-            total_iva=total_iva_sum_dic['total_iva__sum']
-            total_con_iva_dic=todas_las_ventas.aggregate(Sum('total_con_iva'))##obteniendo la suma de el total del total con iva
-            total_con_iva=total_con_iva_dic['total_con_iva__sum']
-            if total_iva is not None and total_sin_iva is not None and total_con_iva is not None:
-                context['ventas']=todas_las_ventas
-                context['total_iva_sum']=round(total_iva, 2)
-                context['total_sin_iva_sum']=round(total_sin_iva, 2)
-                context['total_con_iva_sum']= round(total_con_iva, 2)
-            else:
-                context['ventas']=""
-                context['total_iva_sum']=""
-                context['total_sin_iva_sum']=""
-                context['total_con_iva_sum']= ""
+            todas_las_ventas=None
+            if tipo_reporte=="2" and id_usuario!="0":
+                usuario_responsable=User.objects.get(id=id_usuario)
+                todas_las_ventas=Venta.objects.filter(Q(fecha_venta__gte=fecha_inicial) & Q(fecha_venta__lte=fecha_final) & Q(usuario=usuario_responsable))
+            elif tipo_reporte=="1" and id_sucursal!=0:
+                sucursal=Sucursal.objects.get(id=id_sucursal)
+                todas_las_ventas=Venta.objects.filter(Q(fecha_venta__gte=fecha_inicial) & Q(fecha_venta__lte=fecha_final) & Q(sucursal=sucursal))
+            elif tipo_reporte=="0":
+                todas_las_ventas=Venta.objects.filter(Q(fecha_venta__gte=fecha_inicial) & Q(fecha_venta__lte=fecha_final))
+            print("hello!!")
+            print(todas_las_ventas)
+            if todas_las_ventas!=None:
+                total_iva_sum_dic=todas_las_ventas.aggregate(Sum('total_iva'))#obteniendo la suma total del iva
+                total_sin_iva_dic=todas_las_ventas.aggregate(Sum('total_sin_iva'))#obteniendo la suma total sin iva
+                total_sin_iva=total_sin_iva_dic['total_sin_iva__sum']
+                total_iva=total_iva_sum_dic['total_iva__sum']
+                total_con_iva_dic=todas_las_ventas.aggregate(Sum('total_con_iva'))##obteniendo la suma de el total del total con iva
+                total_con_iva=total_con_iva_dic['total_con_iva__sum']
+                if total_iva is not None and total_sin_iva is not None and total_con_iva is not None:
+                    context['ventas']=todas_las_ventas
+                    context['total_iva_sum']=round(total_iva, 2)
+                    context['total_sin_iva_sum']=round(total_sin_iva, 2)
+                    context['total_con_iva_sum']= round(total_con_iva, 2)
+                else:
+                    context['ventas']=""
+                    context['total_iva_sum']=""
+                    context['total_sin_iva_sum']=""
+                    context['total_con_iva_sum']= ""
         return context
 
 
