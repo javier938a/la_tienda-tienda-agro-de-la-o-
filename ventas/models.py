@@ -174,6 +174,8 @@ class AperturaCorte(models.Model):
     nombre_usuario_corte=models.CharField(max_length=100 ,help_text="servira para poner el nombre de usuario que realizara el corte", blank=True, null=True)
     nombre_usuario_cierre=models.CharField(max_length=100, help_text="Servira para saber que usuario cerro", blank=True, null=True)
     observacion=models.TextField(help_text="Servira para agregarle una observaciones en las aperturas", blank=True, null=True)
+
+    
     def __str__(self):
         return  "Apertura del Usuario %s estado %s "%(self.usuario, str(self.corte_global))
 

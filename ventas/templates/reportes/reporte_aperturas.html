@@ -1,0 +1,64 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Reporte de Aperturas</title>
+    <meta name="description" content="Invoice demo sample">
+  </head>
+
+  <body>
+    <center>
+      <h4>Reporte de aperturas y corte <br> desde {{ fecha_inicial }} hasta el dia {{ fecha_final }} </h4>
+    </center>
+    <table>
+      <thead>
+        <tr>
+          <th>Usuario</th>
+          <th>Sucursal</th>
+          <th>Fecha de apertura</th>
+          <th>Monto de apertura</th>
+          <th>Diferencia de apertura</th>
+          <th>Monto de corte</th>
+          <th>Diferencia de corte</th>
+          <th>Fecha de corte</th>
+          <th>Cierre de caja</th>
+        </tr>
+      </thead>
+      <tbody>
+          {% if apertura_corte %}
+            {% for apecorte in apertura_corte %}
+                <tr>
+                    <td>{{ apecorte.usuario }}</td>
+                    <td>{{ apecorte.usuario.sucursal }}</td>
+                    <td>{{ apecorte.fecha_de_apertura|date:"d-m-Y" }}</td>
+                    <td>${{ apecorte.monto_de_apertura }}</td>
+                    {% if apecorte.diferencia_de_apertura == None %}
+                      <td>$0</td>                      
+                    {% else %}
+                      <td>${{ apecorte.diferencia_de_apertura }}</td>
+                    {% endif %}
+                    <td>${{ apecorte.monto_de_corte }}</td>
+                    {% if apecorte.diferencia_de_corte == None %}
+                      <td>$0</td>
+                    {% else %}
+                      <td>${{ apecorte.diferencia_de_corte }}</td>
+                    {% endif %}                    
+                    <td>{{ apecorte.fecha_de_corte|date:"d-m-Y" }}</td>
+                    {% if apecorte.corte_global == True %}
+                        <td>Cierre de caja</td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+
+          {% else %}
+                <tr>
+                    <td>No hay aperturas y cortes registrados en el rango de fecha proporcionado.</td>
+                </tr>
+          {% endif %}
+
+      </tbody>
+    </table>
+
+  </body>
+</html>

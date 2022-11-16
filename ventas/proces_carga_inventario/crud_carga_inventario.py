@@ -24,6 +24,9 @@ class ListarCargaProductos(LoginRequiredMixin, ListView):
     model=CargaProductos
     context_object_name="cargas_prod"
 
+    def get_queryset(self):
+        return self.model.objects.all().order_by('-fecha_carga')
+
 class DetalleCargaInventario(LoginRequiredMixin, DetailView):
     login_url="/ventas/login/"
     redirect_field_name="redirect_to"

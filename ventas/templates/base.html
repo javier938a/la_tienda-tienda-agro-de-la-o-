@@ -435,6 +435,12 @@
                     <span>Reporte de ventas</span>
                   </a>
                 </li><!-- End Register Page Nav -->
+                <li class="nav-item">
+                  <a class="nav-link collapsed" href="{% url 'store:report_ape' %}">
+                    <i class="bi bi-card-list"></i>
+                    <span>Reporte de Aperturas y Corte</span>
+                  </a>
+                </li><!-- End Register Page Nav -->
               </ul>
             </li><!-- End Forms Nav -->
           {% elif user.tipo_usuario.tipo_usuario == "usuario" %}
@@ -473,6 +479,12 @@
                   <a class="nav-link collapsed" href="{% url 'store:reporte_venta_view' %}">
                     <i class="bi bi-card-list"></i>
                     <span>Reporte de ventas</span>
+                  </a>
+                </li><!-- End Register Page Nav -->
+                <li class="nav-item">
+                  <a class="nav-link collapsed" href="{% url 'store:report_ape' %}">
+                    <i class="bi bi-card-list"></i>
+                    <span>Reporte de Aperturas y Corte</span>
                   </a>
                 </li><!-- End Register Page Nav -->
               </ul>

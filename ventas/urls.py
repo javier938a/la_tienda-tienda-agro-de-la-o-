@@ -12,7 +12,7 @@ from .views import ListarCategoriasProducto, CrearCategoriaProducto, EditarCateg
 from .views import ListarProductos, CrearProducto, EditarProducto, DetalleProducto, EliminarProducto
 from .views import ListarPresentacion, CrearPresentacion, EditarPresentacion, EliminarPresentacion
 from .views import ListarCargaProductos, ViewCargaInventario, DetalleCargaInventario, listar_productos_cargados_y_sin_cargar_autocomplete, agregar_producto_detalle_carga, cargar_producto_inventario
-from .views import ListarDescargasProductos, ViewCrearDescargaProducto, listar_productos_a_descargar_por_sucursal_autocomplete, agregar_producto_a_descargar_a_detalle, efectuar_descarga_de_productos
+from .views import ListarDescargasProductos, ViewCrearDescargaProducto, ViewDetalleDescargaProducto, listar_productos_a_descargar_por_sucursal_autocomplete, agregar_producto_a_descargar_a_detalle, efectuar_descarga_de_productos
 from .views import ListarInventario, ViewCrearInventario, ViewEditarInventario, EliminarInventario, obtener_productos_autocomplete, agregar_producto_detalle
 from .views import guardar_datos_inventario, actualizar_datos_inventario, update_producto_detalle, DetalleInventario
 from .views import ListarVentas, ViewCrearVenta, ViewDetalleVenta, verificar_stock_producto, obtener_productos_inventario_autocomplete, agregar_producto_detalle_venta, efectuar_venta
@@ -21,7 +21,7 @@ from .views import ListarAperturaCorte, CrearApertura, ViewRealizarCorteCaja, Vi
 from .views import ListarCajas, CrearCaja, EditarCaja, EliminarCaja
 from .views import agregar_producto_a_detalle_por_codigo
 from .views import imprimir_ticket, Obtener_ticket
-from .views import ViewSelectReporteVentas, PrintViewReporteVentas
+from .views import ViewSelectReporteVentas, ViewSelectReporteAperturas, PrintViewReporteVentas, PrintViewReporteAperturas
 from .views import grafico_reporte_ventas
 
 
@@ -68,6 +68,7 @@ urlpatterns = [
     path('carga/agregar_producto_detalle_carga', agregar_producto_detalle_carga, name="add_prod_detalle_carga" ),
     path('descarga_productos/', ListarDescargasProductos.as_view(), name="list_descarga_prod"),
     path('descarga_productos/crear_descarga_productos', ViewCrearDescargaProducto.as_view(), name="crear_descarga_prod"),
+    path('descarga_productos/detalle_descarga_productos/<int:pk>', ViewDetalleDescargaProducto.as_view(), name="detalle_descarga"),
     path('list_descarga_productos_autocomplete', listar_productos_a_descargar_por_sucursal_autocomplete, name="list_prod_a_descargar"),
     path('descarga_producto/agregar_producto_a_descargar_a_detalle', agregar_producto_a_descargar_a_detalle, name='add_prod_a_descarga'),
     path('descarga_producto/efectuar_descarga', efectuar_descarga_de_productos, name='efectuar_descarga_prod'),
@@ -112,6 +113,8 @@ urlpatterns = [
     path('apertura_corte/efectuar_corte_caja', efectuar_corte_de_caja, name="op_corte"),
     path('apertura_corte/efectuar_cierre_de_caja', efectuar_cierre_de_caja, name='efectuar_cierre'),
     path('reporte/select_reporte_ventas', ViewSelectReporteVentas.as_view(), name="reporte_venta_view"),
+    path('reporte/select_reporte_aperturas', ViewSelectReporteAperturas.as_view(), name="report_ape"),
+    path('reporte/print_reporte_aperturas', PrintViewReporteAperturas.as_view(), name="print_report_pertura"),
     path('reporte/print_reporte_venta', PrintViewReporteVentas.as_view(), name="print_report_venta"),
     path('reporte/grafico_reporte', grafico_reporte_ventas, name="url_grafico"),
 ]

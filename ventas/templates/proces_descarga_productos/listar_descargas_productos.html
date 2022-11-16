@@ -35,7 +35,7 @@
                     {% if descarga_prod %}
                         {% for descarga in descarga_prod %}
                             <tr>                    
-                                <th scope="row">{{ carga.id }}</th>
+                                <th scope="row">{{ descarga.id }}</th>
                                 <td>{{ descarga.usuario }}</td>
                                 <td>{{ descarga.fecha_descarga }}</td>
                                 <td>{{ descarga.descripcion }}</td>
@@ -47,7 +47,7 @@
                                             Action
                                         </button>
                                         <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="#">Detalle de descarga</a></li>
+                                            <li><a class="dropdown-item" href="{% url 'store:detalle_descarga' descarga.id %}">Detalle de descarga</a></li>
                                         </ul>
                                     </div>
                                 </td>

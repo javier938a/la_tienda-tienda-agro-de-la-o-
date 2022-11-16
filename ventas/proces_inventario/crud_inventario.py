@@ -70,9 +70,9 @@ class ListarInventario(LoginRequiredMixin, ListView):
         tipo_usuario=str(self.request.user.tipo_usuario)
         sucursal=self.request.user.sucursal#validando que el administrador pueda ver su inventario total de todas las sucursales
         if tipo_usuario=="administrador":
-            listado_inventario=self.model.objects.all()
+            listado_inventario=self.model.objects.all().order_by('-fecha_de_registro')
         elif tipo_usuario=="usuario":
-            listado_inventario=self.model.objects.filter(sucursal=sucursal)#de lo contrario si es usuario solo vera el inventario de su sucursal
+            listado_inventario=self.model.objects.filter(sucursal=sucursal).order_by('-fecha_de_registro')#de lo contrario si es usuario solo vera el inventario de su sucursal
         return listado_inventario
 
 def obtener_productos_autocomplete(request):

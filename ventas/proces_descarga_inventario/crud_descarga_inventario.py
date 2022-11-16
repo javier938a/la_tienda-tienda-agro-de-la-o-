@@ -1,5 +1,5 @@
 from itertools import product
-from django.views.generic import ListView, TemplateView
+from django.views.generic import ListView, TemplateView, DetailView
 from ventas.models import CargaProductos, ProductoStockSucursal
 from ventas.models import DescargaProductos, DetalleDescargaProducto
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -13,6 +13,23 @@ class ListarDescargasProductos(LoginRequiredMixin, ListView):
     template_name="proces_descarga_productos/listar_descargas_productos.html"
     model=DescargaProductos
     context_object_name="descarga_prod"
+
+    def get_queryset(self):
+        return self.model.objects.all().order_by('-fecha_descarga')
+
+class ViewDetalleDescargaProducto(LoginRequiredMixin, DetailView):
+    login_url='/ventas/login/'
+    redirect_field_name="redirect_to"
+    template_name="proces_descarga_productos/detalle_descarga_producto.html"
+    model=DescargaProductos
+    context_object_name="descargas"
+
+    def get_context_data(self, **kwargs):
+        context=super(ViewDetalleDescargaProducto, self).get_context_data(**kwargs)
+        descarga_productos=DescargaProductos.objects.get(id=self.kwargs['pk'])
+        detalle_descarga_producto_carga=DetalleDescargaProducto.objects.filter(descarga_productos=descarga_productos)
+        context['detalle_descarga_producto_carga']=detalle_descarga_producto_carga
+        return context
 
 class ViewCrearDescargaProducto(LoginRequiredMixin, TemplateView):
     login_url="/ventas/login/"

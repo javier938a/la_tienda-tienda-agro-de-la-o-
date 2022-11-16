@@ -14,7 +14,7 @@ from django.conf import settings
 from django.views.generic import DetailView, ListView, TemplateView
 from django_weasyprint import WeasyTemplateResponseMixin
 from django_weasyprint.views import WeasyTemplateResponse
-from ventas.models import Venta
+from ventas.models import Venta, AperturaCorte
 from ventas.models import Sucursal
 from ventas.models import User
 
@@ -33,6 +33,71 @@ class ViewSelectReporteVentas(LoginRequiredMixin, TemplateView):
         usuarios=User.objects.all()
         context['usuarios']=usuarios
         context['sucursales']=sucursales
+        return context
+
+class ViewSelectReporteAperturas(LoginRequiredMixin, TemplateView):
+    login_url="/ventas/login/"
+    redirect_field_name="redirect_to"
+    template_name="reportes/view_reporte_aperturas.html"
+    
+    def get_context_data(self, **kwargs):
+        context=super(ViewSelectReporteAperturas, self).get_context_data(**kwargs)
+        sucursales=Sucursal.objects.all()
+        context['sucursales']=sucursales
+        return context
+
+
+class DetalleReporteAperturas(TemplateView):
+    template_name="reportes/reporte_aperturas.html"
+
+class CustomAperturaTemplateReponse(WeasyTemplateResponse):
+    def get_url_fetcher(self):
+        context=ssl.create_default_context()
+        context.check_hostname=False
+        context.verify_mode=ssl.CERT_NONE
+        return functools.partial(django_url_fetcher, ssl_context=context)
+
+class PrintViewReporteAperturas(WeasyTemplateResponseMixin, DetalleReporteAperturas):
+    model=AperturaCorte
+    context_object_name='apertura_corte'
+
+    pdf_stylesheets=[
+        str(settings.STATIC_ROOT) + '/assets/css/estilos_reporte_apertura/reporte_apertura.css',
+    ]
+    pdf_attachment=False
+
+    response_class=CustomAperturaTemplateReponse
+
+    def get_context_data(self, **kwargs):
+        context=super(PrintViewReporteAperturas, self).get_context_data(**kwargs)
+        tipo_reporte=self.request.GET['tipo_reporte']
+        fecha_inicio=self.request.GET['fecha_inicial']
+        fecha_final=self.request.GET['fecha_final'] 
+        aperturas=None
+        context['fecha_inicial']=fecha_inicio
+        context['fecha_final']=fecha_final
+        if tipo_reporte=="0":
+            if fecha_inicio==fecha_final:
+                aperturas=AperturaCorte.objects.filter(Q(fecha_de_apertura__date=fecha_inicio)).order_by("-fecha_de_apertura")
+            else:
+                aperturas=AperturaCorte.objects.filter(Q(fecha_de_apertura__gte=fecha_inicio) & Q(fecha_de_apertura__lte=fecha_final)).order_by("-fecha_de_apertura")
+        elif tipo_reporte=="1":
+                id_sucursal=self.request.GET['id_sucursal']
+                
+                if int(id_sucursal)>0:
+                    sucursal=Sucursal.objects.get(id=id_sucursal)
+                    if fecha_inicio==fecha_final:
+                        aperturas=AperturaCorte.objects.filter(Q(usuario__sucursal=sucursal)).filter(Q(fecha_de_apertura__date=fecha_inicio)).order_by("-fecha_de_apertura")
+                    else:
+                        aperturas=AperturaCorte.objects.filter(Q(usuario__sucursal=sucursal)).filter(Q(fecha_de_apertura__gte=fecha_inicio) & Q(fecha_de_apertura__lte=fecha_final)).order_by("-fecha_de_apertura")
+                else:
+                    if fecha_inicio==fecha_final:
+                        aperturas=AperturaCorte.objects.filter(Q(fecha_de_apertura__date=fecha_inicio)).order_by("-fecha_de_apertura")
+                    else:
+                        aperturas=AperturaCorte.objects.filter(Q(fecha_de_apertura__gte=fecha_inicio) & Q(fecha_de_apertura__lte=fecha_final)).order_by("-fecha_de_apertura") 
+
+        context['apertura_corte']=aperturas
+
         return context
 
 class DetalleReporteVentas(TemplateView):

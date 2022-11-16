@@ -50,9 +50,9 @@ class ListarVentas(LoginRequiredMixin, ListView):
         ventas=None
         print("Este es el "+tipo_de_usuario)
         if tipo_de_usuario=="administrador":#validando que si es administrador pueda ver todas las ventas de todas las sucursales
-            ventas=self.model.objects.all()
+            ventas=self.model.objects.all().order_by('-fecha_venta')
         elif tipo_de_usuario=="usuario":#si es usuario solo podra las ventas de la sucursal a la que se le ha creado su usuario
-            ventas=self.model.objects.filter(sucursal=sucursal_usuario)
+            ventas=self.model.objects.filter(sucursal=sucursal_usuario).order_by('-fecha_venta')
 
         return ventas
 
