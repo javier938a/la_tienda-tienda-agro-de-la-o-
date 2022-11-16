@@ -19,58 +19,51 @@
                         <tbody>
                         <tr>        
                             <td>Nombre del Producto:</td>
-                            <td>{{ producto.producto }}</td>                    
+                            <td>{{ producto.nombre_producto }}</td>                    
                         </tr>
                         <tr>
-                          <td>Sucursal:</td>
-                          <td>{{ producto.sucursal }}</td>
+                            <td>Proveedor</td>
+                            <td>{{ producto.proveedor.empresa }}</td>
                         </tr>
                         <tr>       
                           <td>Fecha de registro:</td>
-                          <td>{{ producto.fecha_de_registro }}</td>                 
+                          {% if producto.fecha_de_registro == None %}
+                            <td>No hay fecha de registro</td>                                
+                          {% else %}
+                            <td>{{ producto.fecha_de_registro }}</td> 
+                          {% endif %}              
+                        </tr>
+                        <tr>
+                            <td>Codigo de Barra</td>
+                            <td>{{ producto.codigo_barra }}</td>
+                        </tr>
+                        <tr>
+                            <td>Usuario que lo registro</td>
+                            <td>{{ producto.usuario }}</td>
+                        </tr>
+                        <tr>
+                            <td>Categoria del producto</td>
+                            <td>{{ producto.categoria.categoria }}</td>
                         </tr>
                         <tr>       
                           <td>Fecha de Vencimiento:</td>
                           {% if producto.producto.fecha_vencimiento == None %}
                             <td>No tiene fecha de vencimiento</td>
                           {% else %}
-                            <td>{{ producto.producto.fecha_vencimiento }}</td>    
+                            <td>{{ producto.fecha_vencimiento }}</td>    
                           {% endif %}             
                         </tr>
                         <tr>
                           <td>Usuario responsable:</td>
                           <td>{{ producto.usuario }}</td>
                         </tr>
-                        <tr>
-                          <td>Stock:</td>
-                          <td>{{ producto.cantidad }}</td>
-                        </tr>
-                        <tr>
-                          <td>Presentacion:</td>
-                          <td>{{ producto.presentacion }}</td>
-                        </tr>
-                        {% if user.tipo_usuario.tipo_usuario == "administrador" %}
-                        <tr>
-                          <td>Costo:</td>
-                          <td>${{ producto.costo }}</td>
-                        </tr>
-                        <tr>
-                          <td>Precio:</td>
-                          <td>${{ producto.precio }}</td>
-                        </tr>
-                        {% else %}
-                        <tr>
-                          <td>Precio:</td>
-                          <td>${{ producto.precio }}</td>
-                        </tr>
-                        {% endif %}
                         </tbody>
                     </table>
                   {% endif %}
                 </div>
                 <div class="card-footer">
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                      <a class="btn btn-success" href="{% url 'store:list_inv' %}">Salir</a>
+                      <a class="btn btn-success" href="{% url 'store:list_prod' %}">Salir</a>
                   </div>
               </div>
               </div><!-- End Default Card -->

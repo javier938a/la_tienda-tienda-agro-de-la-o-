@@ -2,7 +2,7 @@
 
 {% block contenido %}
     <div class="pagetitle">
-      <h1>Listar Inventarios</h1>
+      <h1>Listar productos del Inventarios</h1>
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="{% url 'store:index' %}">Inicio</a></li>
@@ -27,8 +27,8 @@
                     <th scope="col">Sucursal</th>
                     <th scope="col">Usuario</th>
                     <th scope="col">Producto</th>
-                    <th scope="col">Presentacion</th>
                     <th scope="col">Cantidad</th>
+                    <th scope="col">Presentacion</th>
                     <th scope="col">Costo</th>
                     <th scope="col">Precio</th>
                     <th scope="col" colspan="2">Acciones</th>
@@ -42,8 +42,8 @@
                                 <td>{{ inv.sucursal }}</td>
                                 <td>{{ inv.usuario }}</td>
                                 <td>{{ inv.producto}}</td>
-                                <td>{{ inv.presentacion }}</td>
                                 <td>{{ inv.cantidad }}</td>
+                                <td>{{ inv.presentacion }}</td>                                
                                 <td>${{ inv.costo}}</td>
                                 <td>${{ inv.precio }}</td>
                                 <td>
@@ -52,7 +52,8 @@
                                             Action
                                         </button>
                                         <ul class="dropdown-menu">              
-                                            <li><a class="dropdown-item" href="#">Detalle de producto</a></li>
+                                            <li><a class="dropdown-item" href="{% url 'store:det_inv' inv.id %}">Detalle de producto</a></li>
+                                            <li><a class="dropdown-item" href="{% url 'store:del_inv' inv.id %}">Eliminar producto</a></li>
                                         </ul>
                                     </div>
                                 </td>
@@ -77,5 +78,5 @@
 {% load static %}
 
 {% block extra-script %}
-    <script src="{% static 'assets/js/proces_usuario/listar_inventario.js' %}"></script>
+    
 {% endblock %}

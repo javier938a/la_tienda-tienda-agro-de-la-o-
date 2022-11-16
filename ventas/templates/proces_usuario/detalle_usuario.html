@@ -8,7 +8,7 @@
               <ul class="nav nav-tabs nav-tabs-bordered">
 
                 <li class="nav-item">
-                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Acerca de {{ user.username }}</button>
+                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Acerca de {{ usuario.username }}</button>
                 </li>
                 {% comment %}
                 <li class="nav-item">
@@ -45,13 +45,13 @@
 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label">Tipo de Usuario</div>
-                    <div class="col-lg-9 col-md-8">Usuario</div>
+                    <div class="col-lg-9 col-md-8">{{ usuario.tipo_usuario }}</div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Caja</div>
+                    <div class="col-lg-9 col-md-8">{{ usuario.caja }}</div>
                   </div>
 
-                  <div class="row">
-                    <div class="col-lg-3 col-md-4 label">Pais</div>
-                    <div class="col-lg-9 col-md-8">El Salvador</div>
-                  </div>
                   {% comment %}
                     <div class="row">
                       <div class="col-lg-3 col-md-4 label">Address</div>

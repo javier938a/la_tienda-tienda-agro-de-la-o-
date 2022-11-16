@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from ventas.models import InventarioProductos, Sucursal, Producto, Presentacion, User, ProductoStockSucursal
 from django.http import request, JsonResponse
 from django.db.models import Q
+from django.urls import reverse_lazy
 from django.core.serializers import serialize
 
 class ViewCrearInventario(LoginRequiredMixin, TemplateView):
@@ -37,23 +38,26 @@ class ViewEditarInventario(LoginRequiredMixin, TemplateView):
 class DetalleInventario(LoginRequiredMixin, DetailView):
     login_url="/ventas/login/"
     redirect_field_name="redirect_to"
-    model=InventarioProductos
+    model=ProductoStockSucursal
     template_name="proces_inventario/detalle_inventario.html"
-    context_object_name="inventario"
-    def get_context_data(self, **kwargs):
-        context=super(DetalleInventario, self).get_context_data(**kwargs)
-        #obteniendo el listado de productos de este inventario
-        detalle_inv=ProductoStockSucursal.objects.filter(inventario_productos__id=self.kwargs['pk'])
-        context['detalle_inv']=detalle_inv
-
-        print(context)
-        return context
+    context_object_name="producto"
 
 
-class EliminarInventario(LoginRequiredMixin, TemplateView):
+class EliminarInventario(LoginRequiredMixin, DeleteView):
     login_url="/ventas/login/"
     redirect_field_name="redirect_to"
-    pass
+    template_name="proces_inventario/eliminar_inventario.html"
+    model=ProductoStockSucursal
+    context_object_name="producto_stock"
+    success_url=reverse_lazy('store:list_inv')
+    def get_context_data(self, **kwargs):
+        context=super(EliminarInventario, self).get_context_data(**kwargs)
+        
+        print(context)
+        return context
+    
+
+    
 
 class ListarInventario(LoginRequiredMixin, ListView):
     login_url="/ventas/login/"

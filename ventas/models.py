@@ -62,6 +62,7 @@ class Categoria(models.Model):
 
 class Producto(models.Model):
     proveedor=models.ForeignKey(Proveedor, help_text="Seleccione el proveedor", on_delete=models.SET_NULL, null=True)
+    fecha_de_registro=models.DateTimeField(help_text="Ingrese la fecha de registro", null=True, blank=True, auto_now_add=True)
     codigo_producto=models.CharField(max_length=500, help_text="Codigo del producto", null=True)
     codigo_barra=models.CharField(max_length=100, help_text="Ingrese el codigo de barra del producto", null=True, blank=True)
     nombre_producto=models.CharField(max_length=100, help_text="Ingrese el nombre del producto")
@@ -146,6 +147,7 @@ class InventarioProductos(models.Model):
         return "%s %s "%(self.descripcion, str(self.total))
 
 class ProductoStockSucursal(models.Model):
+    fecha_de_registro=models.DateTimeField(help_text="Servira para saber que dia se registro", null=True, blank=True, auto_now_add=True)
     sucursal=models.ForeignKey(Sucursal, on_delete=models.SET_NULL, null=True)
     usuario=models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     producto=models.ForeignKey(Producto, on_delete=models.SET_NULL, null=True)

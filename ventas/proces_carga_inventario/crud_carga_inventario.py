@@ -53,12 +53,14 @@ def listar_productos_cargados_y_sin_cargar_autocomplete(request):
         producto_stock=ProductoStockSucursal.objects.all()
     list_prod=[]
     for producto in producto:
-        fila=str(producto.id)+'|'+str(producto.nombre_producto)+'|'+'ninguna'+'|'+'0'+'|nuevo'
-        list_prod.append(fila)
+        if producto.nombre_producto!=None:
+            fila=str(producto.id)+'|'+str(producto.nombre_producto)+'|'+'ninguna'+'|'+'0'+'|nuevo'
+            list_prod.append(fila)
     
     for producto_stock in producto_stock:
-        fila=str(producto_stock.id)+'|'+str(producto_stock.producto.nombre_producto)+'|'+str(producto_stock.presentacion)+'|'+str(producto_stock.cantidad)+'|existe'
-        list_prod.append(fila)   
+        if producto_stock.producto != None:
+            fila=str(producto_stock.id)+'|'+str(producto_stock.producto.nombre_producto)+'|'+str(producto_stock.presentacion)+'|'+str(producto_stock.cantidad)+'|existe'
+            list_prod.append(fila)   
 
     return JsonResponse(list_prod, safe=False)
 

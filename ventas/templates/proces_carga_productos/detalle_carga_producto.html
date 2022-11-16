@@ -1,5 +1,18 @@
 {% extends "base.html" %}
 
+{% block barra_superior %}
+
+{% endblock %}
+
+{# blocke para especificar los atributos del body y quitar la barra lateral #}
+{% block atributos_body %}
+        class="toggle-sidebar" {# este atributo quita el espacio de mas a la izquierda #}
+{% endblock %}
+
+{% block barra_lateral %}
+
+{% endblock %}
+
 {% block contenido %}
     <section class="section">
         <div class="row align-items-top">

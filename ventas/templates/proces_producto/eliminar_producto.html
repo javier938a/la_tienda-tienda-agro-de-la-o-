@@ -19,12 +19,12 @@
           <div class="card">
             <div class="card-body">
               <h5 class="card-title"></h5>
-
               <!-- General Form Elements -->
-              <form method="POST">
+              {% if res == False %}
+              <form method="POST" id="eliminar_producto">
                     {% csrf_token %}
                     <div class="alert alert-danger" role="alert">
-                    Esta seguro de eliminar a {{ prod.categoria }}
+                    Esta seguro de eliminar a <b>"{{ prod.nombre_producto }}"</b>
                     no se podra recuperar despues..
                     </div>
 
@@ -34,9 +34,23 @@
                     <button type="submit" class="btn btn-danger">Eliminar</button>
                   </div>
                 </div>
-
               </form><!-- End General Form Elements -->
+              {% elif res == True %}
+                <form method="POST" id="eliminar_producto">
+                    {% csrf_token %}
+                    <div class="alert alert-danger" role="alert">
+                      No puede eliminar el producto <b>"{{ prod.nombre_producto }}"</b>, ya que ya lo ha cargado al Inventario
+                      Solo puede eliminar productos que no se han cargado ninguna vez
+                    </div>
 
+                  <div class="row mb-3 float-end">
+                    <div class="col-sm-12">
+                      <a class="btn btn-primary" href="{% url 'store:list_prod' %}">Regresar</a>
+                    </div>
+                  </div>
+                </form><!-- End General Form Elements -->
+              {% endif %}
+              <input type="hidden" name="id_producto" id="id_producto" value="{{ prod.id }}">
             </div>
           </div>
 
@@ -46,3 +60,4 @@
     </section>
 
 {% endblock %}
+

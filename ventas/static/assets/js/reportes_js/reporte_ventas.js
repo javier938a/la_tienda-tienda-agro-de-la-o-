@@ -9,6 +9,9 @@ $(document).ready(function(){
     });
     $("#fecha_final").mask('0000-00-00');
     //generando el reporte
+    $("#tipo_reporte").select2();
+    $("#id_usuario").select2();
+    $("#id_sucursal").select2();
     $("#frm_reporte_venta").submit(function(evt){
         
         let fecha_inicial=$("#fecha_inicio").val();

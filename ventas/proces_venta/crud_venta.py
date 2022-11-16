@@ -72,7 +72,8 @@ def obtener_productos_inventario_autocomplete(request):
             productos_buscado=ProductoStockSucursal.objects.filter(Q(sucursal=sucursal_user))
     
     for producto_ubi in productos_buscado:
-        datos.append(str(producto_ubi.id)+'|'+str(producto_ubi.producto.nombre_producto)+'|'+str(producto_ubi.presentacion.presentacion)+'|'+str(producto_ubi.cantidad))
+        if producto_ubi.producto !=None:
+            datos.append(str(producto_ubi.id)+'|'+str(producto_ubi.producto.nombre_producto)+'|'+str(producto_ubi.presentacion.presentacion)+'|'+str(producto_ubi.cantidad))
 
     return JsonResponse(datos, safe=False)
 

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block extra-css %}
+      <link href="{% static 'assets/css/jquery-ui/jquery-ui.css' %}" rel="stylesheet">
+      <link href="{% static 'assets/css/select2/select2.css' %}" rel="stylesheet">
+      <link rel="stylesheet" href="{% static 'assets/css/toastr/toastr.css' %}">
+{% endblock %}
+
+{% block contenido %}
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title"></h5>
+
+              <!-- General Form Elements -->
+              <form method="POST" id="eliminar_producto_en_inventario">
+                    {% csrf_token %}
+                    <div class="alert alert-danger" role="alert">
+                        
+                    Esta seguro de Eliminar este producto "{{ producto_stock.producto }}"
+                    aun hay {{ producto_stock.cantidad }} {{ producto_stock.presentacion }} en el Inventario, no se podra recuperar despues..
+                    </div>
+
+                <div class="row mb-3 float-end">
+                  <div class="col-sm-12">
+                    <a class="btn btn-primary" href="{% url 'store:list_inv' %}">No</a>
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                  </div>
+                </div>
+
+              </form><!-- End General Form Elements -->
+              <input type="hidden" name="cantidad_disponible" id="cantidad_disponible" value="{{ producto_stock.cantidad }}">
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+{% endblock %}
+
+{% block extra-script %}
+    <script src="{% static 'assets/js/jquery-ui/jquery-ui.js' %}"></script>
+    <script src="{% static 'assets/js/jquery-mask/jquery.mask.js' %}"></script>
+    <script src="{% static 'assets/js/select2/select2.js' %}"></script>
+    <script src="{% static 'assets/js/toastr/toastr.min.js' %}"></script>
+    <script src="{% static 'assets/js/proces_inventario/eliminar_inventario.js' %}"></script>
+    
+{% endblock %}
