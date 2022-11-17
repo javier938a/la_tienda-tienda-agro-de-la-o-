@@ -26,6 +26,7 @@
                     <th scope="col">ID</th>                    
                     <th scope="col">Sucursal</th>
                     <th scope="col">Usuario</th>
+                    <th scope="col">Fecha de registro</th>
                     <th scope="col">Producto</th>
                     <th scope="col">Cantidad</th>
                     <th scope="col">Presentacion</th>
@@ -41,6 +42,7 @@
                                 <th scope="row">{{ inv.id }}</th>
                                 <td>{{ inv.sucursal }}</td>
                                 <td>{{ inv.usuario }}</td>
+                                <td>{{ inv.fecha_de_registro }}</td>
                                 <td>{{ inv.producto}}</td>
                                 <td>{{ inv.cantidad }}</td>
                                 <td>{{ inv.presentacion }}</td>                                
@@ -53,7 +55,7 @@
                                         </button>
                                         <ul class="dropdown-menu">              
                                             <li><a class="dropdown-item" href="{% url 'store:det_inv' inv.id %}">Detalle de producto</a></li>
-                                            <li><a class="dropdown-item" href="{% url 'store:del_inv' inv.id %}">Eliminar producto</a></li>
+                                            {# <li><a class="dropdown-item" href="{% url 'store:del_inv' inv.id %}">Eliminar producto</a></li> #}
                                         </ul>
                                     </div>
                                 </td>

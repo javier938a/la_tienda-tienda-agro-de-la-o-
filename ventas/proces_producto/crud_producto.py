@@ -67,6 +67,9 @@ class ListarProductos(LoginRequiredMixin, ListView):
     model=Producto
     context_object_name="producto"
 
+    def get_queryset(self):
+        return self.model.objects.all().order_by('-fecha_de_registro')
+
 def verificar_producto_si_esta_cargado(request):
     id_producto=request.POST.get('id_producto')
     producto=Producto.objects.get(id=id_producto)
