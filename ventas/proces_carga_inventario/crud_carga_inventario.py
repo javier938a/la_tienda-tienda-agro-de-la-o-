@@ -57,12 +57,15 @@ def listar_productos_cargados_y_sin_cargar_autocomplete(request):
     list_prod=[]
     for producto in producto:
         if producto.nombre_producto!=None:
-            fila=str(producto.id)+'|'+str(producto.nombre_producto)+'|'+'ninguna'+'|'+'0'+'|nuevo'
-            list_prod.append(fila)
-    
+            print(producto)
+            #esta validacion es solo para que no se puedan agregar los productos que ya se cargaron el el inventario
+            if ProductoStockSucursal.objects.filter(producto=producto).exists()==False:
+                fila=str(producto.id)+'|'+str(producto.nombre_producto)+'|'+'ninguna'+'|'+'0'+'|nuevo'
+                list_prod.append(fila)
+    #AQUI SE LISTARIAN TODOS LOS PRODUCTOS QUE YA EXISTEN EN EL INVENTARIO
     for producto_stock in producto_stock:
         if producto_stock.producto != None:
-            fila=str(producto_stock.id)+'|'+str(producto_stock.producto.nombre_producto)+'|'+str(producto_stock.presentacion)+'|'+str(producto_stock.cantidad)+'|existe'
+            fila=str(producto_stock.id)+'|'+str(producto_stock.producto.nombre_producto)+'|'+str(producto_stock.presentacion)+', Cantidad:|'+str(producto_stock.cantidad)+'|existe'
             list_prod.append(fila)   
 
     return JsonResponse(list_prod, safe=False)

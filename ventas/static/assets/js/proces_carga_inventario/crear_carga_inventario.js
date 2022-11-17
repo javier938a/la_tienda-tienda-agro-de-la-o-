@@ -53,11 +53,19 @@ $(document).ready(function(){
             let producto=ui.item.value;
             let prod_array=producto.split('|');
             let id_prod_cualquiera=prod_array[0];
-            presentacion=prod_array[2];
-            stock=prod_array[3];
-            console.log(producto)
-            agregar_producto_detalle_carga(id_prod_cualquiera, presentacion, stock);   
-  
+            let detalle_productos=$("#table-productos-carga tr");
+            esta_agregado=validar_producto_nuevo_unico(detalle_productos, id_prod_cualquiera);
+            console.log("Hola que tal "+esta_agregado)
+            if(esta_agregado){
+                presentacion=prod_array[2];
+                stock=prod_array[3];
+                console.log(producto)
+                agregar_producto_detalle_carga(id_prod_cualquiera, presentacion, stock);   
+            }else{
+                $("#producto").val("");//limpiando el campo de producto
+                toastr['error']("Este producto ya esta agregado en el detalle de carga, porfavor ingrese otro producto");
+                     
+            } 
         }
     });
 
@@ -290,6 +298,29 @@ $(document).ready(function(){
         console.log(total)
 
         $("#total").text("$"+ redondear(total));
+    }
+
+    //validar que no se agregue dos veces el mismo producto
+    function validar_producto_nuevo_unico(tabla, id){
+        res=true;
+        tabla.each(function(index){
+            let id_producto_stock=$(this).find('.idprod').val();
+            let tipo_prod=$(this).find('.tipo_prod').val();
+            if(tipo_prod=="nuevo"){
+                if(id_producto_stock===id){
+                    res=false;
+                }
+            }else if(tipo_prod=="existe"){
+                if(id_producto_stock===id){
+                    res=false
+                }
+            }
+            
+            console.log("este es el id: "+id_producto_stock)
+
+        });
+        console.log("Resultado siempre da "+res)
+        return res;
     }
 
 
