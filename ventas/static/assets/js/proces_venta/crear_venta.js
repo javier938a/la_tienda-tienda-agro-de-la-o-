@@ -323,6 +323,8 @@ $(document).ready(function(){
     }
     let ticket=null;//esta variable es para cuando el usuario le de guardar a la venta almacene los datos de la venta devueltos
                     //para posteriormento imprimirlo en el evento del teclado
+    let efectivo=null;//servira para figurar en el ticket cuanto efectivo entrego al cajero
+    let cambio=null;//serviria para saber cuanto de cambio se le entrego al cliente y mostrarla en el ticket
     $("#efectuar_venta").click(function(evt){       
             let detalles_venta_prod=$("#table-productos-venta tr");
             let res_validad_detalles=validar_detalles_ventas(detalles_venta_prod);
@@ -373,16 +375,17 @@ $(document).ready(function(){
     });
 
     //calculando cambio
+    
     $("#txt_efectivo").keyup(function(evt){
         let total=0;
-        let efectivo=0;
+        efectivo=0;
         if($("#total").text().replace("$", "")!=''){
             total_sin_iva=parseFloat($("#total_sin_iva").text().replace("$", ""));
         }
         if($("#txt_efectivo").val().replace("$", "")!=''){
             efectivo=parseFloat($("#txt_efectivo").val().replace("$", ""));
         }
-        let cambio=efectivo-total_sin_iva;
+        cambio=efectivo-total_sin_iva;
         console.log("total "+total);
         console.log("efectivo "+efectivo);
         console.log("cambio "+cambio);
@@ -425,12 +428,15 @@ $(document).ready(function(){
         let num_tecla_enter=evt.which;
         if(num_tecla_enter===13){
             //url_print_ticket=$("#url_print_ticket").val();
-            url_print_ticket="http://127.0.0.1:8081/imprimir/";
+            url_print_ticket="http://127.0.0.1:8000/imprimir/";
             const csrftoken=getCookie('csrftoken');
             let datos={
                         csrfmiddlewaretoken:csrftoken,
-                        'ticket':ticket
-            }
+                        'ticket':ticket,
+                        'efectivo':efectivo,
+                        'cambio':cambio
+            };
+            
             $.ajax({
                     url:url_print_ticket,
                     type:'POST',
