@@ -3,7 +3,7 @@ from django.views.generic import CreateView, ListView, DeleteView, DetailView, U
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import Http404
-from ventas.models import User
+from ventas.models import User, Venta, CargaProductos
 from ventas.forms import UserForm
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -41,6 +41,19 @@ class EliminarUsuario(LoginRequiredMixin, DeleteView):
     model=User
     context_object_name="user"
     success_url=reverse_lazy("store:user")
+    res=False
+    def get_context_data(self, **kwargs):
+        context=super(EliminarUsuario, self).get_context_data(**kwargs)
+        usuario=User.objects.get(id=self.kwargs['pk'])
+        if usuario.tipo_usuario.tipo_usuario=="administrador":
+            if CargaProductos.objects.filter(usuario=usuario).exists() or Venta.objects.filter(usuario=usuario).exists():
+                self.res=True
+        elif usuario.tipo_usuario.tipo_usuario=="usuario":
+            if Venta.objects.filter(usuario=usuario).exists():
+                self.res=True
+
+        context['res']=self.res
+        return context
 
 class ListarUsuarios(LoginRequiredMixin, ListView):
     login_url="/ventas/login/"

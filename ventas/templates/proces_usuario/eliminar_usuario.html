@@ -10,6 +10,8 @@
               <h5 class="card-title"></h5>
 
               <!-- General Form Elements -->
+              <h1>{{ res }}</h1>
+              {% if res == True %}
               <form method="POST">
                     {% csrf_token %}
                     <div class="alert alert-danger" role="alert">
@@ -25,7 +27,23 @@
                 </div>
 
               </form><!-- End General Form Elements -->
+             {% elif res == False %}
+              <form method="POST">
+                {% csrf_token %}
+                <div class="alert alert-danger" role="alert">
+                No se puede eliminar {{ user.username }}
+                debido a que hay movimientos de venta o movimientos 
+                de carga de productos a nombre de este usuario
+                </div>
 
+                <div class="row mb-3 float-end">
+                  <div class="col-sm-12">
+                    <a class="btn btn-primary" href="{% url 'store:user' %}">No</a>
+                  </div>
+                </div>
+
+              </form><!-- End General Form Elements -->
+             {% endif %}
             </div>
           </div>
 
