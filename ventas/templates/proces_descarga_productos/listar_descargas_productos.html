@@ -1,7 +1,11 @@
 {% extends "base.html" %}
+{% block titulo %}
+  <title>Lista de descarga de productos </title>
+{% endblock %}
+
 {% block contenido %}
     <div class="pagetitle">
-      <h1>Listar Cargas de Inventario</h1>
+      <h1>Listar Descargas de Inventario</h1>
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="{% url 'store:index' %}">Inicio</a></li>
