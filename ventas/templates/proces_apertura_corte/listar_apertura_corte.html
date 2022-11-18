@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 
+{% block titulo %}
+  <title>Listado de aperturas y corte de caja</title>
+{% endblock %}
 {% load static %}
 {% block extra-css %}
       <link href="{% static 'assets/css/jquery-ui/jquery-ui.css' %}" rel="stylesheet">
@@ -47,7 +50,7 @@
                 <a href="{% url 'store:cierre_caja' apertura_de_corte.id %}" class="btn btn-danger">Realizar Cierre de caja</a>   
               {% elif es_corte_de_caja == 3 %}
                 <h4 class="card-title">Usted va empezando el dia, por lo que no hay ninguna apertura de caja, ni ultimo corte disponible</h4>
-                <h4 class="card-title">Porfavor realize una nueva apertura de caja, antes de enpezar a vender</h4>
+                <h4 class="card-title">Por favor realice una nueva apertura de caja, antes de enpezar a vender</h4>
               {% endif %}
             </div>
             <div class="card-footer text-muted" id="mostrar_cuadratura">
