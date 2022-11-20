@@ -161,6 +161,7 @@ class ProductoStockSucursal(models.Model):
         return "%s -> %s"%(str(self.sucursal), self.producto)
 
 class AperturaCorte(models.Model):
+    sucursal=models.ForeignKey(Sucursal, on_delete=models.SET_NULL, null=True)
     usuario=models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     fecha_de_apertura=models.DateTimeField(help_text="fecha y hora de apertura se generara automaticamente porque se registra el mismo momento que se habre apertura" ,auto_now=True)
     monto_de_apertura=models.FloatField(help_text="Ingrese el monto de apertura de su turno")

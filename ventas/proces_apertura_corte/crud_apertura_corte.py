@@ -14,16 +14,16 @@ class CrearApertura(LoginRequiredMixin, TemplateView):
         #promero verificamos si hay una apertura anterior que haya quedado como ultima apertura
         #con estado de apertura=False y estado de ultima_apertura=True
         #si existe es porque ya se creo un corte con esa apertura
-        if AperturaCorte.objects.filter(Q(ultima_apertura=True) & Q(estado_de_apertura=False) & Q(usuario__caja=self.request.user.caja)).exists():
+        if AperturaCorte.objects.filter(sucursal=self.request.user.sucursal).filter(Q(ultima_apertura=True) & Q(estado_de_apertura=False) & Q(usuario__caja=self.request.user.caja)).exists():
             #luego verificamos si este corte no es el corte global o el ultimo corte hecho en el dia 
             #ya que de ser asi no se tomaria en cuenta para realizar esta apertura ya que corresponde 
             #a un nuevo inicio del dia y el dueño decidira con cuanto efectivo necesita iniciar el dia
-            if AperturaCorte.objects.filter(Q(ultima_apertura=True) & Q(estado_de_apertura=False) & Q(corte_global=True) & Q(usuario__caja=self.request.user.caja)).exists():
+            if AperturaCorte.objects.filter(sucursal=self.request.user.sucursal).filter(Q(ultima_apertura=True) & Q(estado_de_apertura=False) & Q(corte_global=True) & Q(usuario__caja=self.request.user.caja)).exists():
                 context['usuario_anterior']="ninguno"
                 context['monto_corte_anterior']="0"
             else:#si no existe entonces agarramos esa ultima apertura y tomamos el valor
                 #del monto de apertura anterior para indicar al usuario que eso debe de tener en caja
-                corte_anterior=AperturaCorte.objects.get(Q(ultima_apertura=True) & Q(usuario__caja=self.request.user.caja))
+                corte_anterior=AperturaCorte.objects.filter(sucursal=self.request.user.sucursal).get(Q(ultima_apertura=True) & Q(usuario__caja=self.request.user.caja))
                 usuario_anterior=corte_anterior.usuario
                 monto_corte_anterior=corte_anterior.monto_de_corte
                 print(monto_corte_anterior)
@@ -136,10 +136,11 @@ def proces_efectuar_apertura_caja(request):
     res=False
     datos={}
     ##poniendo en false la ultima apertura
-    apertura_anterior=AperturaCorte.objects.filter(Q(usuario__caja=caja_del_usuario) & Q(ultima_apertura=True))
+    apertura_anterior=AperturaCorte.objects.filter(sucursal=request.user.sucursal).filter(Q(usuario__caja=caja_del_usuario) & Q(ultima_apertura=True))
     apertura_anterior.update(estado_de_apertura=False,ultima_apertura=False)
     #como el campo corte se mantiene en cero ya que como ese seria el monto de apertura mas la sumatoria de todas las ventas que el usuario realizo en todo su turno
     nueva_apertura=AperturaCorte.objects.get_or_create(
+        sucursal=request.user.sucursal,
         usuario=request.user, 
         monto_de_apertura=monto_de_apertura,
         monto_de_corte=0.0,
@@ -163,7 +164,7 @@ def proces_efectuar_apertura_caja(request):
 
 def proces_verificar_si_hay_apertura_de_caja(request):
     #verifica si hay una apertura referente a la caja asignada al usuario
-    apertura_activa=AperturaCorte.objects.filter(Q(usuario__caja=request.user.caja) & Q(estado_de_apertura=True))
+    apertura_activa=AperturaCorte.objects.filter(sucursal=request.user.sucursal).filter(Q(usuario__caja=request.user.caja) & Q(estado_de_apertura=True))
     res=False
     print(apertura_activa)
     datos={}
@@ -190,16 +191,16 @@ def verificar_apertura_activa_de_usuario(request):
     #si existe una apertura se obtiene el nombre del usuario que esta a cargo de la venta
     #para mostrarsela al usuario
     #primero verificamos si existe una apertura con este usuario logiado
-    if AperturaCorte.objects.filter(Q(usuario=request.user) & Q(estado_de_apertura=True)).exists():
+    if AperturaCorte.objects.filter(sucursal=request.user.sucursal).filter(Q(usuario=request.user) & Q(estado_de_apertura=True)).exists():
         res=1
         apertura_vigente=AperturaCorte.objects.filter(Q(usuario=request.user) & Q(estado_de_apertura=True))
         apertura=apertura_vigente[0]
         nombre_usuario=str(apertura.usuario.username)
         print(apertura_vigente)
         #despues verificamos si existe un corte a nombre de esta caja y vemos a quien le corresponde
-    elif AperturaCorte.objects.filter(Q(usuario__caja=request.user.caja) & Q(estado_de_apertura=True)).exists():#de lo contrario verificamos si existe una apertura vigente a la caja a cargo de otro usuario
+    elif AperturaCorte.objects.filter(sucursal=request.user.sucursal).filter(Q(usuario__caja=request.user.caja) & Q(estado_de_apertura=True)).exists():#de lo contrario verificamos si existe una apertura vigente a la caja a cargo de otro usuario
         res=2
-        apertura_vigente=AperturaCorte.objects.filter(Q(usuario__caja=request.user.caja) & Q(estado_de_apertura=True))
+        apertura_vigente=AperturaCorte.objects.filter(sucursal=request.user.sucursal).filter(Q(usuario__caja=request.user.caja) & Q(estado_de_apertura=True))
         apertura=apertura_vigente[0]
         nombre_usuario=str(apertura.usuario.username)
         print(apertura_vigente)
@@ -235,18 +236,18 @@ class ListarAperturaCorte(LoginRequiredMixin, ListView):
         apertura_activa=None
         apertura_de_corte=None
         es_corte_de_caja=0#servira para saber si el ultimo corte de caja hecho en el dia
-        if AperturaCorte.objects.filter(Q(estado_de_apertura=True) & Q(usuario=self.request.user) & Q(corte_global=False)).exists():
+        if AperturaCorte.objects.filter(sucursal=self.request.user.sucursal).filter(Q(estado_de_apertura=True) & Q(usuario=self.request.user) & Q(corte_global=False)).exists():
             es_corte_de_caja=1
-            apertura_activa= AperturaCorte.objects.get(Q(estado_de_apertura=True) & Q(usuario__caja=self.request.user.caja) & Q(corte_global=False))
-        elif AperturaCorte.objects.filter(Q(estado_de_apertura=True) & Q(usuario__caja=self.request.user.caja)).exists():
+            apertura_activa= AperturaCorte.objects.get(Q(sucursal=self.request.user.sucursal) & Q(estado_de_apertura=True) & Q(usuario__caja=self.request.user.caja) & Q(corte_global=False))
+        elif AperturaCorte.objects.filter(sucursal=self.request.user.sucursal).filter(Q(estado_de_apertura=True) & Q(usuario__caja=self.request.user.caja)).exists():
             es_corte_de_caja=1
-            apertura_activa= AperturaCorte.objects.get(Q(estado_de_apertura=True) & Q(usuario__caja=self.request.user.caja))
-        elif AperturaCorte.objects.filter(Q(estado_de_apertura=False) & Q(ultima_apertura=True) & Q(corte_global=False) & Q(usuario=self.request.user)).exists():
+            apertura_activa= AperturaCorte.objects.get(Q(sucursal=self.request.user.sucursal) & Q(estado_de_apertura=True) & Q(usuario__caja=self.request.user.caja))
+        elif AperturaCorte.objects.filter(sucursal=self.request.user.sucursal).filter(Q(estado_de_apertura=False) & Q(ultima_apertura=True) & Q(corte_global=False) & Q(usuario=self.request.user)).exists():
             es_corte_de_caja=2
-            apertura_de_corte= AperturaCorte.objects.get(Q(estado_de_apertura=False) & Q(ultima_apertura=True) & Q(corte_global=False) & Q(usuario=self.request.user))
-        elif AperturaCorte.objects.filter(Q(estado_de_apertura=False) & Q(ultima_apertura=True) & Q(corte_global=False) & Q(usuario__caja=self.request.user.caja)).exists():
+            apertura_de_corte= AperturaCorte.objects.get(Q(sucursal=self.request.user.sucursal) & Q(estado_de_apertura=False) & Q(ultima_apertura=True) & Q(corte_global=False) & Q(usuario=self.request.user))
+        elif AperturaCorte.objects.filter(sucursal=self.request.user.sucursal).filter(Q(estado_de_apertura=False) & Q(ultima_apertura=True) & Q(corte_global=False) & Q(usuario__caja=self.request.user.caja)).exists():
             es_corte_de_caja=2
-            apertura_de_corte=AperturaCorte.objects.get(Q(estado_de_apertura=False) & Q(ultima_apertura=True) & Q(corte_global=False) & Q(usuario__caja=self.request.user.caja))
+            apertura_de_corte=AperturaCorte.objects.get(Q(sucursal=self.request.user.sucursal) & Q(estado_de_apertura=False) & Q(ultima_apertura=True) & Q(corte_global=False) & Q(usuario__caja=self.request.user.caja))
         else:
             es_corte_de_caja=3
 
@@ -264,4 +265,4 @@ class ListarAperturaCorte(LoginRequiredMixin, ListView):
     def get_queryset(self):
         sucursal=self.request.user.sucursal
         print(self.model.objects.filter(Q(usuario__sucursal=sucursal)))
-        return self.model.objects.filter(Q(usuario__sucursal=sucursal))
+        return self.model.objects.filter(Q(usuario__sucursal=sucursal)).order_by('-fecha_de_apertura')

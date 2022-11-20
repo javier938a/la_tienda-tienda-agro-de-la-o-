@@ -167,7 +167,7 @@ def efectuar_venta(request):
     #aqui se obtendria la apertura de esta cajero y se le asignaria a cada venta que ralize, cuando se haga un corte se obtendria 
     #la suma de todos esos producto que tienen asignada esta apertura el total mas la apertura seria el monto total que deberia tener en caja
     #y eso se registraria en el campor de monto de corte de la tabla Apertura corte
-    apertura_corte=AperturaCorte.objects.get(Q(usuario=request.user) & Q(estado_de_apertura=True))
+    apertura_corte=AperturaCorte.objects.filter(sucursal=request.user.sucursal).get(Q(usuario=request.user) & Q(estado_de_apertura=True))
     factura_objeto=Venta.objects.get_or_create(usuario=request.user, 
                                         apertura_corte=apertura_corte,
                                         numero_factura=nuevo_numero_correlativo,                                        
