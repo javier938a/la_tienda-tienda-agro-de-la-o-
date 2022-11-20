@@ -252,7 +252,8 @@ $(document).ready(function(){
         let cantidad= parseInt($(this).val());//obteniendo el total que se esta ingresando
         let precio=$(this).closest('tr').find('.pre').val().replace('$', '');//obtenendo el costo que esta en el canpo costo no se convierte porque pueda quee este vacio
                                         //closest devuelve el primer antecesor del elemento
-        
+        let fila_producto = $(this).closest('tr');//almacena la referencia a la fila del producto
+        console.log("imprime el valor de: "+cantidad)
         if(!isNaN(cantidad)){//si el el campo costo no esta vacio verifica el stock de este producto y si hay en existencia multiplica el costo por el total
             //datos para calcular el stock en tiempo real
             let id_prod_stock=$(this).closest('tr').find('.id_prod_stock').val();//id del producto de la fila
@@ -263,7 +264,7 @@ $(document).ready(function(){
                         csrfmiddlewaretoken:csrftoken,
                         'id_prod_stock':id_prod_stock,//se le envia el id de producto stock ubicacion
             }
-            let fila_producto = $(this).closest('tr');//almacena la referencia a la fila del producto
+            
             let campo_cantidad=$(this);//almacena la referencia al campo actual para usarlo dentro de la respuesta de la peticion ajax
             $.ajax({                  //que consulta el stock
                 url:url_verificar_stock,
@@ -272,7 +273,7 @@ $(document).ready(function(){
                 dataType:'json',
                 success:function(data){
                     let cantidad_real=parseInt(data.cantidad_real);
-                    if(cantidad>0 && cantidad<=cantidad_real){
+                    if(cantidad>=0 && cantidad<=cantidad_real){
                         console.log("Entra aqui")
                         let total=cantidad*parseFloat(precio);
         
