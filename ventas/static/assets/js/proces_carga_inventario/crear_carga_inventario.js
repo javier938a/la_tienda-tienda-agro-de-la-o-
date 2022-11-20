@@ -31,22 +31,35 @@ $(document).ready(function(){
     //listar los productos a cargar pueden ser nuevos o productos 
     let url_listar_productos_cargados_y_sin_cargar=$("#url_listar_productos_cargados_y_sin_cargar").val();
     const csrftoken=getCookie('csrftoken')
-    let id_sucursal=$("#sucursal").val();    
+    let id_sucursal=$("#sucursal").val();  
+    //lo que se esta haciendo aqui almacenando en un hidden el valor del id sucursal
+    //por medio del evento change ya que da una falla al agarrarlo directamebte del select 
+    $("#sucursal").change(function(){
+        $("#id_sucursal_hidden").val($(this).val())
+    });  
     $("#producto").autocomplete({
         source:function(request, response){
-            $.ajax({
-                url:url_listar_productos_cargados_y_sin_cargar,
-                type:"POST",
-                data:{
-                    csrfmiddlewaretoken:csrftoken,
-                    'id_sucursal':id_sucursal,
-                    term:request.term
-                },
-                dataType:'json',
-                success:function(data){
-                    response(data)
-                }
-            })
+            //console.log("Hola esto es el autocomplete")
+            let id_sucursal_hidden=$("#id_sucursal_hidden").val();
+
+            console.log("id_sucursal="+id_sucursal)
+            if(id_sucursal_hidden!="0"){
+                $.ajax({
+                    url:url_listar_productos_cargados_y_sin_cargar,
+                    type:"POST",
+                    data:{
+                        csrfmiddlewaretoken:csrftoken,
+                        'id_sucursal':id_sucursal_hidden,
+                        term:request.term
+                    },
+                    dataType:'json',
+                    success:function(data){
+                        response(data)
+                    }
+                })
+            }else{
+                toastr["warning"]("Debe de seleccionar la sucursal en donde cargara los productos");
+            }
         },
         minLength:2,
         select:function(event, ui){
@@ -102,7 +115,7 @@ $(document).ready(function(){
     $("#efectuar_carga").click(function(){
         let descripcion_carga=$("#descripcion").val();
         if(descripcion_carga.length>0){
-           let id_sucursal = $("#sucursal").val();
+           let id_sucursal = $("#id_sucursal_hidden").val();
            if(id_sucursal.length>0){
             let tabla_producto_detalle=$("#table-productos-carga tr");
             let res_tabla_detalle=validar_detalles_carga(tabla_producto_detalle);

@@ -14,23 +14,32 @@ function getCookie(name) {
     return cookieValue;
 }
 $(document).ready(function(){
-    
+    $("#sucursal").select2();
+    $("#sucursal").change(function(){
+        $("#id_sucursal_hidden").val($(this).val())
+    }); 
     let url_list_descarga_prod = $("#url_list_prod_a_descargar").val();//url de la lista de productos a descargar
     let csrftoken = getCookie('csrftoken');
     $("#producto").autocomplete({
         source:function(request, response){
-            $.ajax({
-                url:url_list_descarga_prod,
-                type:"POST",
-                data:{
-                    csrfmiddlewaretoken:csrftoken,
-                    term:request.term
-                },
-                dataType:'json',
-                success:function(data){
-                    response(data)
-                }
-            })
+            let id_sucursal_hidden = $("#id_sucursal_hidden").val();
+            if(id_sucursal_hidden!="0"){
+                $.ajax({
+                    url:url_list_descarga_prod,
+                    type:"POST",
+                    data:{
+                        'id_sucursal':id_sucursal_hidden,
+                        csrfmiddlewaretoken:csrftoken,
+                        term:request.term
+                    },
+                    dataType:'json',
+                    success:function(data){
+                        response(data)
+                    }
+                })
+            }else{
+                toastr["warning"]("Debe de seleccionar la sucursal de donde desea descargar productos");
+            }
         },
         minLength:2,
         select:function(event, ui){

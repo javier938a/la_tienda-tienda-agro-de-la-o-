@@ -3,6 +3,7 @@ from django.views.generic import ListView, TemplateView, DetailView
 from ventas.models import CargaProductos, ProductoStockSucursal
 from ventas.models import DescargaProductos, DetalleDescargaProducto
 from django.contrib.auth.mixins import LoginRequiredMixin
+from ventas.models import Sucursal
 from django.db.models import Q
 from django.http import JsonResponse
 import json
@@ -36,11 +37,17 @@ class ViewCrearDescargaProducto(LoginRequiredMixin, TemplateView):
     redirect_field_name="redirect_to"
     template_name="proces_descarga_productos/crear_descarga_productos.html"
 
+    def get_context_data(self, **kwargs):
+        context= super(ViewCrearDescargaProducto, self).get_context_data(**kwargs)
+        context['sucursales']=Sucursal.objects.all()
+        return context
+
 
 def listar_productos_a_descargar_por_sucursal_autocomplete(request):
     clave = request.POST.get('term')
+    id_sucursal=request.POST.get('id_sucursal')
     print(clave)
-    sucursal=request.user.sucursal
+    sucursal=Sucursal.objects.get(id=id_sucursal)
     productos=None
     datos=[]
     if(clave.strip()!=''):

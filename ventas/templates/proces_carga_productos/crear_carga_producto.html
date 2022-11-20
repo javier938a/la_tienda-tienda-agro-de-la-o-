@@ -53,10 +53,10 @@
           <div class="col-md-6 form-group">
             <label for="">Sucursal</label>
             <select name="sucursal" id="sucursal" class="form-control select">
-              <option value="">Seleccione</option>
+              <option value="0" selected>Seleccione</option>
               {% if suc %}
                 {% for sucursal in suc %}
-                  <option value="{{ sucursal.id }}" selected>{{ sucursal.descripcion }}</option>
+                  <option value="{{ sucursal.id }}">{{ sucursal.descripcion }}</option>
                 {% endfor %}
               {% else %}}
                 <option value="">No hay sucursales</option>
@@ -73,6 +73,7 @@
               <input type="hidden" name="url_add_prod_detalle_carga" id="url_add_prod_detalle_carga" value="{% url 'store:add_prod_detalle_carga' %}">
               <input type="hidden" name="url_cargar_prod_inv" id="url_cargar_prod_inv" value="{% url 'store:cargar_prod_inv' %}">
               <input type="hidden" name="url_listar_cargas_inventario" id="url_listar_cargas_inventario" value="{% url 'store:list_carga_prod' %}">
+              <input type="hidden" name="id_sucursal_hidden" id="id_sucursal_hidden" value="0">
             </div>
           </div>
         </div>

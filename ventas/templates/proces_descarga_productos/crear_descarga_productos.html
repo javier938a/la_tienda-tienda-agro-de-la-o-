@@ -47,7 +47,20 @@
           <div class="col-md-6 form-group">
             <label for="">Descripcion</label>
             <input class="form-control" type="text" name="descripcion" id="descripcion" value="">
-          </div>       
+          </div>   
+          <div class="col-md-6 form-group">
+            <label for="">Sucursal</label>
+            <select name="sucursal" id="sucursal" class="form-control select">
+              <option value="0" selected>Seleccione</option>
+              {% if sucursales %}
+                {% for sucursal in sucursales %}
+                  <option value="{{ sucursal.id }}">{{ sucursal.descripcion }}</option>
+                {% endfor %}
+              {% else %}}
+                <option value="">No hay sucursales</option>
+              {% endif %}
+            </select>
+          </div>    
         </div>
         <div class="row">
           <div class="col-md-4 ">
@@ -58,7 +71,7 @@
               <input type="hidden" name="url_add_prod_a_descarga" id="url_add_prod_a_descarga" value="{% url 'store:add_prod_a_descarga' %}">
               <input type="hidden" name="url_efectuar_descarga_prod" id="url_efectuar_descarga_prod" value="{% url 'store:efectuar_descarga_prod' %}">
               <input type="hidden" name="url_listar_descarga_prod" id="url_listar_descarga_prod" value="{% url 'store:list_descarga_prod' %}">
-
+              <input type="hidden" name="id_sucursal_hidden" id="id_sucursal_hidden" value="0">
             </div>
           </div>
         </div>
@@ -84,7 +97,7 @@
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                      <button type="button" class="btn btn-success" id="efectuar_descarga">Aplicar carga</button>
+                      <button type="button" class="btn btn-success" id="efectuar_descarga">Aplicar descarga</button>
                     </div>
                   </div>
                 </div>
