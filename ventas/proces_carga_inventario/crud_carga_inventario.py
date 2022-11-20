@@ -47,29 +47,28 @@ def listar_productos_cargados_y_sin_cargar_autocomplete(request):
     clave=request.POST.get('term')
     producto_stock=None
     producto=None
+    print("id_sucursal="+str(sucursal))
     print(clave)
     if clave.strip()!='':
         producto=Producto.objects.filter(Q(nombre_producto__icontains=clave)| Q(descripcion__icontains=clave))
         producto_stock=ProductoStockSucursal.objects.filter(sucursal=sucursal).filter(Q(producto__nombre_producto__icontains=clave)|Q(producto__descripcion__icontains=clave))
     else:
         producto=Producto.objects.all()
-        producto_stock=ProductoStockSucursal.objects.all()
+        producto_stock=ProductoStockSucursal.objects.filter(sucursal=sucursal)
     list_prod=[]
-    sucursal=Sucursal.objects.get(id=id_sucursal)
     for producto in producto:
         if producto.nombre_producto!=None:
             print(producto)
             #esta validacion es solo para que no se puedan agregar los productos que ya se cargaron el el inventario
-            
             if ProductoStockSucursal.objects.filter(Q(producto=producto) & Q(sucursal=sucursal)).exists()==False:
                 fila=str(producto.id)+'|'+str(producto.nombre_producto)+'|'+'ninguna'+'|'+'0'+'|nuevo'
                 list_prod.append(fila)
     #AQUI SE LISTARIAN TODOS LOS PRODUCTOS QUE YA EXISTEN EN EL INVENTARIO
+    print(producto_stock)
     for producto_stock in producto_stock:
         if producto_stock.producto != None:
-            if ProductoStockSucursal.objects.filter(Q(producto=producto) & Q(sucursal=sucursal)).exists():
-                fila=str(producto_stock.id)+'|'+str(producto_stock.producto.nombre_producto)+'|'+str(producto_stock.presentacion)+', Cantidad:|'+str(producto_stock.cantidad)+'|existe'
-                list_prod.append(fila)   
+            fila=str(producto_stock.id)+'|'+str(producto_stock.producto.nombre_producto)+'|'+str(producto_stock.presentacion)+', Cantidad:|'+str(producto_stock.cantidad)+'|existe'
+            list_prod.append(fila)   
 
     return JsonResponse(list_prod, safe=False)
 

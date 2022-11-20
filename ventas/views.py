@@ -42,8 +42,8 @@ class Index(TemplateView, LoginRequiredMixin):
         print("Usuario")
         print( str(self.request.user))
         if str(self.request.user)!="AnonymousUser":
-
-            ventas_hoy=Venta.objects.filter(Q(fecha_venta__date=fecha_hoy))
+            sucursal=self.request.user.sucursal
+            ventas_hoy=Venta.objects.filter(Q(sucursal=sucursal)).filter(Q(fecha_venta__date=fecha_hoy))
             print(ventas_hoy)
             suma_ventas=ventas_hoy.aggregate(Sum('total_sin_iva'))
             total=suma_ventas.get('total_sin_iva__sum')

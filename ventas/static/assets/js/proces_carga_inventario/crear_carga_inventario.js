@@ -35,7 +35,27 @@ $(document).ready(function(){
     //lo que se esta haciendo aqui almacenando en un hidden el valor del id sucursal
     //por medio del evento change ya que da una falla al agarrarlo directamebte del select 
     $("#sucursal").change(function(){
-        $("#id_sucursal_hidden").val($(this).val())
+        //debido a que cuando seleccionamos una sucursal el sistema nos busca todos los productos cargados en esa sucursal
+        //no podemos cambiar de sucursal cuando ya hemos ingresado los productos que pertenecen a esa sucursal
+        //si cambiamos tenemos que borrar todo lo ingresado, y agregar solo productos que esten cargados en esa sucursal
+        //y los productos que aun no han sido cargados del catalogo
+        //primero obtenemos el numero de filas que hay en la tabla de esta manera nos aseguramos que no se haya ingresado aun productos
+        //y poder cambiar de sucursal libremente
+        let numero_filas_en_tabla=$("#table-productos-carga tr").length;
+        if(numero_filas_en_tabla>0){//si ya hay produtos agregados al detalle le preguntamos si desea cambiar de sucursal y alertamos al usuario que si lo cambia se borraran todo lo que haya ingresado hasta ese momento
+            let cambiar_sucursal=window.confirm("¿Esta seguro que desea cambiar de sucursal? se borrara lo que se ha agregado hasta ahorita.")
+            if(cambiar_sucursal==true){//si el usuario dice que si entonces procedemos a borrar todo el contenido de la tabla
+                $("#table-productos-carga tr").remove();//y agregamos al hidden input el nuevo id de sucursal
+                $("#id_sucursal_hidden").val($(this).val())
+            }else{//de lo contrario establecemos el en el select la ultima sucursal seleccionada que se encuentra en el hidden input
+                let id_sucursal_hidden = $("#id_sucursal_hidden").val();
+                $(this).val(id_sucursal_hidden).trigger('change.select2');
+            }
+            
+        }else{//si el numero de filas de la tabla es cero podremos cambiar de sucursal libremente
+            $("#id_sucursal_hidden").val($(this).val());
+        }
+
     });  
     $("#producto").autocomplete({
         source:function(request, response){
@@ -120,44 +140,47 @@ $(document).ready(function(){
             let tabla_producto_detalle=$("#table-productos-carga tr");
             let res_tabla_detalle=validar_detalles_carga(tabla_producto_detalle);
             if(res_tabla_detalle===false){
-                let detalles_productos= obtener_detalles_productos(tabla_producto_detalle);
-                console.log("Detalle..")
-                console.log(detalles_productos);
-                let total=$("#total").text().replace("$", "");
-                const csrftoken=getCookie("csrftoken");
-                let datos={
-                    csrfmiddlewaretoken:csrftoken,
-                    'descripcion':descripcion_carga,
-                    'id_sucursal':id_sucursal,
-                    'detalles_productos':JSON.stringify(detalles_productos),
-                    'total':total,
-                };
-                console.log(datos);
-                let url_cargar_prod_inv=$("#url_cargar_prod_inv").val();
-                console.log(url_cargar_prod_inv)
-                $.ajax({
-                    url:url_cargar_prod_inv,
-                    type:'POST',
-                    data:datos,
-                    dataType:'json',
-                    success:function(data){
-                        let res = data.res;
-                        if(res===true){
-                            toastr['success']("Inventario cargado exitosamente");
-                            setTimeout(function(){
-                                window.location.href=$("#url_listar_cargas_inventario").val();
-                            }, 1000)
-                        }else{
-                            toastr['sucess']("Error al cargar inventario favor comuniquese con soporte tecnico")
+                if(parseInt(id_sucursal)>0){
+                    let detalles_productos= obtener_detalles_productos(tabla_producto_detalle);
+                    console.log("Detalle..")
+                    console.log(detalles_productos);
+                    let total=$("#total").text().replace("$", "");
+                    const csrftoken=getCookie("csrftoken");
+                    let datos={
+                        csrfmiddlewaretoken:csrftoken,
+                        'descripcion':descripcion_carga,
+                        'id_sucursal':id_sucursal,
+                        'detalles_productos':JSON.stringify(detalles_productos),
+                        'total':total,
+                    };
+                    console.log(datos);
+                    let url_cargar_prod_inv=$("#url_cargar_prod_inv").val();
+                    console.log(url_cargar_prod_inv)
+                    $.ajax({
+                        url:url_cargar_prod_inv,
+                        type:'POST',
+                        data:datos,
+                        dataType:'json',
+                        success:function(data){
+                            let res = data.res;
+                            if(res===true){
+                                toastr['success']("Inventario cargado exitosamente");
+                                setTimeout(function(){
+                                    window.location.href=$("#url_listar_cargas_inventario").val();
+                                }, 1000)
+                            }else{
+                                toastr['sucess']("Error al cargar inventario favor comuniquese con soporte tecnico")
+                            }
                         }
-                    }
-                });
-
+                    });
+                }else{
+                    toastr['warning']("Debe de seleccionar una sucursal antes de poder realizar una carga de productos al inventario");
+                }
             }else{
                 toastr['error']("Debe de ingresar mas de un producto y llenar todos los campos");
             }
            }else{
-               toastr['error']("Debe de seleccionar una sucursal");
+               toastr['error']("Debe de seleccionar una sucursal antes de efectuar una carga");
            }
 
         }else{

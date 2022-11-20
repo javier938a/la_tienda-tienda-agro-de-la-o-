@@ -218,7 +218,7 @@ def grafico_reporte_ventas(request):
                 reporte_ventas_hoy=Venta.objects.filter(Q(fecha_venta__date=fecha_hoy))
             elif tipo_usuario=="usuario":
                 sucursal_usuario=request.user.sucursal
-                reporte_ventas_hoy=Venta.objects.filter(Q(fecha_venta__date=fecha_hoy)).filter(Q(sucursal=sucursal_usuario))
+                reporte_ventas_hoy=Venta.objects.filter(Q(sucursal=sucursal_usuario)).filter(Q(fecha_venta__date=fecha_hoy))
 
     datos=[]
     if reporte_ventas_hoy!=None:

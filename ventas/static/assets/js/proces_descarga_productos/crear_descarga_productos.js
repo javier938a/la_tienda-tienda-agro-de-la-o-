@@ -16,7 +16,24 @@ function getCookie(name) {
 $(document).ready(function(){
     $("#sucursal").select2();
     $("#sucursal").change(function(){
-        $("#id_sucursal_hidden").val($(this).val())
+        let numeros_filas_en_tabla=$("#table-productos-descarga tr").length;
+        console.log("Numero de filas: "+numeros_filas_en_tabla);
+        if(numeros_filas_en_tabla>0){
+            let cambiar_sucursal=window.confirm("Esta seguro que desea cambiar de sucursal se borrara lo que se agregado hasta ahorita")
+            
+            if(cambiar_sucursal==true){
+                $("#table-productos-descarga tr").remove();
+                $("#id_sucursal_hidden").val($(this).val());
+            }else{
+                let id_sucursal_hidden=$("#id_sucursal_hidden").val();
+                $(this).val(id_sucursal_hidden).trigger("change.select2");
+                
+            }
+        }else{
+            $("#id_sucursal_hidden").val($(this).val())
+        }
+
+        
     }); 
     let url_list_descarga_prod = $("#url_list_prod_a_descargar").val();//url de la lista de productos a descargar
     let csrftoken = getCookie('csrftoken');
@@ -98,40 +115,45 @@ $(document).ready(function(){
     $("#efectuar_descarga").click(function(evt){
         let descripcion=$("#descripcion").val();
         if(descripcion.length>0){
-            let tabla_detalle_de_descarga_productos=$("#table-productos-descarga tr");
-            let res_tabla_descarga_prod=validar_detalle_de_descarga_productos(tabla_detalle_de_descarga_productos);
-            if(res_tabla_descarga_prod===false){
-                const csrftoken=getCookie('csrftoken');
-                let detalles_descarga_producto=obtener_detalle_productos_a_descargar(tabla_detalle_de_descarga_productos);
-                let total=$("#total").text().replace('$', '');
-                console.log(detalles_descarga_producto)
-                let url_efectuar_descarga_prod=$("#url_efectuar_descarga_prod").val();
-                let datos={
-                    csrfmiddlewaretoken:csrftoken,
-                    'descripcion':descripcion,
-                    'total':total,
-                    'detalles_descarga_producto':JSON.stringify(detalles_descarga_producto)
-                }
-                console.log(datos);
-                $.ajax({
-                    url:url_efectuar_descarga_prod,
-                    type:'POST',
-                    data:datos,
-                    dataType:'json',
-                    success:function(data){
-                        let res=data.res;
-                        if(res===true){
-                            toastr['success']("Descarga efectuada exitosamente")
-                            setTimeout(function(){
-                                window.location.href=$("#url_listar_descarga_prod").val();
-                            }, 1000);
-                        }else{
-                            toastr['error']("Hubo un error al registrar los datos comuniquese con el administrador del sistema..");
-                        }
+            let id_sucursal_hidden = $("#id_sucursal_hidden").val();
+            if(parseInt(id_sucursal_hidden)>0){
+                let tabla_detalle_de_descarga_productos=$("#table-productos-descarga tr");
+                let res_tabla_descarga_prod=validar_detalle_de_descarga_productos(tabla_detalle_de_descarga_productos);
+                if(res_tabla_descarga_prod===false){
+                    const csrftoken=getCookie('csrftoken');
+                    let detalles_descarga_producto=obtener_detalle_productos_a_descargar(tabla_detalle_de_descarga_productos);
+                    let total=$("#total").text().replace('$', '');
+                    console.log(detalles_descarga_producto)
+                    let url_efectuar_descarga_prod=$("#url_efectuar_descarga_prod").val();
+                    let datos={
+                        csrfmiddlewaretoken:csrftoken,
+                        'descripcion':descripcion,
+                        'total':total,
+                        'detalles_descarga_producto':JSON.stringify(detalles_descarga_producto)
                     }
-                });
+                    console.log(datos);
+                    $.ajax({
+                        url:url_efectuar_descarga_prod,
+                        type:'POST',
+                        data:datos,
+                        dataType:'json',
+                        success:function(data){
+                            let res=data.res;
+                            if(res===true){
+                                toastr['success']("Descarga efectuada exitosamente")
+                                setTimeout(function(){
+                                    window.location.href=$("#url_listar_descarga_prod").val();
+                                }, 1000);
+                            }else{
+                                toastr['error']("Hubo un error al registrar los datos comuniquese con el administrador del sistema..");
+                            }
+                        }
+                    });
+                }else{
+                    toastr['error']("Debe de llenar todos los campos de cantidad de todos los productos en la descarga a efectuar..");
+                }   
             }else{
-                toastr['error']("Debe de llenar todos los campos de cantidad de todos los productos en la descarga a efectuar..");
+                toastr['error']("debe seleccionar una sucursal de donde se va a realizar la descarga de producto");
             }
         }else{
             toastr['error']("Debe de agregar una descripcion como justificacion de la descarga de los productos");
