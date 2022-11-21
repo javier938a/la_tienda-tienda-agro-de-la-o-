@@ -189,6 +189,8 @@ $(document).ready(function(){
             }else{
                 toastr['warning']('Para efectuar devolucion debe de devolver al menos un producto, no puede dejar los campos a cero');
             }       
+        }else{
+            toastr['warning']('Debe de cargar el contenido de un ticket o factura'); 
         }
     });
 

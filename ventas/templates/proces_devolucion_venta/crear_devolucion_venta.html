@@ -74,17 +74,36 @@
               <input type="hidden" id="id_venta" name="id_venta" value="">
             </div>
           </div>
-          <div class="col-md-9">
+          <div class="col-md-2">
 
           </div>
-          <div class="col-md-1">
+          <div class="col-md-2">
               <div class="form-group">
                 <!--Espacio en blanco-->
               </div>
           </div>
-          <div class="col-md-1">
+          <div class="col-md-2">
             <div class="form-group">                
-              <button id="efectuar_devolucion" type="button" class="btn btn-success form-control">Devolver</button>
+              <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#disablebackdrop">
+                Devolver
+              </button>
+              <div class="modal fade" id="disablebackdrop" tabindex="-1" data-bs-backdrop="false">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">¿Esta seguro de desea realizar esta revolucion?</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      ¿Se modificara la el ticket desea continuar?
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                      <button type="button" class="btn btn-success" id="efectuar_devolucion">Aplicar devolucion</button>
+                    </div>
+                  </div>
+                </div>
+              </div><!-- End Disabled Backdrop Modal-->
             </div>           
           </div>
           <div class="col-md-1">
