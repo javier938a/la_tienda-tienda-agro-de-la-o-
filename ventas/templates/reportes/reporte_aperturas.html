@@ -14,6 +14,7 @@
         <tr>
           <th>Usuario</th>
           <th>Sucursal</th>
+          <th>Caja</th>
           <th>Fecha de apertura</th>
           <th>Monto de apertura</th>
           <th>Diferencia de apertura</th>
@@ -28,6 +29,7 @@
             {% for apecorte in apertura_corte %}
                 <tr>
                     <td>{{ apecorte.usuario }}</td>
+                    <td>{{ apecorte.usuario.caja }}</td>
                     <td>{{ apecorte.usuario.sucursal }}</td>
                     <td>{{ apecorte.fecha_de_apertura|date:"d-m-Y" }}</td>
                     <td>${{ apecorte.monto_de_apertura }}</td>
