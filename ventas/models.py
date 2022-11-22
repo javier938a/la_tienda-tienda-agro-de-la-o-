@@ -76,6 +76,7 @@ class Producto(models.Model):
 
 
 class Correlativos(models.Model):
+    sucursal=models.ForeignKey(Sucursal, on_delete=models.SET_NULL, null=True)
     nombre_documento=models.CharField(max_length=100, help_text="Ingrese el nombre del documento")
     numero_correlativo_actual=models.CharField(max_length=100,help_text="Ingrese el numero de correlativo actual")
 
