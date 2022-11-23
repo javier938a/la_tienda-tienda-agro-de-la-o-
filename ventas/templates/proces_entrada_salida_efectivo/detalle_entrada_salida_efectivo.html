@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block titulo %}
+  <title>Detalle Entrada o Salida de Efectivo</title>
+{% endblock %}
+
+
+{% block contenido %}
+    <section class="section">
+        <div class="row align-items-top">
+            <div class="col-lg-2">
+
+            </div>
+            <div class="col-lg-8">
+    
+              <!-- Default Card -->
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Detalle de Entrada o Salida de Efectivo</h5>
+                  {% if entrada_salida_efectivo %}
+                    <table class="table">
+                        <thead>
+                        </thead>
+                        <tbody>
+                        <tr>        
+                            <td>Fecha de Registro:</td>
+                            <td>{{ entrada_salida_efectivo.fecha_hora }}</td>                    
+                        </tr>
+                        <tr>
+                            <td>Usuario</td>
+                            <td>{{ entrada_salida_efectivo.usuario }}</td>
+                        </tr>
+                        <tr>
+                            <td>Caja</td>
+                            <td>{{ entrada_salida_efectivo.caja }}</td>
+                        </tr>
+                        <tr>
+                            <td>Tipo de Movimiento de caja</td>
+                            <td>{{ entrada_salida_efectivo.tipo_entrada_salida}}</td>
+                        </tr>
+                        <tr>
+                            <td>Descripcion</td>
+                            <td>{{ entrada_salida_efectivo.descripcion }}</td>
+                        </tr>
+                        <tr>       
+                          <td>Monto:</td>
+                          <td>${{ entrada_salida_efectivo.monto }}</td>         
+                        </tr>
+                        </tbody>
+                    </table>
+                  {% endif %}
+                </div>
+                <div class="card-footer">
+                  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                      <a class="btn btn-success" href="{% url 'store:entrada_salida' %}">Salir</a>
+                  </div>
+              </div>
+              </div><!-- End Default Card -->
+
+            </div>
+        </div>
+    </section>
+
+
+{% endblock %}

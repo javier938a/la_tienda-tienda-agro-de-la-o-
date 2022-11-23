@@ -1,0 +1,49 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Reporte de Ventas</title>
+    <meta name="description" content="Invoice demo sample">
+  </head>
+
+  <body>
+    <center>
+      <h4>Reporte de Entradas y Salidas de Efectivo de Caja<br> desde {{ fecha_inicial }} hasta el dia {{ fecha_final }} </h4>
+    </center>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Usuario</th>
+          <th>Fecha y Hora</th>
+          <th>Sucursal</th>
+          <th>caja</th>
+          <th>Descripcion</th>
+          <th>Tipo de Movimiento</th>
+          <th>Monto</th>
+        </tr>
+      </thead>
+      <tbody>
+          {% if entradas_salidas %}
+            {% for entr_sal in entradas_salidas %}
+                <tr>
+                    <td>{{ entr_sal.id }}</td>
+                    <td>{{ entr_sal.usuario }}</td>
+                    <td>{{ entr_sal.fecha_hora|date:"d-m-Y" }}</td>
+                    <td>{{ entr_sal.usuario.sucursal }}</td>
+                    <td>{{ entr_sal.caja }}</td>
+                    <td>{{ entr_sal.descripcion }}</td>
+                    <td>{{ entr_sal.tipo_entrada_salida }}</td>
+                    <td>${{ entr_sal.monto }}</td>
+                </tr>
+            {% endfor %}
+          {% else %}
+                <tr>
+                    <td>No hay ventas registradas en el rango de fecha proporcionado.</td>
+                </tr>
+          {% endif %}
+
+      </tbody>
+    </table>
+
+  </body>
+</html>

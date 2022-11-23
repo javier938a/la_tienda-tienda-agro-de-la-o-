@@ -19,9 +19,10 @@ from .views import ListarVentas, ViewCrearVenta, ViewDetalleVenta, verificar_sto
 from .views import ListarDevolucionesVentas, ViewCrearDevolucionVenta, ViewDetalleDevolucion, obtener_ventas_autocomplete, listar_productos_de_venta, efectuar_devolucion_venta
 from .views import ListarAperturaCorte, CrearApertura, ViewRealizarCorteCaja, ViewCierreDeCaja, proces_efectuar_apertura_caja, proces_verificar_si_hay_apertura_de_caja, verificar_apertura_activa_de_usuario, efectuar_corte_de_caja, efectuar_cierre_de_caja
 from .views import ListarCajas, CrearCaja, EditarCaja, EliminarCaja
+from .views import ListarEntradasSalidas, CrearEntradaSalida, EditarEntradaSalida, EliminarEntradaSalida, DetalleEntradaSalida
 from .views import agregar_producto_a_detalle_por_codigo
 from .views import imprimir_ticket, Obtener_ticket
-from .views import ViewSelectReporteVentas, ViewSelectReporteAperturas, PrintViewReporteVentas, PrintViewReporteAperturas
+from .views import ViewSelectReporteVentas, ViewSelectReporteAperturas, PrintViewReporteVentas, ViewSelectReporteEntradaSalidasEfectivo, PrintViewReporteAperturas, PrintViewReporteEntradaSalida
 from .views import grafico_reporte_ventas
 
 
@@ -112,9 +113,16 @@ urlpatterns = [
     path('apertura_corte/realizar_cierre_de_caja/<int:pk>', ViewCierreDeCaja.as_view(), name="cierre_caja"),
     path('apertura_corte/efectuar_corte_caja', efectuar_corte_de_caja, name="op_corte"),
     path('apertura_corte/efectuar_cierre_de_caja', efectuar_cierre_de_caja, name='efectuar_cierre'),
+    path('entradas_salidas_efectivo/', ListarEntradasSalidas.as_view(), name='entrada_salida'),
+    path('entradas_salidas_efectivo/crear_entrada_salida_efectivo', CrearEntradaSalida.as_view(), name="crear_entrada_salida_efectivo"),
+    path('entradas_salidas_efectivo/editar_entrada_salida_efectivo/<int:pk>', EditarEntradaSalida.as_view(), name='editar_entrada_salida'),
+    path('entradas_salidas_efectivo/eliminar_entrada_salida_efectivo/<int:pk>', EliminarEntradaSalida.as_view(), name="eliminar_entrada_salida"),
+    path('entradas_salidas_efectivo/detalle_entrada_salida_efectivo/<int:pk>', DetalleEntradaSalida.as_view(), name="detalle_entrada_salida"),
     path('reporte/select_reporte_ventas', ViewSelectReporteVentas.as_view(), name="reporte_venta_view"),
     path('reporte/select_reporte_aperturas', ViewSelectReporteAperturas.as_view(), name="report_ape"),
+    path('reporte/select_reporte_entrada_salida_efectivo', ViewSelectReporteEntradaSalidasEfectivo.as_view(), name='report_ent_sal'), 
     path('reporte/print_reporte_aperturas', PrintViewReporteAperturas.as_view(), name="print_report_pertura"),
     path('reporte/print_reporte_venta', PrintViewReporteVentas.as_view(), name="print_report_venta"),
+    path('reporte/print_reporte_entradas_salidas', PrintViewReporteEntradaSalida.as_view(), name='print_entradas_salidas'),
     path('reporte/grafico_reporte', grafico_reporte_ventas, name="url_grafico"),
 ]

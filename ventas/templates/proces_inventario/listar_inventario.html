@@ -35,6 +35,7 @@
                     <th scope="col">Producto</th>
                     <th scope="col">Cantidad</th>
                     <th scope="col">Presentacion</th>
+                    <th scope="col">Categoria</th>
                     <th scope="col">Costo</th>
                     <th scope="col">Precio</th>
                     <th scope="col" colspan="2">Acciones</th>
@@ -50,7 +51,8 @@
                                 <td>{{ inv.fecha_de_registro }}</td>
                                 <td>{{ inv.producto}}</td>
                                 <td>{{ inv.cantidad }}</td>
-                                <td>{{ inv.presentacion }}</td>                                
+                                <td>{{ inv.presentacion }}</td>   
+                                <td>{{ inv.producto.categoria }}</td>                             
                                 <td>${{ inv.costo}}</td>
                                 <td>${{ inv.precio }}</td>
                                 <td>

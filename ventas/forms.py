@@ -6,6 +6,7 @@ from django.contrib.admin import widgets as wd
 from django.contrib.auth.forms import UserCreationForm
 from .models import User, Sucursal, Categoria, Producto, Presentacion, Proveedor, TipoUsuario
 from .models import AperturaCorte, Caja
+from .models import EntradaSalidaEfectivo
 
 class TipoUsuarioForm(forms.ModelForm):
     class Meta:
@@ -76,6 +77,18 @@ class ProductoForm(forms.ModelForm):
             'fecha_vencimiento':"Fecha de vencimiento",
             'usuario':'Usuario'
            
+        }
+
+class EntradaSalidaEfectivoForm(forms.ModelForm):
+    class Meta:
+        model=EntradaSalidaEfectivo
+        fields=('usuario','caja','descripcion', 'tipo_entrada_salida', 'monto')
+        labels={
+            'usuario':'Usuario',
+            'caja':'Caja',
+            'descripcion':'Descripcion del movimiento de caja',
+            'tipo_entrada_salida':'Tipo de flujo',
+            'monto':'Monto'
         }
     
 class PresentacionForm(forms.ModelForm):

@@ -1,4 +1,3 @@
-from pyexpat import model
 from django.views.generic import CreateView, ListView, DeleteView, DetailView, UpdateView
 from django.core.paginator import Paginator
 from django.db.models import Q

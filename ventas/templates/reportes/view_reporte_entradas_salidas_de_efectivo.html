@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block titulo %}
+  <title>Generar reporte de Entradas y Salidas de Efectivo de Caja</title>
+{% endblock %}
+
+
+{% load static %}
+{% block extra-css %}
+    <link href="{% static 'assets/css/jquery-ui/jquery-ui.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/select2/select2.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'assets/css/toastr/toastr.css' %}">
+{% endblock %}
+
+{% block contenido %}
+    <div class="container">
+        <h4 class="h4">Reporte Entradas y Salidas de Efectivo</h4>
+        <form id="frm_reporte_entradas_salidas" target="_blank" action="{% url 'store:print_entradas_salidas' %}" method="GET">
+            {% csrf_token %}
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                        <label for="">Tipo de Reporte</label>
+                        <select class="form-control" name="tipo_reporte" id="tipo_reporte">
+                            <option value="0" selected>Seleccione</option>
+                            <option value="2">Por Usuario</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" id="list_usuarios" style="display: none;">
+                        <label for="">Usuarios</label>
+                        {% if usuarios %}
+                          <select class="form-control" name="id_usuario" id="id_usuario">
+                              <option value="0">Seleccione</option>
+                              {% for usuario in usuarios %}
+                                  <option value="{{ usuario.id }}">{{ usuario.username }}</option>
+                              {% endfor %}
+                          </select>
+                        {% endif %}
+                      </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                        <label for="">Fecha inicial</label>
+                        <input type="text" id="fecha_inicio" name="fecha_inicial" class="form-control">
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                        <label for="">Fecha Final</label>
+                        <input type="text" id="fecha_final" name="fecha_final" class="form-control">
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="d-grid-gap-2 d-md-flex justify-content-md-end">
+                            <button class="btn btn-success" type="submit" id="generar_reporte">Generar reporte</button>
+                        </div>                       
+                    </div>
+                </div>                
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% load static %}
+{% block extra-script %}
+    <script src="{% static 'assets/js/jquery-ui/jquery-ui.js' %}"></script>
+    <script src="{% static 'assets/js/jquery-mask/jquery.mask.js' %}"></script>
+    <script src="{% static 'assets/js/select2/select2.js' %}"></script>
+    <script src="{% static 'assets/js/toastr/toastr.min.js' %}"></script>
+    <script src="{% static 'assets/js/reportes_js/reporte_entradas_salidas_efectivo.js' %}"></script>
+{% endblock %}

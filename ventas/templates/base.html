@@ -443,6 +443,25 @@
                     <span>Reporte de Aperturas y Corte</span>
                   </a>
                 </li><!-- End Register Page Nav -->
+                <li class="nav-item">
+                  <a class="nav-link collapsed" href="{% url 'store:report_ent_sal' %}">
+                    <i class="bi bi-card-list"></i>
+                    <span>Reporte de Entradas y Salidas de Efectivo</span>
+                  </a>
+                </li><!-- End Register Page Nav -->
+              </ul>
+            </li><!-- End Forms Nav -->
+            <li class="nav-item">
+              <a class="nav-link collapsed" data-bs-target="#entradas-salidas-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-cash"></i><span>Administrar Entradas y Salidas</span><i class="bi bi-chevron-down ms-auto"></i>
+              </a>
+              <ul id="entradas-salidas-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li class="nav-item">
+                  <a class="nav-link collapsed" href="{% url 'store:entrada_salida' %}">
+                    <i class="bi bi-card-list"></i>
+                    <span>Entradas y Salidas de Caja</span>
+                  </a>
+                </li><!-- End Register Page Nav -->
               </ul>
             </li><!-- End Forms Nav -->
           {% elif user.tipo_usuario.tipo_usuario == "usuario" %}
@@ -489,9 +508,27 @@
                     <span>Reporte de Aperturas y Corte</span>
                   </a>
                 </li><!-- End Register Page Nav -->
+                <li class="nav-item">
+                  <a class="nav-link collapsed" href="{% url 'store:report_ent_sal' %}">
+                    <i class="bi bi-card-list"></i>
+                    <span>Reporte de Entradas y Salidas de Efectivo</span>
+                  </a>
+                </li><!-- End Register Page Nav -->
               </ul>
             </li><!-- End Forms Nav -->
-
+            <li class="nav-item">
+              <a class="nav-link collapsed" data-bs-target="#entradas-salidas-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-cash"></i><span>Administrar Entradas y Salidas</span><i class="bi bi-chevron-down ms-auto"></i>
+              </a>
+              <ul id="entradas-salidas-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li class="nav-item">
+                  <a class="nav-link collapsed" href="{% url 'store:entrada_salida' %}">
+                    <i class="bi bi-card-list"></i>
+                    <span>Entradas y Salidas de Caja</span>
+                  </a>
+                </li><!-- End Register Page Nav -->
+              </ul>
+            </li><!-- End Forms Nav -->
           {% endif %}
           <li class="nav-item">
             <a class="nav-link collapsed" data-bs-target="#apertura-nav" data-bs-toggle="collapse" href="#">

@@ -161,6 +161,24 @@ class ProductoStockSucursal(models.Model):
     def __str__(self) -> str:
         return "%s -> %s"%(str(self.sucursal), self.producto)
 
+class TipoEntradaSalidaEfectivo(models.Model):
+    tipo_entrada_salida=models.CharField(max_length=100, help_text="Ingrese el tipo de entrada y salida")
+
+
+    def __str__(self):
+        return "%s"%self.tipo_entrada_salida
+
+class EntradaSalidaEfectivo(models.Model):
+    usuario=models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    fecha_hora=models.DateTimeField(auto_now_add=True)
+    caja=models.ForeignKey(Caja, on_delete=models.SET_NULL, null=True)
+    descripcion=models.TextField(help_text="Ingrese la descripcion de la entrada o salida de efectivo de caja")
+    tipo_entrada_salida=models.ForeignKey(TipoEntradaSalidaEfectivo, on_delete=models.SET_NULL, null=True)
+    monto=models.FloatField(help_text="Ingrese el monto de la salida o entrada de efectivo")
+    def __str__(self):
+        return "%s -> %s -> %s",(self.descripcion, str(self.tipo_entrada_salida), str(self.monto))
+
+
 class AperturaCorte(models.Model):
     sucursal=models.ForeignKey(Sucursal, on_delete=models.SET_NULL, null=True)
     usuario=models.ForeignKey(User, on_delete=models.SET_NULL, null=True)

@@ -17,10 +17,21 @@ from django_weasyprint.views import WeasyTemplateResponse
 from ventas.models import Venta, AperturaCorte
 from ventas.models import Sucursal
 from ventas.models import User
-
+from ventas.models import EntradaSalidaEfectivo
 from django.db.models import Sum, Q
 from django.http import JsonResponse
 
+class ViewSelectReporteEntradaSalidasEfectivo(LoginRequiredMixin, TemplateView):
+    login_url='/ventas/login/'
+    redirect_field_name="redirect_to"
+    template_name='reportes/view_reporte_entradas_salidas_de_efectivo.html'
+
+    def get_context_data(self, **kwargs):
+        context=super(ViewSelectReporteEntradaSalidasEfectivo, self).get_context_data(**kwargs)
+        usuarios=User.objects.all()
+        context['usuarios']=usuarios
+
+        return context
 
 class ViewSelectReporteVentas(LoginRequiredMixin, TemplateView):
     login_url="/ventas/login/"
@@ -46,6 +57,57 @@ class ViewSelectReporteAperturas(LoginRequiredMixin, TemplateView):
         context['sucursales']=sucursales
         return context
 
+
+class DetalleReporteEntradasSalidas(TemplateView):
+    template_name="reportes/reporte_entradas_salidas_de_efectivo.html"
+
+class CustomEntradaSalidaTemplateResponse(WeasyTemplateResponse):
+    def get_url_fetcher(self):
+        context=ssl.create_default_context()
+        context.check_hostname=False
+        context.verify_mode=ssl.CERT_NONE
+        return functools.partial(django_url_fetcher, ssl_context=context)
+
+class PrintViewReporteEntradaSalida(WeasyTemplateResponseMixin, DetalleReporteEntradasSalidas):
+    model=EntradaSalidaEfectivo
+    context_object_name='entradas_salidas'
+    
+    pdf_stylesheets=[
+        str(settings.STATIC_ROOT) + '/assets/css/estilos_reporte_entradas_salidas/reporte_entradas_salidas.css'
+    ]
+    pdf_attachment=False
+
+    response_class=CustomEntradaSalidaTemplateResponse
+
+    def get_context_data(self, **kwargs):
+        context=super(PrintViewReporteEntradaSalida, self).get_context_data(**kwargs)
+        tipo_reporte=self.request.GET['tipo_reporte']
+        fecha_inicio=self.request.GET['fecha_inicial']
+        fecha_final=self.request.GET['fecha_final'] 
+        entradas_salidas=None
+        context['fecha_inicial']=fecha_inicio
+        context['fecha_final']=fecha_final
+        if tipo_reporte == '0':
+            if fecha_final==fecha_inicio:
+                entradas_salidas=EntradaSalidaEfectivo.objects.filter(Q(fecha_hora__date=fecha_inicio)).order_by('-fecha_hora')
+            else:
+                entradas_salidas=EntradaSalidaEfectivo.objects.filter(Q(fecha_hora__gte=fecha_inicio) & Q(fecha_hora__lte=fecha_final)).order_by("-fecha_hora") 
+        elif tipo_reporte == '2':
+            id_usuario=self.request.GET.get('id_usuario')
+            if int(id_usuario)>0:
+                usuario=User.objects.get(id=id_usuario)
+                if fecha_final==fecha_inicio:
+                    entradas_salidas=EntradaSalidaEfectivo.objects.filter(Q(usuario=usuario)).filter(Q(fecha_hora__date=fecha_inicio)).order_by('-fecha_hora')
+                else:
+                    entradas_salidas=EntradaSalidaEfectivo.objects.filter(Q(usuario=usuario)).filter(Q(fecha_hora__gte=fecha_inicio) & Q(fecha_hora__lte=fecha_final)).order_by('-fecha_hora')                
+            else:
+                if fecha_final==fecha_inicio:
+                    entradas_salidas=EntradaSalidaEfectivo.objects.filter(Q(fecha_hora__date=fecha_inicio)).order_by('-fecha_hora')
+                else:
+                    entradas_salidas=EntradaSalidaEfectivo.objects.filter(Q(fecha_hora__gte=fecha_inicio) & Q(fecha_hora__lte=fecha_final)).order_by('-fecha_hora')
+        
+        context['entradas_salidas']=entradas_salidas
+        return context
 
 class DetalleReporteAperturas(TemplateView):
     template_name="reportes/reporte_aperturas.html"

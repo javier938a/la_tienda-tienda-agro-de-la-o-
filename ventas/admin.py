@@ -4,6 +4,7 @@ from .models import Venta, DetalleVenta, DetalleVentaServicio, InventarioProduct
 from .models import DescargaProductos, DetalleDescargaProducto
 from .models import DevolucionVenta, DetalleDevolucionVenta
 from .models import Correlativos, AperturaCorte
+from .models import TipoEntradaSalidaEfectivo, EntradaSalidaEfectivo
 # Register your models here.
 
 admin.site.register(User)
@@ -26,3 +27,5 @@ admin.site.register(DetalleVentaServicio)
 admin.site.register(DetalleDevolucionVenta)
 admin.site.register(Correlativos)
 admin.site.register(AperturaCorte)
+admin.site.register(TipoEntradaSalidaEfectivo)
+admin.site.register(EntradaSalidaEfectivo)
