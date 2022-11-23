@@ -67,15 +67,15 @@ class CategoriaProductoForm(forms.ModelForm):
 class ProductoForm(forms.ModelForm):
     class Meta:
         model=Producto
-        fields=("proveedor","codigo_barra","nombre_producto", "descripcion","fecha_vencimiento", 'usuario', 'categoria')
+        fields=("proveedor","nombre_producto", "descripcion","fecha_vencimiento", 'usuario', 'categoria',"codigo_barra")
         labels={
             'proveedor':'proveedor',
-            'codigo_barra':'Codigo de barra del producto',
-            'nombre_producto':'Nombre del producto',
+            'codigo_barra':'Codigo de barra del producto',            
             'categoria':'Categoria del producto',
             'descripcion':'Descripcion del producto',
             'fecha_vencimiento':"Fecha de vencimiento",
-            'usuario':'Usuario'
+            'usuario':'Usuario',
+            'nombre_producto':'Nombre del producto',
            
         }
 
