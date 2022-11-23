@@ -464,6 +464,19 @@
                 </li><!-- End Register Page Nav -->
               </ul>
             </li><!-- End Forms Nav -->
+            <li class="nav-item">
+              <a class="nav-link collapsed" data-bs-target="#codigo-barra-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-cash"></i><span>Codigo de barra</span><i class="bi bi-chevron-down ms-auto"></i>
+              </a>
+              <ul id="codigo-barra-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li class="nav-item">
+                  <a class="nav-link collapsed" href="{% url 'store:gen_codigo_barra' %}">
+                    <i class="bi bi-card-list"></i>
+                    <span>Entradas y Salidas de Caja</span>
+                  </a>
+                </li><!-- End Register Page Nav -->
+              </ul>
+            </li><!-- End Forms Nav -->
           {% elif user.tipo_usuario.tipo_usuario == "usuario" %}
             <li class="nav-item">
               <a class="nav-link collapsed" data-bs-target="#cate-prod-nav" data-bs-toggle="collapse" href="#">

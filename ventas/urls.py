@@ -23,6 +23,7 @@ from .views import ListarEntradasSalidas, CrearEntradaSalida, EditarEntradaSalid
 from .views import agregar_producto_a_detalle_por_codigo
 from .views import imprimir_ticket, Obtener_ticket
 from .views import ViewSelectReporteVentas, ViewSelectReporteAperturas, PrintViewReporteVentas, ViewSelectReporteEntradaSalidasEfectivo, PrintViewReporteAperturas, PrintViewReporteEntradaSalida
+from .views import ViewGenerarCodigoBarra, PrintViewCodigoBarra
 from .views import grafico_reporte_ventas
 
 
@@ -125,4 +126,6 @@ urlpatterns = [
     path('reporte/print_reporte_venta', PrintViewReporteVentas.as_view(), name="print_report_venta"),
     path('reporte/print_reporte_entradas_salidas', PrintViewReporteEntradaSalida.as_view(), name='print_entradas_salidas'),
     path('reporte/grafico_reporte', grafico_reporte_ventas, name="url_grafico"),
+    path('generar_codigo_barra/', ViewGenerarCodigoBarra.as_view(), name='gen_codigo_barra'),
+    path('print_codigo_barra/', PrintViewCodigoBarra.as_view(), name='print_codigo_barra' ),
 ]

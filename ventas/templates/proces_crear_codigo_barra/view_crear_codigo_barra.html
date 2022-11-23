@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block titulo %}
+  <title>Generar Codigo de Barra</title>
+{% endblock %}
+
+
+{% load static %}
+{% block extra-css %}
+    <link href="{% static 'assets/css/jquery-ui/jquery-ui.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/select2/select2.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'assets/css/toastr/toastr.css' %}">
+{% endblock %}
+
+{% block contenido %}
+    <div class="container">
+        <h4 class="h4">Generar Codigo de Barra</h4>
+        <form id="frm_codigo_barra" target="_blank" action="{% url 'store:print_codigo_barra' %}" method="GET">
+            {% csrf_token %}
+              <div class="form-group">
+                <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                        <label for="">Numero de codigo</label>
+                        <input type="text" id="codigo" name="codigo" class="form-control">
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="d-grid-gap-2 d-md-flex justify-content-md-end">
+                            <button class="btn btn-success" type="submit" id="generar_reporte">Generar reporte</button>
+                        </div>                       
+                    </div>
+                </div>                
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% load static %}
+{% block extra-script %}
+    <script src="{% static 'assets/js/jquery-ui/jquery-ui.js' %}"></script>
+    <script src="{% static 'assets/js/jquery-mask/jquery.mask.js' %}"></script>
+    <script src="{% static 'assets/js/select2/select2.js' %}"></script>
+    <script src="{% static 'assets/js/toastr/toastr.min.js' %}"></script>
+    <script src="{% static 'assets/js/crear_codigo_barra/crear_codigo_barra.js' %}"></script>
+{% endblock %}

@@ -22,6 +22,7 @@ from ventas.proces_devoluciones_venta.crud_devoluciones_venta import ListarDevol
 from ventas.proces_apertura_corte.crud_apertura_corte import ListarAperturaCorte, CrearApertura, ViewRealizarCorteCaja, ViewCierreDeCaja, proces_efectuar_apertura_caja, proces_verificar_si_hay_apertura_de_caja, verificar_apertura_activa_de_usuario, efectuar_corte_de_caja, efectuar_cierre_de_caja
 from ventas.proces_caja.crud_caja import ListarCajas,CrearCaja, EditarCaja, EliminarCaja
 from ventas.proces_entradas_salidas_efectivo.crud_entrada_salida import ListarEntradasSalidas, CrearEntradaSalida, EditarEntradaSalida, EliminarEntradaSalida ,DetalleEntradaSalida
+from ventas.proces_crear_codigo_barra.generar_codigo_barra import ViewGenerarCodigoBarra, PrintViewCodigoBarra
 # Create your views here.
 
 from django.db.models import Sum
