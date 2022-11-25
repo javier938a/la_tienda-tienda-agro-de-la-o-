@@ -1,0 +1,51 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Reporte de Ventas</title>
+    <meta name="description" content="Invoice demo sample">
+  </head>
+
+  <body>
+    <center>
+        {% if fecha_inicial != '' and fecha_final != '' %}
+            <h4>Reporte de Inventario <br> desde {{ fecha_inicial }} hasta el dia {{ fecha_final }} </h4>
+        {% else %}
+            <h4>Reporte de Inventario </h4>
+        {% endif %}
+    </center>
+    <table>
+      <thead>
+        {% if sucursal %}
+            {% if categoria %}
+                <tr><td colspan="6">Productos de la sucursal <b>"{{ sucursal.descripcion }}"</b> <b>categoria "{{ categoria.categoria }}"</b> </td></tr>
+            {% else %}
+                <tr><td colspan="6">Todos los productos de la sucursal <b>"{{ sucursal.descripcion }}"</b> </td></tr>
+            {% endif %}
+        {% endif %}
+        <tr>
+          <th>Fecha de Registro</th>
+          <th>Producto</th>          
+          <th>Cantidad</th>
+          <th>Presentacion</th>
+          <th>Costo</th>
+          <th>Precio</th>
+        </tr>
+      </thead>
+      <tbody>
+            {% if inventario %}
+                {% for prod in inventario %}
+                    <tr>
+                        <td>{{ prod.fecha_de_registro|date:"d-m-Y" }}</td>
+                        <td>{{ prod.producto }}</td>
+                        <td>{{ prod.cantidad }}</td>
+                        <td>{{ prod.presentacion }}</td>                        
+                        <td>${{ prod.costo }}</td>
+                        <td>${{ prod.precio }}</td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+      </tbody>
+    </table>
+
+  </body>
+</html>

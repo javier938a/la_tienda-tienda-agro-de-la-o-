@@ -22,7 +22,7 @@ from .views import ListarCajas, CrearCaja, EditarCaja, EliminarCaja
 from .views import ListarEntradasSalidas, CrearEntradaSalida, EditarEntradaSalida, EliminarEntradaSalida, DetalleEntradaSalida
 from .views import agregar_producto_a_detalle_por_codigo
 from .views import imprimir_ticket, Obtener_ticket
-from .views import ViewSelectReporteVentas, ViewSelectReporteAperturas, PrintViewReporteVentas, ViewSelectReporteEntradaSalidasEfectivo, PrintViewReporteAperturas, PrintViewReporteEntradaSalida
+from .views import ViewSelectReporteVentas, ViewSelectReporteAperturas, ViewSelectReporteInventario, PrintViewReporteVentas, ViewSelectReporteEntradaSalidasEfectivo, PrintViewReporteAperturas, PrintViewReporteEntradaSalida, PrintViewReporteInventario
 from .views import ViewGenerarCodigoBarra, PrintViewCodigoBarra
 from .views import grafico_reporte_ventas
 
@@ -122,9 +122,11 @@ urlpatterns = [
     path('reporte/select_reporte_ventas', ViewSelectReporteVentas.as_view(), name="reporte_venta_view"),
     path('reporte/select_reporte_aperturas', ViewSelectReporteAperturas.as_view(), name="report_ape"),
     path('reporte/select_reporte_entrada_salida_efectivo', ViewSelectReporteEntradaSalidasEfectivo.as_view(), name='report_ent_sal'), 
+    path('reporte/select_reporte_inventario', ViewSelectReporteInventario.as_view(), name="reporte_inv_view"),
     path('reporte/print_reporte_aperturas', PrintViewReporteAperturas.as_view(), name="print_report_pertura"),
     path('reporte/print_reporte_venta', PrintViewReporteVentas.as_view(), name="print_report_venta"),
     path('reporte/print_reporte_entradas_salidas', PrintViewReporteEntradaSalida.as_view(), name='print_entradas_salidas'),
+     path('reporte/print_reporte_inventario', PrintViewReporteInventario.as_view(), name="reporte_inventario"),
     path('reporte/grafico_reporte', grafico_reporte_ventas, name="url_grafico"),
     path('generar_codigo_barra/', ViewGenerarCodigoBarra.as_view(), name='gen_codigo_barra'),
     path('print_codigo_barra/', PrintViewCodigoBarra.as_view(), name='print_codigo_barra' ),

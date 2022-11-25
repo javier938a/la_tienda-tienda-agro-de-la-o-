@@ -14,12 +14,23 @@ from django.conf import settings
 from django.views.generic import DetailView, ListView, TemplateView
 from django_weasyprint import WeasyTemplateResponseMixin
 from django_weasyprint.views import WeasyTemplateResponse
-from ventas.models import Venta, AperturaCorte
-from ventas.models import Sucursal
-from ventas.models import User
+from ventas.models import Venta, AperturaCorte, ProductoStockSucursal
+from ventas.models import Sucursal, ProductoStockSucursal
+from ventas.models import User, Categoria
 from ventas.models import EntradaSalidaEfectivo
 from django.db.models import Sum, Q
 from django.http import JsonResponse
+
+class ViewSelectReporteInventario(LoginRequiredMixin, TemplateView):
+    login_url='/ventas/login/'
+    redirect_field_name="redirect_to"    
+    template_name='reportes/view_reporte_inventario.html'
+
+    def get_context_data(self, **kwargs):
+        context=super(ViewSelectReporteInventario, self).get_context_data(**kwargs)
+        context['sucursales']=Sucursal.objects.all()
+        context['categorias']=Categoria.objects.all()
+        return context
 
 class ViewSelectReporteEntradaSalidasEfectivo(LoginRequiredMixin, TemplateView):
     login_url='/ventas/login/'
@@ -57,6 +68,71 @@ class ViewSelectReporteAperturas(LoginRequiredMixin, TemplateView):
         context['sucursales']=sucursales
         return context
 
+
+class DetalleReporteInventario(TemplateView):
+    template_name="reportes/reporte_inventario.html"
+
+class CustomInventarioTemplateResponse(WeasyTemplateResponse):
+    def get_url_fetcher(self):
+        context=ssl.create_default_context()
+        context.check_hostname=False
+        context.verify_mode=ssl.CERT_NONE
+        return functools.partial(django_url_fetcher, ssl_context=context)
+
+class PrintViewReporteInventario(WeasyTemplateResponseMixin, DetalleReporteInventario):
+    model=ProductoStockSucursal
+    context_object_name='inventario'
+    
+    pdf_stylesheets=[
+        str(settings.STATIC_ROOT) + '/assets/css/estilos_reporte_inventario/reporte_inventario.css'
+    ]
+    pdf_attachment=False
+
+    response_class=CustomInventarioTemplateResponse
+
+    def get_context_data(self, **kwargs):
+        context=super(PrintViewReporteInventario, self).get_context_data(**kwargs)
+        id_sucursal=self.request.GET['id_sucursal']
+        id_categoria=self.request.GET['id_categoria']
+        fecha_inicio=self.request.GET['fecha_inicial']
+        fecha_final=self.request.GET['fecha_final'] 
+        inventario=None
+        context['fecha_inicial']=fecha_inicio
+        context['fecha_final']=fecha_final
+        if id_sucursal!='0':
+            
+            if id_categoria!='0':
+                categoria=Categoria.objects.get(id=id_categoria)
+                context['categoria']=categoria
+                sucursal=Sucursal.objects.get(id=id_sucursal)
+                context['sucursal']=sucursal
+                if fecha_final==fecha_inicio and fecha_final!='' and fecha_inicio!='':
+                    inventario=ProductoStockSucursal.objects.filter(Q(sucursal=sucursal)).filter(Q(producto__categoria=categoria)).filter(fecha_de_registro__date=fecha_inicio).order_by('producto')
+                    context['inventario']=inventario
+                elif fecha_final==fecha_inicio and fecha_final=="" and fecha_inicio=="":
+                    print("Entro aqui....")
+                    inventario=ProductoStockSucursal.objects.filter(Q(sucursal=sucursal)).filter(Q(producto__categoria=categoria)).order_by('producto')
+                    context['inventario']=inventario
+                else:
+                    inventario=ProductoStockSucursal.objects.filter(Q(sucursal=sucursal)).filter(Q(producto__categoria=categoria)).filter(Q(fecha_de_registro__gte=fecha_inicio) & Q(fecha_de_registro__lte=fecha_final)).order_by('producto')
+                    context['inventario']=inventario
+            else:
+                #print("igfgfgd_sucursalddfdf "+str(id_sucursal)+' ddfdf '+fecha_inicio+' 67676'+fecha_final)
+                sucursal=Sucursal.objects.get(id=id_sucursal)
+                context['sucursal']=sucursal
+                if fecha_final==fecha_inicio and fecha_final!='' and fecha_inicio!='':
+                    inventario=ProductoStockSucursal.objects.filter(Q(sucursal=sucursal)).filter(fecha_de_registro__date=fecha_inicio).order_by('producto')
+                    
+                    context['inventario']=inventario
+                elif fecha_final==fecha_inicio and fecha_final=="" and fecha_inicio=="":
+                    print("igfgfgd_sucursalddfdf "+str(id_sucursal)+' ddfdgholaf '+fecha_inicio+' 67676'+fecha_final)
+                    inventario=ProductoStockSucursal.objects.filter(Q(sucursal=sucursal)).order_by('producto')
+                    context['inventario']=inventario
+                else:
+                    inventario=ProductoStockSucursal.objects.filter(Q(sucursal=sucursal)).filter(Q(fecha_de_registro__gte=fecha_inicio) & Q(fecha_de_registro__lte=fecha_final)).order_by('producto')
+                    context['inventario']=inventario
+
+        return context
 
 class DetalleReporteEntradasSalidas(TemplateView):
     template_name="reportes/reporte_entradas_salidas_de_efectivo.html"
