@@ -99,6 +99,13 @@ class PrintViewReporteInventario(WeasyTemplateResponseMixin, DetalleReporteInven
         inventario=None
         context['fecha_inicial']=fecha_inicio
         context['fecha_final']=fecha_final
+        if fecha_inicio=='':
+            fecha_inicio=fecha_final
+        
+        if fecha_final=='':
+            fecha_final=fecha_inicio
+
+            
         if id_sucursal!='0':
             
             if id_categoria!='0':

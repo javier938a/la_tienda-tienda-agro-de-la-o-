@@ -18,7 +18,18 @@ $(document).ready(function(){
         let id_sucursal=$("#id_sucursal").val();
         let id_categoria=$("#id_categoria").val();
             if(parseInt(id_sucursal)>0 || parseInt(id_categoria)>0){
-
+                if(parseInt(id_sucursal)>0 || parseInt(id_categoria)>0){
+                    if(fecha_final.length==0 && fecha_inicial.length>0){
+                        toastr['warning']("Debe de ingresar la fecha final para continuar.")
+                        evt.preventDefault(); 
+                    }else if(fecha_final.length>0 && fecha_inicial.length==0){
+                        toastr['warning']("Debe de ingresar la fecha inicial para continuar.")
+                        evt.preventDefault(); 
+                    }
+                }else{
+                    toastr['warning']("Debe de seleccionar una categoria o una sucursal para generar el reporte");
+                    evt.preventDefault(); 
+                }
             }else{
                 toastr['warning']("Debe de seleccionar una categoria o una sucursal para generar el reporte");
                 evt.preventDefault(); 

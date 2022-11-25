@@ -176,7 +176,7 @@ class EntradaSalidaEfectivo(models.Model):
     tipo_entrada_salida=models.ForeignKey(TipoEntradaSalidaEfectivo, on_delete=models.SET_NULL, null=True)
     monto=models.FloatField(help_text="Ingrese el monto de la salida o entrada de efectivo")
     def __str__(self):
-        return "%s -> %s -> %s",(self.descripcion, str(self.tipo_entrada_salida), str(self.monto))
+        return "%s -> %s -> %s"%(self.descripcion, str(self.tipo_entrada_salida), str(self.monto))
 
 
 class AperturaCorte(models.Model):
