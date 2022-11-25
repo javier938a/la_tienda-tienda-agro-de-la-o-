@@ -25,56 +25,57 @@
               <h5 class="card-title">Usuarios</h5>
               {# <a class="btn btn-primary pull-right" href="{% url 'store:crear_inv' %}">Crear Inventario</a> #}
               <!-- Table with stripped rows -->
-              <table class="table datatable">
-                <thead>
-                  <tr>
-                    <th scope="col">ID</th>                    
-                    <th scope="col">Sucursal</th>
-                    <th scope="col">Usuario</th>
-                    <th scope="col">Fecha de registro</th>
-                    <th scope="col">Producto</th>
-                    <th scope="col">Cantidad</th>
-                    <th scope="col">Presentacion</th>
-                    <th scope="col">Categoria</th>
-                    <th scope="col">Costo</th>
-                    <th scope="col">Precio</th>
-                    <th scope="col" colspan="2">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                    {% if inventario %}
-                        {% for inv in inventario %}
-                            <tr>                    
-                                <th scope="row">{{ inv.id }}</th>
-                                <td>{{ inv.sucursal }}</td>
-                                <td>{{ inv.usuario }}</td>
-                                <td>{{ inv.fecha_de_registro }}</td>
-                                <td>{{ inv.producto}}</td>
-                                <td>{{ inv.cantidad }}</td>
-                                <td>{{ inv.presentacion }}</td>   
-                                <td>{{ inv.producto.categoria }}</td>                             
-                                <td>${{ inv.costo}}</td>
-                                <td>${{ inv.precio }}</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                            Action
-                                        </button>
-                                        <ul class="dropdown-menu">              
-                                            <li><a class="dropdown-item" href="{% url 'store:det_inv' inv.id %}">Detalle de producto</a></li>
-                                            <li><a class="dropdown-item" href="{% url 'store:del_inv' inv.id %}">Eliminar producto</a></li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    {% else %}
-                        <p>No hay registros que mostrar</p>
-                  {% endif %}
-                </tbody>
-              </table>
-              <!-- End Table with stripped rows -->
-
+              <div class="table-responsive">
+                <table class="table datatable">
+                  <thead>
+                    <tr>
+                      <th scope="col">ID</th>                    
+                      <th scope="col">Sucursal</th>
+                      <th scope="col">Usuario</th>
+                      <th scope="col">Fecha de registro</th>
+                      <th scope="col">Producto</th>
+                      <th scope="col">Cantidad</th>
+                      <th scope="col">Presentacion</th>
+                      <th scope="col">Categoria</th>
+                      <th scope="col">Costo</th>
+                      <th scope="col">Precio</th>
+                      <th scope="col" colspan="2">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                      {% if inventario %}
+                          {% for inv in inventario %}
+                              <tr>                    
+                                  <th scope="row">{{ inv.id }}</th>
+                                  <td>{{ inv.sucursal }}</td>
+                                  <td>{{ inv.usuario }}</td>
+                                  <td>{{ inv.fecha_de_registro }}</td>
+                                  <td>{{ inv.producto}}</td>
+                                  <td>{{ inv.cantidad }}</td>
+                                  <td>{{ inv.presentacion }}</td>   
+                                  <td>{{ inv.producto.categoria }}</td>                             
+                                  <td>${{ inv.costo}}</td>
+                                  <td>${{ inv.precio }}</td>
+                                  <td>
+                                      <div class="btn-group">
+                                          <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                              Action
+                                          </button>
+                                          <ul class="dropdown-menu">              
+                                              <li><a class="dropdown-item" href="{% url 'store:det_inv' inv.id %}">Detalle de producto</a></li>
+                                              <li><a class="dropdown-item" href="{% url 'store:del_inv' inv.id %}">Eliminar producto</a></li>
+                                          </ul>
+                                      </div>
+                                  </td>
+                              </tr>
+                          {% endfor %}
+                      {% else %}
+                          <p>No hay registros que mostrar</p>
+                    {% endif %}
+                  </tbody>
+                </table>
+                <!-- End Table with stripped rows -->
+              </div>
             </div>
           </div>
 

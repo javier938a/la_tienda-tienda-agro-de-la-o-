@@ -25,40 +25,41 @@
               <h5 class="card-title">Categorias</h5>
               <a class="btn btn-primary pull-right" href="{% url 'store:crear_cate' %}">Agregar Categorias</a>
               <!-- Table with stripped rows -->
-              <table class="table datatable">
-                <thead>
-                  <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Categoria</th>
-                    <th scope="col" colspan="2">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                    {% if categorias %}
-                        {% for cate in categorias %}
-                            <tr>                    
-                                <th scope="row">{{ cate.id }}</th>
-                                <td>{{ cate.categoria }}</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                            Action
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="{% url 'store:edit_cate' cate.pk %}">Editar</a></li>
-                                            <li><a class="dropdown-item" href="{% url 'store:del_cate' cate.pk %}">Eliminar</a></li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    {% else %}
-                        <p>No hay registros que mostrar</p>
-                  {% endif %}
-                </tbody>
-              </table>
-              <!-- End Table with stripped rows -->
-
+              <div class="table-responsive">
+                <table class="table datatable">
+                  <thead>
+                    <tr>
+                      <th scope="col">ID</th>
+                      <th scope="col">Categoria</th>
+                      <th scope="col" colspan="2">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                      {% if categorias %}
+                          {% for cate in categorias %}
+                              <tr>                    
+                                  <th scope="row">{{ cate.id }}</th>
+                                  <td>{{ cate.categoria }}</td>
+                                  <td>
+                                      <div class="btn-group">
+                                          <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                              Action
+                                          </button>
+                                          <ul class="dropdown-menu">
+                                              <li><a class="dropdown-item" href="{% url 'store:edit_cate' cate.pk %}">Editar</a></li>
+                                              <li><a class="dropdown-item" href="{% url 'store:del_cate' cate.pk %}">Eliminar</a></li>
+                                          </ul>
+                                      </div>
+                                  </td>
+                              </tr>
+                          {% endfor %}
+                      {% else %}
+                          <p>No hay registros que mostrar</p>
+                    {% endif %}
+                  </tbody>
+                </table>
+                <!-- End Table with stripped rows -->
+              </div>
             </div>
           </div>
 

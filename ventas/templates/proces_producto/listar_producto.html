@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block titulo %}
-  <title>Crear Producto</title>
+  <title>Listado de Productos</title>
 {% endblock %}
 
 
@@ -26,49 +26,50 @@
               <h5 class="card-title">Producto</h5>
               <a class="btn btn-primary pull-right" href="{% url 'store:crear_prod' %}">Agregar Producto</a>
               <!-- Table with stripped rows -->
-              <table class="table datatable">
-                <thead>
-                  <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Nombre del producto</th>
-                    <th scope="col">Fecha de creacion</th>
-                    <th scope="col">Descripcion</th>
-                    <th scope="col">Usuario</th>
-                    <th scope="col">Categoria</th>
-                    <th scope="col">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                    {% if producto %}
-                        {% for prod in producto %}
-                            <tr>                    
-                                <th scope="row">{{ prod.id }}</th>
-                                <td>{{ prod.nombre_producto }}</td>
-                                <td>{{ prod.fecha_de_registro }}</td>
-                                <td>{{ prod.descripcion }}</td>
-                                <td>{{ prod.usuario }}</td>
-                                <td>{{ prod.categoria }}</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                            Action
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="{% url 'store:editar_prod' prod.id %}">Editar</a></li>
-                                            <li><a class="dropdown-item" href="{% url 'store:del_prod' prod.id %}">Eliminar</a></li>
-                                            <li><a class="dropdown-item" href="{% url 'store:det_prod' prod.id %}">Detalle</a></li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    {% else %}
-                        <p>No hay registros que mostrar</p>
-                  {% endif %}
-                </tbody>
-              </table>
-              <!-- End Table with stripped rows -->
-
+              <div class="table-responsive">
+                <table class="table datatable">
+                  <thead>
+                    <tr>
+                      <th scope="col">ID</th>
+                      <th scope="col">Nombre del producto</th>
+                      <th scope="col">Fecha de creacion</th>
+                      <th scope="col">Descripcion</th>
+                      <th scope="col">Usuario</th>
+                      <th scope="col">Categoria</th>
+                      <th scope="col">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                      {% if producto %}
+                          {% for prod in producto %}
+                              <tr>                    
+                                  <th scope="row">{{ prod.id }}</th>
+                                  <td>{{ prod.nombre_producto }}</td>
+                                  <td>{{ prod.fecha_de_registro }}</td>
+                                  <td>{{ prod.descripcion }}</td>
+                                  <td>{{ prod.usuario }}</td>
+                                  <td>{{ prod.categoria }}</td>
+                                  <td>
+                                      <div class="btn-group">
+                                          <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                              Action
+                                          </button>
+                                          <ul class="dropdown-menu">
+                                              <li><a class="dropdown-item" href="{% url 'store:editar_prod' prod.id %}">Editar</a></li>
+                                              <li><a class="dropdown-item" href="{% url 'store:del_prod' prod.id %}">Eliminar</a></li>
+                                              <li><a class="dropdown-item" href="{% url 'store:det_prod' prod.id %}">Detalle</a></li>
+                                          </ul>
+                                      </div>
+                                  </td>
+                              </tr>
+                          {% endfor %}
+                      {% else %}
+                          <p>No hay registros que mostrar</p>
+                    {% endif %}
+                  </tbody>
+                </table>
+                <!-- End Table with stripped rows -->
+              </div>
             </div>
           </div>
 

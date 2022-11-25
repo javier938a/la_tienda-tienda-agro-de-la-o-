@@ -25,39 +25,40 @@
               <h5 class="card-title">Presentaciones de productos</h5>
               <a class="btn btn-primary pull-right" href="{% url 'store:crear_pre' %}">Agregar Presentacion</a>
               <!-- Table with stripped rows -->
-              <table class="table datatable">
-                <thead>
-                  <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Descripcion</th>
-                  </tr>
-                </thead>
-                <tbody>
-                    {% if presentacion %}
-                        {% for pre in presentacion %}
-                            <tr>                    
-                                <th scope="row">{{ pre.id }}</th>
-                                <td>{{ pre.presentacion }}</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                            Action
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="{% url 'store:edit_pre' pre.id %}">Editar</a></li>
-                                            <li><a class="dropdown-item" href="{% url 'store:del_pre' pre.id %}">Eliminar</a></li>
-                                        </ul> 
-                                    </div>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    {% else %}
-                        <p>No hay registros que mostrar</p>
-                  {% endif %}
-                </tbody>
-              </table>
-              <!-- End Table with stripped rows -->
-
+              <div class="table-responsive">
+                <table class="table datatable">
+                  <thead>
+                    <tr>
+                      <th scope="col">ID</th>
+                      <th scope="col">Descripcion</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                      {% if presentacion %}
+                          {% for pre in presentacion %}
+                              <tr>                    
+                                  <th scope="row">{{ pre.id }}</th>
+                                  <td>{{ pre.presentacion }}</td>
+                                  <td>
+                                      <div class="btn-group">
+                                          <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                              Action
+                                          </button>
+                                          <ul class="dropdown-menu">
+                                              <li><a class="dropdown-item" href="{% url 'store:edit_pre' pre.id %}">Editar</a></li>
+                                              <li><a class="dropdown-item" href="{% url 'store:del_pre' pre.id %}">Eliminar</a></li>
+                                          </ul> 
+                                      </div>
+                                  </td>
+                              </tr>
+                          {% endfor %}
+                      {% else %}
+                          <p>No hay registros que mostrar</p>
+                    {% endif %}
+                  </tbody>
+                </table>
+                <!-- End Table with stripped rows -->
+              </div>
             </div>
           </div>
 

@@ -23,55 +23,56 @@
               <h5 class="card-title">Entradas y Salidas de efectivo</h5>
               <a class="btn btn-primary pull-right" href="{% url 'store:crear_entrada_salida_efectivo' %}">Agregar Movimiento</a>
               <!-- Table with stripped rows -->
-              <table class="table datatable">
-                <thead>
-                  <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Fecha de registro</th>
-                    <th scope="col">Usuario</th>
-                    <th scope="col">Sucursal</th>
-                    <th scope="col">Caja</th>
-                    <th scope="col">Descripcion</th>
-                    <th scope="col">Tipo de flujo</th>
-                    <th scope="col">Monto</th>
-                    <th scope="col" colspan="2">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                    {% if entradas_salidas %}
-                        {% for entrada_salida in entradas_salidas %}
-                            <tr>                    
-                                <th scope="row">{{ entrada_salida.id }}</th>
-                                <td>{{ entrada_salida.fecha_hora }}</td>
-                                <td>{{ entrada_salida.usuario }}</td>
-                                <td>{{ entrada_salida.usuario.sucursal }}</td>
-                                <td>{{ entrada_salida.caja }}</td>
-                                <td>{{ entrada_salida.descripcion }}</td>
-                                <td>{{ entrada_salida.tipo_entrada_salida }}</td>
-                                <td>${{ entrada_salida.monto }}</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                            Action
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            {% if entrada_salida.usuario.username == user.username %}
-                                                <li><a class="dropdown-item" href="{% url 'store:editar_entrada_salida' entrada_salida.id %}">Editar</a></li>
-                                                <li><a class="dropdown-item" href="{% url 'store:eliminar_entrada_salida' entrada_salida.id %}">Eliminar</a></li>
-                                            {% endif %}
-                                            <li><a class="dropdown-item" href="{% url 'store:detalle_entrada_salida' entrada_salida.id %}">Detalle</a></li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    {% else %}
-                        <p>No hay registros que mostrar</p>
-                  {% endif %}
-                </tbody>
-              </table>
-              <!-- End Table with stripped rows -->
-
+              <div class="table-responsive">
+                <table class="table datatable">
+                  <thead>
+                    <tr>
+                      <th scope="col">ID</th>
+                      <th scope="col">Fecha de registro</th>
+                      <th scope="col">Usuario</th>
+                      <th scope="col">Sucursal</th>
+                      <th scope="col">Caja</th>
+                      <th scope="col">Descripcion</th>
+                      <th scope="col">Tipo de flujo</th>
+                      <th scope="col">Monto</th>
+                      <th scope="col" colspan="2">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                      {% if entradas_salidas %}
+                          {% for entrada_salida in entradas_salidas %}
+                              <tr>                    
+                                  <th scope="row">{{ entrada_salida.id }}</th>
+                                  <td>{{ entrada_salida.fecha_hora }}</td>
+                                  <td>{{ entrada_salida.usuario }}</td>
+                                  <td>{{ entrada_salida.usuario.sucursal }}</td>
+                                  <td>{{ entrada_salida.caja }}</td>
+                                  <td>{{ entrada_salida.descripcion }}</td>
+                                  <td>{{ entrada_salida.tipo_entrada_salida }}</td>
+                                  <td>${{ entrada_salida.monto }}</td>
+                                  <td>
+                                      <div class="btn-group">
+                                          <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                              Action
+                                          </button>
+                                          <ul class="dropdown-menu">
+                                              {% if entrada_salida.usuario.username == user.username %}
+                                                  <li><a class="dropdown-item" href="{% url 'store:editar_entrada_salida' entrada_salida.id %}">Editar</a></li>
+                                                  <li><a class="dropdown-item" href="{% url 'store:eliminar_entrada_salida' entrada_salida.id %}">Eliminar</a></li>
+                                              {% endif %}
+                                              <li><a class="dropdown-item" href="{% url 'store:detalle_entrada_salida' entrada_salida.id %}">Detalle</a></li>
+                                          </ul>
+                                      </div>
+                                  </td>
+                              </tr>
+                          {% endfor %}
+                      {% else %}
+                          <p>No hay registros que mostrar</p>
+                    {% endif %}
+                  </tbody>
+                </table>
+                <!-- End Table with stripped rows -->
+              </div>
             </div>
           </div>
 

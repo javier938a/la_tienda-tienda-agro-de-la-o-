@@ -5,7 +5,7 @@
 
 {% block contenido %}
     <div class="pagetitle">
-      <h1>Listar Cargas de Inventario</h1>
+      <h1>Listar Cajas Registradoras</h1>
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="{% url 'store:index' %}">Inicio</a></li>
@@ -23,40 +23,41 @@
               <h5 class="card-title">Cajas Registradoras</h5>
               <a class="btn btn-primary pull-right" href="{% url 'store:crear_caja' %}">Agregar Caja</a>
               <!-- Table with stripped rows -->
-              <table class="table datatable">
-                <thead>
-                  <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Caja</th>
-                    <th scope="col" colspan="2">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                    {% if cajas %}
-                        {% for caja in cajas %}
-                            <tr>                    
-                                <th scope="row">{{ caja.id }}</th>
-                                <td>{{ caja.numero_de_caja }}</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                            Action
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="{% url 'store:edit_caja' caja.id %}">Editar</a></li>
-                                            {# <li><a class="dropdown-item" href="{% url 'store:del_caja' caja.id %}">Eliminar</a></li> #}
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    {% else %}
-                        <p>No hay registros que mostrar</p>
-                  {% endif %}
-                </tbody>
-              </table>
-              <!-- End Table with stripped rows -->
-
+              <div class="table-responsive">
+                <table class="table datatable">
+                  <thead>
+                    <tr>
+                      <th scope="col">ID</th>
+                      <th scope="col">Caja</th>
+                      <th scope="col" colspan="2">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                      {% if cajas %}
+                          {% for caja in cajas %}
+                              <tr>                    
+                                  <th scope="row">{{ caja.id }}</th>
+                                  <td>{{ caja.numero_de_caja }}</td>
+                                  <td>
+                                      <div class="btn-group">
+                                          <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                              Action
+                                          </button>
+                                          <ul class="dropdown-menu">
+                                              <li><a class="dropdown-item" href="{% url 'store:edit_caja' caja.id %}">Editar</a></li>
+                                              {# <li><a class="dropdown-item" href="{% url 'store:del_caja' caja.id %}">Eliminar</a></li> #}
+                                          </ul>
+                                      </div>
+                                  </td>
+                              </tr>
+                          {% endfor %}
+                      {% else %}
+                          <p>No hay registros que mostrar</p>
+                    {% endif %}
+                  </tbody>
+                </table>
+                <!-- End Table with stripped rows -->
+              </div>
             </div>
           </div>
 
