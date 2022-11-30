@@ -63,6 +63,7 @@
                                           </button>
                                           <ul class="dropdown-menu">              
                                               <li><a class="dropdown-item" href="{% url 'store:det_inv' inv.id %}">Detalle de producto</a></li>
+                                              <li><a class="dropdown-item" href="{% url 'store:edit_prod_inv' inv.id %}" class="dropdown-item">Editar Producto</a></li>
                                               <li><a class="dropdown-item" href="{% url 'store:del_inv' inv.id %}">Eliminar producto</a></li>
                                           </ul>
                                       </div>

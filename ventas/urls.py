@@ -13,7 +13,7 @@ from .views import ListarProductos, CrearProducto, EditarProducto, DetalleProduc
 from .views import ListarPresentacion, CrearPresentacion, EditarPresentacion, EliminarPresentacion
 from .views import ListarCargaProductos, ViewCargaInventario, DetalleCargaInventario, listar_productos_cargados_y_sin_cargar_autocomplete, agregar_producto_detalle_carga, cargar_producto_inventario
 from .views import ListarDescargasProductos, ViewCrearDescargaProducto, ViewDetalleDescargaProducto, listar_productos_a_descargar_por_sucursal_autocomplete, agregar_producto_a_descargar_a_detalle, efectuar_descarga_de_productos
-from .views import ListarInventario, ViewCrearInventario, ViewEditarInventario, EliminarInventario, obtener_productos_autocomplete, agregar_producto_detalle
+from .views import ListarInventario, ViewCrearInventario, EditarProductoInventario, ViewEditarInventario, EliminarInventario, obtener_productos_autocomplete, agregar_producto_detalle
 from .views import guardar_datos_inventario, actualizar_datos_inventario, update_producto_detalle, DetalleInventario
 from .views import ListarVentas, ViewCrearVenta, ViewDetalleVenta, verificar_stock_producto, obtener_productos_inventario_autocomplete, agregar_producto_detalle_venta, efectuar_venta
 from .views import ListarDevolucionesVentas, ViewCrearDevolucionVenta, ViewDetalleDevolucion, obtener_ventas_autocomplete, listar_productos_de_venta, efectuar_devolucion_venta
@@ -78,6 +78,7 @@ urlpatterns = [
     path('inventario/', ListarInventario.as_view(), name="list_inv"),
     path('inventario/crear_inventario', ViewCrearInventario.as_view(), name="crear_inv"),
     path('inventario/editar_inventario/<int:pk>', ViewEditarInventario.as_view(), name="edit_inv"),
+    path('inventario/editar_producto_inventario/<int:pk>', EditarProductoInventario.as_view(), name='edit_prod_inv'),
     path('inventario/detalle_inventario/<int:pk>', DetalleInventario.as_view(), name="det_inv"),
     path('inventario/eliminar_inventario/<int:pk>', EliminarInventario.as_view(), name="del_inv"),
     path('inventario/auto_prod_list', obtener_productos_autocomplete, name='auto_prod_list'),

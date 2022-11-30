@@ -3,6 +3,8 @@ from django.views.generic import TemplateView, CreateView, ListView, UpdateView,
 from django.contrib.auth.mixins import LoginRequiredMixin
 from ventas.models import InventarioProductos, Sucursal, Producto, Presentacion, User, ProductoStockSucursal
 from django.http import request, JsonResponse
+from ventas.models import CargaProductos, DetalleCargaProductos
+from ventas.forms import ProductoInventarioForm
 from django.db.models import Q
 from django.urls import reverse_lazy
 from django.core.serializers import serialize
@@ -16,6 +18,79 @@ class ViewCrearInventario(LoginRequiredMixin, TemplateView):
         sucursales=Sucursal.objects.all()
         context['suc']=sucursales
         return context
+
+class EditarProductoInventario(LoginRequiredMixin, UpdateView):
+    login_url="/ventas/login/"
+    redirect_field_name="redirect_to"
+    template_name="proces_inventario/editar_producto_inventario.html"
+    model=ProductoStockSucursal
+    form_class=ProductoInventarioForm
+    context_object_name='form'  
+
+    def get_context_data(self, **kwargs):
+        context=super(EditarProductoInventario, self).get_context_data(**kwargs)
+        producto_stock_ubi=ProductoStockSucursal.objects.get(Q(id=self.kwargs['pk']))
+        costo_anterior=str(producto_stock_ubi.costo)
+        precio_anterior=str(producto_stock_ubi.precio)
+        print("Precio Anterior: "+str(precio_anterior)+" Costo anterior: "+str(costo_anterior))
+        context.get('form').fields.get('usuario').empty_label=None
+        usuario=ProductoStockSucursal.objects.get(Q(id=self.kwargs['pk'])).usuario
+        print(usuario)
+        context.get('form').fields.get('usuario').queryset=User.objects.filter(id=usuario.id)
+        sucursal=ProductoStockSucursal.objects.get(Q(id=self.kwargs['pk'])).sucursal
+        context.get('form').fields.get('sucursal').empty_label=None
+        context.get('form').fields.get('sucursal').queryset=Sucursal.objects.filter(id=sucursal.id)
+        context.get('form').fields.get('producto').empty_label=None
+        producto=ProductoStockSucursal.objects.get(Q(id=self.kwargs['pk'])).producto
+        context.get('form').fields.get('producto').queryset=Producto.objects.filter(Q(id=producto.id))
+        #asignando a dos imput ocultos el valor anterior para despues registrarlos
+        context.get('form').fields.get('precio_anterior').initial=precio_anterior
+        context.get('form').fields.get('costo_anterior').initial=costo_anterior
+        return context
+
+    def form_valid(self, form):
+        print(form)
+        form_val=super(EditarProductoInventario, self).form_valid(form)
+        
+        producto=ProductoStockSucursal.objects.get(Q(id=self.kwargs['pk'])).producto
+        sucursal=ProductoStockSucursal.objects.get(Q(id=self.kwargs['pk'])).sucursal
+        costo_anterior=form.cleaned_data.get('costo_anterior')
+        precio_anterior=form.cleaned_data.get('precio_anterior')
+        cantidad=ProductoStockSucursal.objects.get(Q(id=self.kwargs['pk'])).cantidad
+        presentacion=form.cleaned_data.get('presentacion')
+        costo=float(form.cleaned_data.get('costo'))
+        precio=float(form.cleaned_data.get('precio'))
+        print("Este es el costo "+str(costo_anterior) + " Este es el precio anterior "+str(precio_anterior))
+        descripcion="Cambiando el precio o costo del producto "+str(producto)
+        usuario_realiza_cambio=self.request.user
+        total=float(form.cleaned_data.get('costo'))*int(cantidad)
+        CargaProductos.objects.create(
+            descripcion=descripcion,
+            usuario=usuario_realiza_cambio,
+            sucursal=sucursal,
+            total=total
+        )
+        #obteniendo el ultimo registro ingresado
+        carga_producto_obj=CargaProductos.objects.all().last()
+        DetalleCargaProductos.objects.create(
+            carga_producto=carga_producto_obj,
+            producto=producto,
+            presentacion=presentacion,
+            cantidad=cantidad,
+            nueva_cantidad=cantidad,
+            costo_anterior=costo_anterior,
+            costo=costo,
+            precio_anterior=precio_anterior,
+            precio=precio,
+            total=total,
+            tipo_prod='existe'
+
+        )
+        return form_val
+    
+    def get_success_url(self):
+
+        return reverse_lazy('store:list_inv')
 
 class ViewEditarInventario(LoginRequiredMixin, TemplateView):
     login_url="/ventas/login/"
