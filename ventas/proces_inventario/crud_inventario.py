@@ -56,19 +56,19 @@ class EditarProductoInventario(LoginRequiredMixin, UpdateView):
         sucursal=ProductoStockSucursal.objects.get(Q(id=self.kwargs['pk'])).sucursal
         costo_anterior=form.cleaned_data.get('costo_anterior')
         precio_anterior=form.cleaned_data.get('precio_anterior')
-        cantidad=ProductoStockSucursal.objects.get(Q(id=self.kwargs['pk'])).cantidad
+        cantidad=0
         presentacion=form.cleaned_data.get('presentacion')
         costo=float(form.cleaned_data.get('costo'))
         precio=float(form.cleaned_data.get('precio'))
         print("Este es el costo "+str(costo_anterior) + " Este es el precio anterior "+str(precio_anterior))
         descripcion="Cambiando el precio o costo del producto "+str(producto)
         usuario_realiza_cambio=self.request.user
-        total=float(form.cleaned_data.get('costo'))*int(cantidad)
+        total=0.0
         CargaProductos.objects.create(
             descripcion=descripcion,
             usuario=usuario_realiza_cambio,
             sucursal=sucursal,
-            total=total
+            total=0.0
         )
         #obteniendo el ultimo registro ingresado
         carga_producto_obj=CargaProductos.objects.all().last()
