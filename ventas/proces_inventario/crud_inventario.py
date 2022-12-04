@@ -30,6 +30,7 @@ class EditarProductoInventario(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context=super(EditarProductoInventario, self).get_context_data(**kwargs)
         producto_stock_ubi=ProductoStockSucursal.objects.get(Q(id=self.kwargs['pk']))
+        cantidad_anterior=str(producto_stock_ubi.cantidad)
         costo_anterior=str(producto_stock_ubi.costo)
         precio_anterior=str(producto_stock_ubi.precio)
         print("Precio Anterior: "+str(precio_anterior)+" Costo anterior: "+str(costo_anterior))
@@ -44,6 +45,7 @@ class EditarProductoInventario(LoginRequiredMixin, UpdateView):
         producto=ProductoStockSucursal.objects.get(Q(id=self.kwargs['pk'])).producto
         context.get('form').fields.get('producto').queryset=Producto.objects.filter(Q(id=producto.id))
         #asignando a dos imput ocultos el valor anterior para despues registrarlos
+        context.get('form').fields.get('cantidad_anterior').initial=cantidad_anterior
         context.get('form').fields.get('precio_anterior').initial=precio_anterior
         context.get('form').fields.get('costo_anterior').initial=costo_anterior
         return context
@@ -54,9 +56,9 @@ class EditarProductoInventario(LoginRequiredMixin, UpdateView):
         
         producto=ProductoStockSucursal.objects.get(Q(id=self.kwargs['pk'])).producto
         sucursal=ProductoStockSucursal.objects.get(Q(id=self.kwargs['pk'])).sucursal
+        cantidad=int(ProductoStockSucursal.objects.get(Q(id=self.kwargs['pk'])).cantidad)
         costo_anterior=form.cleaned_data.get('costo_anterior')
         precio_anterior=form.cleaned_data.get('precio_anterior')
-        cantidad=0
         presentacion=form.cleaned_data.get('presentacion')
         costo=float(form.cleaned_data.get('costo'))
         precio=float(form.cleaned_data.get('precio'))
@@ -64,28 +66,32 @@ class EditarProductoInventario(LoginRequiredMixin, UpdateView):
         descripcion="Cambiando el precio o costo del producto "+str(producto)
         usuario_realiza_cambio=self.request.user
         total=0.0
+
         CargaProductos.objects.create(
-            descripcion=descripcion,
-            usuario=usuario_realiza_cambio,
-            sucursal=sucursal,
-            total=0.0
-        )
-        #obteniendo el ultimo registro ingresado
+                descripcion=descripcion,
+                usuario=usuario_realiza_cambio,
+                sucursal=sucursal,
+                total=0.0
+            )
+            #obteniendo el ultimo registro ingresado
         carga_producto_obj=CargaProductos.objects.all().last()
         DetalleCargaProductos.objects.create(
-            carga_producto=carga_producto_obj,
-            producto=producto,
-            presentacion=presentacion,
-            cantidad=cantidad,
-            nueva_cantidad=cantidad,
-            costo_anterior=costo_anterior,
-            costo=costo,
-            precio_anterior=precio_anterior,
-            precio=precio,
-            total=total,
-            tipo_prod='existe'
+                carga_producto=carga_producto_obj,
+                producto=producto,
+                presentacion=presentacion,
+                cantidad_anterior=cantidad,
+                cantidad=0,
+                nueva_cantidad=cantidad,
+                costo_anterior=costo_anterior,
+                costo=costo,
+                precio_anterior=precio_anterior,
+                precio=precio,
+                total=0.0,
+                tipo_prod='existe'
 
-        )
+            )
+        
+
         return form_val
     
     def get_success_url(self):

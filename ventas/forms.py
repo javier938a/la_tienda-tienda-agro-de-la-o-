@@ -80,17 +80,18 @@ class ProductoForm(forms.ModelForm):
         }
 
 class ProductoInventarioForm(forms.ModelForm):
+    cantidad_anterior=forms.CharField(widget=forms.HiddenInput())
     precio_anterior=forms.CharField(widget=forms.HiddenInput())
     costo_anterior=forms.CharField(widget=forms.HiddenInput())
     class Meta:
         model=ProductoStockSucursal
-        fields=('sucursal', 'usuario', 'producto', 'presentacion', 'costo', 'precio')
+        fields=('sucursal', 'usuario', 'producto', 'presentacion','costo', 'precio')
         labels={
             'fecha_de_registro':'Fecha de Registro',
             'sucursal':'Sucursal',
             'Usuario':'Usuario',
             'producto':'Producto',
-            'presentacion':'Presentacion', 
+            'presentacion':'Presentacion',
             'costo':'Costo',
             'precio':'Precio'
         }

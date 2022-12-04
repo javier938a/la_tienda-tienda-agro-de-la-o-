@@ -33,6 +33,7 @@
                       <th scope="col">Sucursal</th>
                       <th scope="col">Usuario</th>
                       <th scope="col">Fecha de registro</th>
+                      <th scope="col">Codigo</th>
                       <th scope="col">Producto</th>
                       <th scope="col">Cantidad</th>
                       <th scope="col">Presentacion</th>
@@ -50,6 +51,11 @@
                                   <td>{{ inv.sucursal }}</td>
                                   <td>{{ inv.usuario }}</td>
                                   <td>{{ inv.fecha_de_registro }}</td>
+                                  {% if inv.producto.codigo_barra == None %}
+                                    <td>No existe</td>
+                                  {% else %}
+                                    <td>{{ inv.producto.codigo_barra }}</td>
+                                  {% endif %}
                                   <td>{{ inv.producto}}</td>
                                   <td>{{ inv.cantidad }}</td>
                                   <td>{{ inv.presentacion }}</td>   

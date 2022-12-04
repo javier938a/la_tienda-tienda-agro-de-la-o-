@@ -31,6 +31,7 @@
                   <thead>
                     <tr>
                       <th scope="col">ID</th>
+                      <th scope="col">Codigo</th>
                       <th scope="col">Nombre del producto</th>
                       <th scope="col">Fecha de creacion</th>
                       <th scope="col">Descripcion</th>
@@ -44,6 +45,11 @@
                           {% for prod in producto %}
                               <tr>                    
                                   <th scope="row">{{ prod.id }}</th>
+                                  {% if prod.codigo_barra == None %}
+                                    <td>No Existe</td> 
+                                  {% else %}
+                                    <td>{{ prod.codigo_barra }}</td>
+                                  {% endif %}
                                   <td>{{ prod.nombre_producto }}</td>
                                   <td>{{ prod.fecha_de_registro }}</td>
                                   <td>{{ prod.descripcion }}</td>
