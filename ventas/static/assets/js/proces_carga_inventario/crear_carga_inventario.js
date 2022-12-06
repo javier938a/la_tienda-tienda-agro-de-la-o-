@@ -292,8 +292,28 @@ $(document).ready(function(){
     });
 
     $(document).on('keyup', '.cost', function(evt){
-        let costo=parseFloat($(this).val());
+        let costo_str=$(this).val();
+        let costo='';
         let cantidad=$(this).closest('tr').find('.cant').val();
+        let array_cadena_puntos=costo_str.split('.');
+        if(array_cadena_puntos.length==1){
+            costo= parseFloat(costo_str);
+        }else{
+            costo_solo_dos_decimales=costo_str.slice(0,5);
+            array_dos_punto=costo_solo_dos_decimales.split('.')
+            if(array_dos_punto.length==2){
+                parte_entera=array_dos_punto[0];
+                //aqui eliminamos el segundo punto decimal
+                parte_decimal=array_dos_punto[1].replace('.',' ')
+                console.log(parte_decimal)
+                costo_solo_un_decimal=parte_entera+'.'+parte_decimal;
+                costo=parseFloat(costo_solo_un_decimal);
+                console.log("hola")
+                console.log(costo)
+                $(this).val(costo_solo_dos_decimales);
+            }
+
+        }
         if(!isNaN(costo)){
             let total=parseFloat(cantidad)*costo;
             $(this).closest('tr').find('.tot').val("$"+redondear(total));
@@ -303,6 +323,8 @@ $(document).ready(function(){
         }
         calcular_totales();
     });
+
+
     
     $(document).on('click', '.delfila', function(){
         let fila = $(this).parents('tr');

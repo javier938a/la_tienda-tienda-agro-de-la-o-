@@ -85,7 +85,7 @@
           <div class="col-md-5">
             <div class="form-group">
               <label for="">Escriba un producto</label>
-              <input class="form-control" type="text" name="producto" id="producto" placeholder="Escriba un producto" value="">
+              <input class="form-control" type="text" name="producto" id="producto" placeholder="Escriba un producto" value="" autofocus>
               <input class="form-control" type="text" name="codigo_barra" id="codigo_barra" placeholder="Ingrese el codigo de barra" value="" style="display: none;">
               <textarea class="form-control" name="servicio" id="servicio" cols="30" rows="1" style="display: none;"></textarea>
               <input type="hidden" id="url_productos_inv_autocomplete" name="url_productos_inv_autocomplete" value="{% url 'store:prod_inv_autocomplete' %}">

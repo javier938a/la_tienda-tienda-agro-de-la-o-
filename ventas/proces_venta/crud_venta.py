@@ -6,6 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.http import JsonResponse
 from django.core.serializers import serialize
+from django.utils import timezone
 import json
 
 from escpos.printer import Usb
@@ -50,10 +51,12 @@ class ListarVentas(LoginRequiredMixin, ListView):
         ventas=None
         print("Este es el "+tipo_de_usuario)
         if tipo_de_usuario=="administrador":#validando que si es administrador pueda ver todas las ventas de todas las sucursales
-            ventas=self.model.objects.all().order_by('-fecha_venta')
+            ventas=self.model.objects.filter(Q(fecha_venta__date=timezone.now())).order_by('-fecha_venta')
+            print(str(timezone.now()))
+            print(ventas)
         elif tipo_de_usuario=="usuario":#si es usuario solo podra las ventas de la sucursal a la que se le ha creado su usuario
-            ventas=self.model.objects.filter(sucursal=sucursal_usuario).order_by('-fecha_venta')
-
+            ventas=self.model.objects.filter(Q(sucursal=sucursal_usuario) & Q(fecha_venta__date=timezone.now())).order_by('-fecha_venta')
+            print(ventas)
         return ventas
 
 
