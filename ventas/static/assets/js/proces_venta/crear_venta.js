@@ -23,6 +23,8 @@ $(document).ready(function(){
     $("#tipo_busqueda").change(function(){
         let num_tipo=$(this).val();
         if(num_tipo==="1"){
+            //
+            
             $("#codigo_barra").css({
                 'display':'block',
             });
@@ -41,7 +43,8 @@ $(document).ready(function(){
             $("#agregar_servicio_venta").css({
                 'display':'none',
             });
-        }else if(num_tipo==="2"){
+            $("#codigo_barra").focus();
+        }else if(num_tipo==="2"){            
             $("#producto").css({
                 'display':'block',
             });
@@ -60,6 +63,7 @@ $(document).ready(function(){
             $("#agregar_servicio_venta").css({
                 'display':'none',
             });
+            $("#producto").focus();
         }else if(num_tipo=="3"){
            $("#codigo_barra").css({
             'display':'none',
@@ -240,7 +244,14 @@ $(document).ready(function(){
     $(document).on('click', '.delfila', function(){
         let fila = $(this).parents('tr');
         fila.remove();
-        calcular_totales();
+        calcular_totales();        
+        let tipo_busqueda=$("#tipo_busqueda").val();
+        //alert(tipo_busqueda);
+        if(tipo_busqueda=="1"){
+            $("#codigo_barra").focus();
+        }else if(tipo_busqueda=="2"){
+            $("#producto").focus();
+        }
     });
     //funcion para redondear cantidades a dos digitos
     function redondear(num) {
@@ -358,9 +369,13 @@ $(document).ready(function(){
                             if(tipo_venta==="2"){
                                 $("#efectuar_venta").prop('disabled', true);
                                 $("#txt_efectivo").prop('disabled', false);
+                                //Estableciendo el foco en el campo de txtefectivo para que el usuario ingrese el efectivo sin nececidad de dar click en el campo
+                                $("#txt_efectivo").focus();
                             }else if(tipo_venta==="1"){
                                 $("#efectuar_venta").prop('disabled', true);
                                 $("#txt_efectivo_sin_ticket").prop('disabled', false);
+                                //Estableciendo el foco en el campo de txt_sin_efectivo para que el usuario ingrese el efectivo sin nececidad de dar click en el campo
+                                $("#txt_efectivo_sin_ticket").focus();
                             }
 
                             ///aqui el codigo que imprimira el ticket e redireccionara al listado de ventas

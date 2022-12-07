@@ -68,7 +68,7 @@
           <div class="col-md-4 ">
             <div class="form-group">
               <label for="">Escriba un producto</label>
-              <input class="form-control" type="text" name="producto" id="producto" placeholder="Escriba un producto" value="">
+              <input class="form-control" type="text" name="producto" id="producto" placeholder="Escriba un producto" value="" autofocus>
               <input type="hidden" name="url_listar_productos_cargados_y_sin_cargar" id="url_listar_productos_cargados_y_sin_cargar" value="{% url 'store:list_prod_autocomplete' %}">
               <input type="hidden" name="url_add_prod_detalle_carga" id="url_add_prod_detalle_carga" value="{% url 'store:add_prod_detalle_carga' %}">
               <input type="hidden" name="url_cargar_prod_inv" id="url_cargar_prod_inv" value="{% url 'store:cargar_prod_inv' %}">

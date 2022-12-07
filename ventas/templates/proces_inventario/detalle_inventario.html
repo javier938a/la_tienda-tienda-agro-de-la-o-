@@ -20,6 +20,14 @@
                         <thead>
                         </thead>
                         <tbody>
+                          <tr>
+                            <td>Codigo de Barra</td>
+                            {% if producto.producto.codigo_barra == None %}
+                              <td>No Existe</td>
+                            {% else %}
+                              <td>{{ producto.producto.codigo_barra }}</td> 
+                            {% endif %}
+                          </tr>
                         <tr>        
                             <td>Nombre del Producto:</td>
                             <td>{{ producto.producto }}</td>                    

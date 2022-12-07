@@ -47,6 +47,8 @@ $(document).ready(function(){
             if(cambiar_sucursal==true){//si el usuario dice que si entonces procedemos a borrar todo el contenido de la tabla
                 $("#table-productos-carga tr").remove();//y agregamos al hidden input el nuevo id de sucursal
                 $("#id_sucursal_hidden").val($(this).val())
+                $("#total").text("");
+                $("#producto").focus();
             }else{//de lo contrario establecemos el en el select la ultima sucursal seleccionada que se encuentra en el hidden input
                 let id_sucursal_hidden = $("#id_sucursal_hidden").val();
                 $(this).val(id_sucursal_hidden).trigger('change.select2');
@@ -285,10 +287,26 @@ $(document).ready(function(){
                 $(this).closest('tr').find('.tot').val("$"+redondear(total));
             }            
         }else{
-            $(this).val("0");
             $(this).closest('tr').find('.tot').val("$0.0");
         }
         calcular_totales();
+    });
+
+    $(document).on('keyup', '.pre', function(evt){
+        let precio_str=$(this).val();
+        let array_cadena_punto=precio_str.split('.');
+        if(array_cadena_punto.length==1){//primero verificamos si solamente hay un punto decimal
+            $(this).val(precio_str);//si eso es cierto no hay problema ponemos precio como esta escrito
+        }else{//de lo contrario si el usuario agrega otro punto entonces 
+            let posicion_primer_punto=precio_str.indexOf('.')+3;
+            let precio_solo_dos_punto_decimal=precio_str.slice(0,posicion_primer_punto);//estraemos solo los primeros 5 caracteres
+            let array_un_punto_decimal=precio_solo_dos_punto_decimal.split('.');//volvemos a hacer un arreglo con los puntos que el usuario ingreso
+            let parte_entera=array_un_punto_decimal[0];//obtenemos la primera parte que seria la entera
+            let parte_decimal=array_un_punto_decimal[1].replace('.', ' ');//luego obtenemos la segunda parte que la decimal, pero asumimos que el usuario puede haber ingresado mas de un punto por lo que reemplazamos los puntos por espacio si es que los hay
+            let precio=parte_entera+'.'+parte_decimal;
+            $(this).val(precio);
+
+        }
     });
 
     $(document).on('keyup', '.cost', function(evt){
@@ -296,29 +314,34 @@ $(document).ready(function(){
         let costo='';
         let cantidad=$(this).closest('tr').find('.cant').val();
         let array_cadena_puntos=costo_str.split('.');
+        console.log(array_cadena_puntos)
         if(array_cadena_puntos.length==1){
             costo= parseFloat(costo_str);
         }else{
-            costo_solo_dos_decimales=costo_str.slice(0,5);
-            array_dos_punto=costo_solo_dos_decimales.split('.')
-            if(array_dos_punto.length==2){
-                parte_entera=array_dos_punto[0];
-                //aqui eliminamos el segundo punto decimal
-                parte_decimal=array_dos_punto[1].replace('.',' ')
-                console.log(parte_decimal)
-                costo_solo_un_decimal=parte_entera+'.'+parte_decimal;
-                costo=parseFloat(costo_solo_un_decimal);
-                console.log("hola")
-                console.log(costo)
-                $(this).val(costo_solo_dos_decimales);
-            }
+            let pos_primer_punto=costo_str.indexOf('.')+3;
+            let costo_solo_dos_decimales=costo_str.slice(0,pos_primer_punto);
+            console.log('indice: '+costo_str.indexOf('.'))
+            console.log(costo_solo_dos_decimales);
+            let array_dos_punto=costo_solo_dos_decimales.split('.')
+            console.log(array_dos_punto)
+
+            let parte_entera=array_dos_punto[0];
+            //aqui eliminamos el segundo punto decimal
+            let parte_decimal=array_dos_punto[1].replace('.',' ')
+            console.log(parte_decimal)
+            let costo_solo_un_decimal=parte_entera+'.'+parte_decimal;
+            costo=parseFloat(costo_solo_un_decimal);
+            console.log("hola")
+            console.log("costo "+costo_solo_un_decimal)
+            $(this).val(costo_solo_un_decimal);
 
         }
-        if(!isNaN(costo)){
+        console.log("costo es: "+cantidad)
+        if(cantidad!='' && !isNaN(costo)){
             let total=parseFloat(cantidad)*costo;
+            console.log(costo)
             $(this).closest('tr').find('.tot').val("$"+redondear(total));
         }else{
-            $(this).val("0.0");
             $(this).closest('tr').find('.tot').val("$0.0");
         }
         calcular_totales();
@@ -329,6 +352,7 @@ $(document).ready(function(){
     $(document).on('click', '.delfila', function(){
         let fila = $(this).parents('tr');
         fila.remove();
+        $("#producto").focus();
         calcular_totales();
     });
     //funcion para redondear cantidades a dos digitos
