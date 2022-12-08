@@ -27,7 +27,7 @@
               <a class="btn btn-primary pull-right" href="{% url 'store:crear_prod' %}">Agregar Producto</a>
               <!-- Table with stripped rows -->
               <div class="table-responsive">
-                <table class="table datatable">
+                <table class="table" id="table-productos">
                   <thead>
                     <tr>
                       <th scope="col">ID</th>
@@ -41,6 +41,7 @@
                     </tr>
                   </thead>
                   <tbody>
+                    {% comment %}
                       {% if producto %}
                           {% for prod in producto %}
                               <tr>                    
@@ -72,8 +73,10 @@
                       {% else %}
                           <p>No hay registros que mostrar</p>
                     {% endif %}
+                    {% endcomment %}
                   </tbody>
                 </table>
+                <input type="hidden" name="url_listar_producto" id="url_listar_producto" value="{% url 'store:list_prod_json' %}">
                 <!-- End Table with stripped rows -->
               </div>
             </div>
@@ -82,4 +85,14 @@
         </div>
       </div>
     </section>
+{% endblock %}
+
+{% load static %}
+{% block extra-script %}
+    <script src="{% static 'assets/js/jquery-ui/jquery-ui.js' %}"></script>
+    <script src="{% static 'assets/js/jquery-mask/jquery.mask.js' %}"></script>
+    <script src="{% static 'assets/js/select2/select2.js' %}"></script>
+    <script src="{% static 'assets/js/toastr/toastr.min.js' %}"></script>
+    <script src="{% static 'assets/js/proces_producto/listar_producto.js' %}"></script>
+    
 {% endblock %}

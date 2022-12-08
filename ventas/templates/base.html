@@ -27,7 +27,7 @@
   <link href="{% static 'assets/vendor/quill/quill.bubble.css' %}" rel="stylesheet">
   <link href="{% static 'assets/vendor/remixicon/remixicon.css' %}" rel="stylesheet">
   <link href="{% static 'assets/vendor/simple-datatables/style.css' %}" rel="stylesheet">
-
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/DataTables/datatables.min.css' %}"/>
   <!-- Template Main CSS File -->
   <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
 
@@ -1210,11 +1210,12 @@
   <script src="{% static 'assets/vendor/simple-datatables/simple-datatables.js' %}"></script>
   <script src="{% static 'assets/vendor/tinymce/tinymce.min.js' %}"></script>
   <script src="{% static  'assets/vendor/php-email-form/validate.js' %}"></script>
-
+  
   <!-- Template Main JS File -->
   <script src="{% static 'assets/js/main.js' %}"></script>
   <script src="{% static 'assets/js/jquery/jquery.js' %}"></script>
   <script src="{% static 'assets/js/grafico/grafico.js' %}"></script>
+  <script type="text/javascript" src="{% static 'assets/vendor/DataTables/datatables.min.js' %}"></script>
   {% block extra-script %}
     
   {% endblock %}

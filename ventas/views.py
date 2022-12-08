@@ -8,7 +8,7 @@ from ventas.proces_tipo_usuario.crud_tipo_usuario import ListarTipoUsuario, Crea
 from ventas.proces_proveedor.crud_proveedor import ListarProveedor, CrearProveedor, EditarProveedor, EliminarProveedor
 from ventas.proces_sucursal.crud_sucursal import ListarSucursal, CrearSucursal, EditarSucursal, EliminarSucursal
 from ventas.proces_categoria_producto.crud_categoria import ListarCategoriasProducto, CrearCategoriaProducto, EditarCategoriaProducto, EliminarCategoriaProducto
-from ventas.proces_producto.crud_producto import ListarProductos, CrearProducto, DetalleProducto, EditarProducto, EliminarProducto
+from ventas.proces_producto.crud_producto import ListarProductos, CrearProducto, DetalleProducto, EditarProducto, EliminarProducto, obtener_lista_productos_json
 from ventas.proces_presentacion.crud_presentacion import ListarPresentacion, CrearPresentacion, EditarPresentacion, EliminarPresentacion
 from ventas.proces_inventario.crud_inventario import ListarInventario,  ViewCrearInventario, EditarProductoInventario, ViewEditarInventario, EliminarInventario, obtener_productos_autocomplete
 from ventas.proces_carga_inventario.crud_carga_inventario import ListarCargaProductos, ViewCargaInventario, DetalleCargaInventario, listar_productos_cargados_y_sin_cargar_autocomplete, agregar_producto_detalle_carga, cargar_producto_inventario

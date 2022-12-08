@@ -9,7 +9,7 @@ from .views import ListarTipoUsuario, CrearTipoUsuario, EditarTipoUsuario, Elimi
 from .views import ListarProveedor, CrearProveedor, EditarProveedor, EliminarProveedor
 from .views import ListarSucursal, CrearSucursal, EditarSucursal, EliminarSucursal
 from .views import ListarCategoriasProducto, CrearCategoriaProducto, EditarCategoriaProducto, EliminarCategoriaProducto
-from .views import ListarProductos, CrearProducto, EditarProducto, DetalleProducto, EliminarProducto
+from .views import ListarProductos, CrearProducto, EditarProducto, DetalleProducto, EliminarProducto, obtener_lista_productos_json
 from .views import ListarPresentacion, CrearPresentacion, EditarPresentacion, EliminarPresentacion
 from .views import ListarCargaProductos, ViewCargaInventario, DetalleCargaInventario, listar_productos_cargados_y_sin_cargar_autocomplete, agregar_producto_detalle_carga, cargar_producto_inventario
 from .views import ListarDescargasProductos, ViewCrearDescargaProducto, ViewDetalleDescargaProducto, listar_productos_a_descargar_por_sucursal_autocomplete, agregar_producto_a_descargar_a_detalle, efectuar_descarga_de_productos
@@ -59,6 +59,7 @@ urlpatterns = [
     path('productos/editar_producto/<int:pk>', EditarProducto.as_view(), name="editar_prod"),
     path('productos/detalle_producto/<int:pk>', DetalleProducto.as_view(), name="det_prod"),
     path('productos/eliminar_producto/<int:pk>', EliminarProducto.as_view(), name="del_prod"),
+    path('productos/listar_productos_json', obtener_lista_productos_json, name='list_prod_json'),
     path('presentaciones/', ListarPresentacion.as_view(), name="list_pre"),
     path('presentaciones/crear_presentacion', CrearPresentacion.as_view(), name="crear_pre"),
     path('presentaciones/editar_presentacion/<int:pk>', EditarPresentacion.as_view(), name="edit_pre"),
