@@ -156,6 +156,14 @@ class ListarInventario(LoginRequiredMixin, ListView):
             listado_inventario=self.model.objects.filter(sucursal=sucursal).order_by('-fecha_de_registro')#de lo contrario si es usuario solo vera el inventario de su sucursal
         return listado_inventario
 
+def obtener_lista_productos_inv_json(request):
+    data=[]
+    inventario=None
+    draw=request.POST.get('draw')
+    start=request.POST.get('start')
+    length=request.POST.get('length')
+
+
 def obtener_productos_autocomplete(request):
     clave=request.GET.get('term').strip()
     print("Esto imprime")

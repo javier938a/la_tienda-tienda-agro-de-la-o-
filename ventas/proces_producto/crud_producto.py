@@ -122,13 +122,9 @@ def obtener_lista_productos_json(request):
     if codiciones_de_busqueda is not None:##si hay condiciones porque se esta buscando pues hacemos el filtro
         if int(row)>=int(rowperpage):
             productos=Producto.objects.filter(codiciones_de_busqueda).order_by('-fecha_de_registro')[int(row):int(rowperpage)+int(row)]
-            totalRecordWidthFilter = productos.count()
         else:
-            
-            productos=Producto.objects.filter(codiciones_de_busqueda).order_by('-fecha_de_registro')[int(row):int(rowperpage)]
-            totalRecordWidthFilter = productos.count()
-        totalRecords=productos.count()
-        
+           productos=Producto.objects.filter(codiciones_de_busqueda).order_by('-fecha_de_registro')[int(row):int(rowperpage)] 
+        totalRecordWidthFilter = productos.count()
     else:
         #si row que el numero pagina es mayor o igual que el rowperpage que es el numero de registros que debe de mostrar en lapgina
         if int(row)>=int(rowperpage):#entonces ordenamos los registros en forma ascendente por fecha y solo mostramos los primeros registros delimitados entre  row y roperpage
