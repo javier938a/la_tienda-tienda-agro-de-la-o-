@@ -40,7 +40,11 @@
                         </tr>
                         <tr>
                             <td>Codigo de Barra</td>
-                            <td>{{ producto.codigo_barra }}</td>
+                            {% if producto.codigo_barra == None %}
+                              <td>No Existe</td>
+                            {% else %}
+                              <td>{{ producto.codigo_barra }}</td>
+                            {% endif %}
                         </tr>
                         <tr>
                             <td>Usuario que lo registro</td>

@@ -60,47 +60,49 @@
                 <div class="card-header">Detalle</div>
                 <div class="card-body">
                   <h5 class="card-title">Detalle</h5>
-                  <table class="table">
-                    <thead>
-                      <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">Producto</th>
-                        <th scope="col">Presentacion</th>
-                        <th scope="col">Cantidad anterior</th>
-                        <th scope="col">Cantidad descargada</th>
-                        <th scope="col">Nueva cantidad</th>
-                        <th scope="col">Costo</th>
-                        <th scope="col">Precio</th>
-                        <th scope="col">Total</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                        {% if detalle_descarga_producto_carga %}
-                            {% for descarga_detalle in detalle_descarga_producto_carga %}
-                                <tr>
-                                    <th scope="row">{{ descarga_detalle.id }}</th>
-                                    <td>{{ descarga_detalle.producto }}</td>
-                                    <td>{{ descarga_detalle.presentacion }}</td>
-                                    <td>{{ descarga_detalle.cantidad_anterior }}</td>
-                                    <td>{{ descarga_detalle.cantidad_descargada }}</td>
-                                    <td>{{ descarga_detalle.nueva_cantidad }}</td>
-                                    <td>${{ descarga_detalle.costo }}</td>
-                                    <td>${{ descarga_detalle.precio }}</td>
-                                    <td>${{ descarga_detalle.total }}</td>
-                                </tr>
-                            {% endfor %}
-                        {% else %}
-                        <p>No hay productos registrados para este inventario</p>
-                      {% endif %}
-                    </tbody>
-                    <tfoot>
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
                         <tr>
-                            <th colspan="8">Total</th>
-                            <th>${{ descargas.total }}</th>
+                          <th scope="col">ID</th>
+                          <th scope="col">Producto</th>
+                          <th scope="col">Presentacion</th>
+                          <th scope="col">Cantidad anterior</th>
+                          <th scope="col">Cantidad descargada</th>
+                          <th scope="col">Nueva cantidad</th>
+                          <th scope="col">Costo</th>
+                          <th scope="col">Precio</th>
+                          <th scope="col">Total</th>
                         </tr>
-                    </tfoot>
-                  </table>
-                  <!-- End Active Table -->
+                      </thead>
+                      <tbody>
+                          {% if detalle_descarga_producto_carga %}
+                              {% for descarga_detalle in detalle_descarga_producto_carga %}
+                                  <tr>
+                                      <th scope="row">{{ descarga_detalle.id }}</th>
+                                      <td>{{ descarga_detalle.producto }}</td>
+                                      <td>{{ descarga_detalle.presentacion }}</td>
+                                      <td>{{ descarga_detalle.cantidad_anterior }}</td>
+                                      <td>{{ descarga_detalle.cantidad_descargada }}</td>
+                                      <td>{{ descarga_detalle.nueva_cantidad }}</td>
+                                      <td>${{ descarga_detalle.costo }}</td>
+                                      <td>${{ descarga_detalle.precio }}</td>
+                                      <td>${{ descarga_detalle.total }}</td>
+                                  </tr>
+                              {% endfor %}
+                          {% else %}
+                          <p>No hay productos registrados para este inventario</p>
+                        {% endif %}
+                      </tbody>
+                      <tfoot>
+                          <tr>
+                              <th colspan="8">Total</th>
+                              <th>${{ descargas.total }}</th>
+                          </tr>
+                      </tfoot>
+                    </table>
+                    <!-- End Active Table -->
+                  </div>
                 </div>
                 <div class="card-footer">
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">

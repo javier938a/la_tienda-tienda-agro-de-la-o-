@@ -60,44 +60,45 @@
                 <div class="card-header">Detalle</div>
                 <div class="card-body">
                   <h5 class="card-title">Detalle</h5>
-                  <table class="table">
-                    <thead>
-                      <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">Producto</th>
-                        <th scope="col">Presentacion</th>
-                        <th scope="col">Cantidad</th>
-                        <th scope="col">Costo</th>
-                        <th scope="col">Precio</th>
-                        <th scope="col">Total</th>
-                        <th scope="col">Tipo</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                        {% if detalle_producto_carga %}
-                            {% for carga_detalle in detalle_producto_carga %}
-                                <tr>
-                                    <th scope="row">{{ carga_detalle.id }}</th>
-                                    <td>{{ carga_detalle.producto }}</td>
-                                    <td>{{ carga_detalle.presentacion }}</td>
-                                    <td>{{ carga_detalle.cantidad }}</td>
-                                    <td>${{ carga_detalle.costo }}</td>
-                                    <td>${{ carga_detalle.precio }}</td>
-                                    <td>${{ carga_detalle.total }}</td>
-                                    <td>{{ carga_detalle.tipo_prod }}</td>
-                                </tr>
-                            {% endfor %}
-                        {% else %}
-                        <p>No hay productos registrados para este inventario</p>
-                      {% endif %}
-                    </tbody>
-                    <tfoot>
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
                         <tr>
-                            <th colspan="6">Total</th>
-                            <th>${{ carga_prod.total }}</th>
+                          <th scope="col">ID</th>
+                          <th scope="col">Producto</th>
+                          <th scope="col">Presentacion</th>
+                          <th scope="col">Cantidad</th>
+                          <th scope="col">Costo</th>
+                          <th scope="col">Precio</th>
+                          <th scope="col">Total</th>
+                          <th scope="col">Tipo</th>
                         </tr>
-                    </tfoot>
-                  </table>
+                      </thead>
+                      <tbody>
+                          {% if detalle_producto_carga %}
+                              {% for carga_detalle in detalle_producto_carga %}
+                                  <tr>
+                                      <th scope="row">{{ carga_detalle.id }}</th>
+                                      <td>{{ carga_detalle.producto }}</td>
+                                      <td>{{ carga_detalle.presentacion }}</td>
+                                      <td>{{ carga_detalle.cantidad }}</td>
+                                      <td>${{ carga_detalle.precio }}</td>
+                                      <td>${{ carga_detalle.total }}</td>
+                                      <td>{{ carga_detalle.tipo_prod }}</td>
+                                  </tr>
+                              {% endfor %}
+                          {% else %}
+                          <p>No hay productos registrados para este inventario</p>
+                        {% endif %}
+                      </tbody>
+                      <tfoot>
+                          <tr>
+                              <th colspan="6">Total</th>
+                              <th>${{ carga_prod.total }}</th>
+                          </tr>
+                      </tfoot>
+                    </table>
+                  </div>
                   <!-- End Active Table -->
                 </div>
                 <div class="card-footer">

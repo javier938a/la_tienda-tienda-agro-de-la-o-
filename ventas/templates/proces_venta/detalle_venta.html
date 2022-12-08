@@ -50,61 +50,63 @@
                 <div class="card-header">Detalle</div>
                 <div class="card-body">
                   <h5 class="card-title">Detalle</h5>
-                  <table class="table">
-                    <thead>
-                      <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">Producto</th>
-                        <th scope="col">Presentacion</th>
-                        <th scope="col">Cantidad</th>
-                        <th scope="col">Precio</th>
-                        <th scope="col">Total</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                        {% if detalle_venta %}
-                            {% for detalle in detalle_venta %}
-                                <tr>
-                                    <th scope="row">{{ detalle.id }}</th>
-                                    <td>{{ detalle.producto_stock.producto }}</td>
-                                    <td>{{ detalle.producto_stock.presentacion }}</td>
-                                    <td>{{ detalle.cantidad }}</td>
-                                    <td>{{ detalle.precio }}</td>
-                                    <td>{{ detalle.total }}</td>
-                                </tr>
-                            {% endfor %}
-                        {% else %}
-                        <p>No hay productos registrados para esta venta</p>
-                      {% endif %}
-                      {% if detalle_venta_servicios %}
-                          {% for detalle_service in detalle_venta_servicios %}
-                            <tr>
-                              <th scope="row">{{ detalle_service.id }}</th>
-                              <td>{{ detalle_service.descripcion_servicio }}</td>
-                              <td>Servicio</td>
-                              <td>1</td>
-                              <td>{{ detalle_service.precio }}</td>
-                              <td>{{ detalle_service.precio }}</td> 
-                            </tr>                              
-                          {% endfor %}
-                      {% endif %}
-                    </tbody>
-                    <tfoot>
-                        <tr style="display: none;">
-                            <th scope="row" colspan="5" style="text-align: right;">Totol IVA</th>
-                            <td id="total_iva">{{ venta.total_iva }}</td>
-                        </tr>
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
                         <tr>
-                            <th scope="row" colspan="5" style="text-align: right;">Total</th>
-                            <td id="total_sin_iva">{{ venta.total_sin_iva }}</td>
+                          <th scope="col">ID</th>
+                          <th scope="col">Producto</th>
+                          <th scope="col">Presentacion</th>
+                          <th scope="col">Cantidad</th>
+                          <th scope="col">Precio</th>
+                          <th scope="col">Total</th>
                         </tr>
-                        <tr style="display: none;">
-                            <th scope="row" colspan="5" style="text-align: right;">Total</th>
-                            <td id="total">{{ venta.total_con_iva }}</td>
-                        </tr>
-                    </tfoot>
-                  </table>
-                  <!-- End Active Table -->
+                      </thead>
+                      <tbody>
+                          {% if detalle_venta %}
+                              {% for detalle in detalle_venta %}
+                                  <tr>
+                                      <th scope="row">{{ detalle.id }}</th>
+                                      <td>{{ detalle.producto_stock.producto }}</td>
+                                      <td>{{ detalle.producto_stock.presentacion }}</td>
+                                      <td>{{ detalle.cantidad }}</td>
+                                      <td>{{ detalle.precio }}</td>
+                                      <td>{{ detalle.total }}</td>
+                                  </tr>
+                              {% endfor %}
+                          {% else %}
+                          <p>No hay productos registrados para esta venta</p>
+                        {% endif %}
+                        {% if detalle_venta_servicios %}
+                            {% for detalle_service in detalle_venta_servicios %}
+                              <tr>
+                                <th scope="row">{{ detalle_service.id }}</th>
+                                <td>{{ detalle_service.descripcion_servicio }}</td>
+                                <td>Servicio</td>
+                                <td>1</td>
+                                <td>{{ detalle_service.precio }}</td>
+                                <td>{{ detalle_service.precio }}</td> 
+                              </tr>                              
+                            {% endfor %}
+                        {% endif %}
+                      </tbody>
+                      <tfoot>
+                          <tr style="display: none;">
+                              <th scope="row" colspan="5" style="text-align: right;">Totol IVA</th>
+                              <td id="total_iva">{{ venta.total_iva }}</td>
+                          </tr>
+                          <tr>
+                              <th scope="row" colspan="5" style="text-align: right;">Total</th>
+                              <td id="total_sin_iva">{{ venta.total_sin_iva }}</td>
+                          </tr>
+                          <tr style="display: none;">
+                              <th scope="row" colspan="5" style="text-align: right;">Total</th>
+                              <td id="total">{{ venta.total_con_iva }}</td>
+                          </tr>
+                      </tfoot>
+                    </table>
+                    <!-- End Active Table -->
+                  </div>
                 </div>
                 <div class="card-footer">
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">

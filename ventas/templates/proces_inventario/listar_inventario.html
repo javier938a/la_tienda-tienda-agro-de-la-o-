@@ -26,7 +26,7 @@
               {# <a class="btn btn-primary pull-right" href="{% url 'store:crear_inv' %}">Crear Inventario</a> #}
               <!-- Table with stripped rows -->
               <div class="table-responsive">
-                <table class="table datatable">
+                <table class="table" id="table-inventario">
                   <thead>
                     <tr>
                       <th scope="col">ID</th>                    
@@ -40,47 +40,14 @@
                       <th scope="col">Categoria</th>
                       <th scope="col">Costo</th>
                       <th scope="col">Precio</th>
-                      <th scope="col" colspan="2">Acciones</th>
+                      <th scope="col">Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
-                      {% if inventario %}
-                          {% for inv in inventario %}
-                              <tr>                    
-                                  <th scope="row">{{ inv.id }}</th>
-                                  <td>{{ inv.sucursal }}</td>
-                                  <td>{{ inv.usuario }}</td>
-                                  <td>{{ inv.fecha_de_registro }}</td>
-                                  {% if inv.producto.codigo_barra == None %}
-                                    <td>No existe</td>
-                                  {% else %}
-                                    <td>{{ inv.producto.codigo_barra }}</td>
-                                  {% endif %}
-                                  <td>{{ inv.producto}}</td>
-                                  <td>{{ inv.cantidad }}</td>
-                                  <td>{{ inv.presentacion }}</td>   
-                                  <td>{{ inv.producto.categoria }}</td>                             
-                                  <td>${{ inv.costo}}</td>
-                                  <td>${{ inv.precio }}</td>
-                                  <td>
-                                      <div class="btn-group">
-                                          <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                              Action
-                                          </button>
-                                          <ul class="dropdown-menu">              
-                                              <li><a class="dropdown-item" href="{% url 'store:det_inv' inv.id %}">Detalle de producto</a></li>
-                                              <li><a class="dropdown-item" href="{% url 'store:edit_prod_inv' inv.id %}" class="dropdown-item">Editar Producto</a></li>
-                                              <li><a class="dropdown-item" href="{% url 'store:del_inv' inv.id %}">Eliminar producto</a></li>
-                                          </ul>
-                                      </div>
-                                  </td>
-                              </tr>
-                          {% endfor %}
-                      {% else %}
-                          <p>No hay registros que mostrar</p>
-                    {% endif %}
+         
                   </tbody>
                 </table>
+                <input type="hidden" name="url_list_inv_json" id="url_list_inv_json" value="{% url 'store:inv_json' %}">
                 <!-- End Table with stripped rows -->
               </div>
             </div>
@@ -95,5 +62,9 @@
 {% load static %}
 
 {% block extra-script %}
-    
+  <script src="{% static 'assets/js/jquery-ui/jquery-ui.js' %}"></script>
+  <script src="{% static 'assets/js/jquery-mask/jquery.mask.js' %}"></script>
+  <script src="{% static 'assets/js/select2/select2.js' %}"></script>
+  <script src="{% static 'assets/js/toastr/toastr.min.js' %}"></script>
+  <script src="{% static 'assets/js/proces_inventario/listar_inventario.js' %}"></script>
 {% endblock %}

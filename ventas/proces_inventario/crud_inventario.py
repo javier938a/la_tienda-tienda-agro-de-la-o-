@@ -8,6 +8,7 @@ from ventas.forms import ProductoInventarioForm
 from django.db.models import Q
 from django.urls import reverse_lazy
 from django.core.serializers import serialize
+from django.urls import reverse
 
 class ViewCrearInventario(LoginRequiredMixin, TemplateView):
     login_url="/ventas/login/"
@@ -140,21 +141,12 @@ class EliminarInventario(LoginRequiredMixin, DeleteView):
 
     
 
-class ListarInventario(LoginRequiredMixin, ListView):
+class ListarInventario(LoginRequiredMixin, TemplateView):
     login_url="/ventas/login/"
     redirect_field_name="redirect_to"
     template_name="proces_inventario/listar_inventario.html"
-    model=ProductoStockSucursal
-    context_object_name="inventario"
 
-    def get_queryset(self):
-        tipo_usuario=str(self.request.user.tipo_usuario)
-        sucursal=self.request.user.sucursal#validando que el administrador pueda ver su inventario total de todas las sucursales
-        if tipo_usuario=="administrador":
-            listado_inventario=self.model.objects.all().order_by('-fecha_de_registro')
-        elif tipo_usuario=="usuario":
-            listado_inventario=self.model.objects.filter(sucursal=sucursal).order_by('-fecha_de_registro')#de lo contrario si es usuario solo vera el inventario de su sucursal
-        return listado_inventario
+
 
 def obtener_lista_productos_inv_json(request):
     data=[]
@@ -162,7 +154,82 @@ def obtener_lista_productos_inv_json(request):
     draw=request.POST.get('draw')
     start=request.POST.get('start')
     length=request.POST.get('length')
+    searchValue=request.POST.get('search[value]')
+    condiciones_de_busqueda=None
+    if searchValue!='':
+        condiciones_de_busqueda=Q(fecha_de_registro__date__icontains=searchValue) | Q(sucursal__descripcion=searchValue) | Q(usuario__username__icontains=searchValue) | Q(producto__nombre_producto__icontains=searchValue) | Q(producto__codigo_barra__icontains=searchValue) | Q(producto__categoria__categoria__icontains=searchValue)
+    
+    totalRedords=ProductoStockSucursal.objects.all().count()
 
+    totalRecordWithFilter=0
+    if condiciones_de_busqueda is not None:
+        if int(start)>=int(length):
+            inventario=ProductoStockSucursal.objects.filter(condiciones_de_busqueda).order_by('-fecha_de_registro')[int(start):int(length)+int(start)]
+        else:
+            inventario=ProductoStockSucursal.objects.filter(condiciones_de_busqueda).order_by('-fecha_de_registro')[int(start):int(length)]
+        totalRecordWithFilter=inventario.count()
+    else:
+        if int(start)>=int(length):
+            inventario=ProductoStockSucursal.objects.all().order_by('-fecha_de_registro')[int(start):int(length)+int(start)]
+        else:
+            inventario=ProductoStockSucursal.objects.all().order_by('-fecha_de_registro')[int(start):int(length)]
+        totalRecordWithFilter=inventario.count()
+    
+    for inv in inventario:
+        url_detalle=reverse('store:det_inv', args=[inv.id])
+        url_editar=reverse('store:edit_prod_inv', args=[inv.id])
+        url_del=reverse('store:del_inv', args=[inv.id])
+        action="""
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        Action
+                    </button>
+                    <ul class="dropdown-menu">              
+                        <li><a class="dropdown-item" href="%s">Detalle de producto</a></li>
+                        <li><a class="dropdown-item" href="%s" class="dropdown-item">Editar Producto</a></li>
+                        <li><a class="dropdown-item" href="%s">Eliminar producto</a></li>
+                    </ul>
+                </div>
+        """%(url_detalle, url_editar, url_del)
+        print(inv.producto.codigo_barra)
+        
+        if inv.producto.codigo_barra==None:
+            data.append({
+            'id':inv.id, 
+            'sucursal':str(inv.sucursal), 
+            'usuario':str(inv.usuario),             
+            'fecha_de_registro':str(inv.fecha_de_registro), 
+            'codigo':'No Existe', 
+            'producto':str(inv.producto), 
+            'cantidad':inv.cantidad, 
+            'presentacion':str(inv.presentacion), 
+            'categoria':str(inv.producto.categoria), 
+            'costo':str(inv.costo), 
+            'precio':str(inv.precio), 
+            'action':action })
+        else:
+            data.append({
+            'id':str(inv.id),
+            'sucursal':str(inv.sucursal), 
+            'usuario':str(inv.usuario),             
+            'fecha_de_registro':str(inv.fecha_de_registro), 
+            'codigo':str(inv.producto.codigo_barra), 
+            'producto':str(inv.producto), 
+            'cantidad':str(inv.cantidad), 
+            'presentacion':str(inv.presentacion), 
+            'categoria':str(inv.producto.categoria), 
+            'costo':str(inv.costo), 
+            'precio':str(inv.precio), 
+            'action':action })
+    
+        
+
+    return JsonResponse({
+        'draw':int(draw),
+        "iTotalRecords":totalRecordWithFilter,
+        'iTotalDisplayRecords':totalRedords,
+        'data':data
+    }, safe=False)
 
 def obtener_productos_autocomplete(request):
     clave=request.GET.get('term').strip()
