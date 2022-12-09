@@ -30,27 +30,29 @@
                 <div class="card-body">
                   <h5 class="card-title">Carga de Inventario</h5>
                   {% if carga_prod %}
+                  <div class="table-responsive">
                     <table class="table">
-                        <thead>
-                        <tr>
-                            <th scope="col" colspan="4">Inventario de la fecha {{ carga_prod.fecha_carga }}</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>                            
-                            <td>Usuario:</td>
-                            <td>{{ carga_prod.usuario }}</td>
-                            <td>Descripcion</td>
-                            <td>{{ carga_prod.descripcion }}</td>
-                        </tr>
-                        <tr>                        
-                            <td>Sucursal:</td>
-                            <td>{{ carga_prod.sucursal }}</td>
-                            <td>Fecha de carga de inventario:</td>
-                            <td>{{ carga_prod.fecha_carga }}</td>
-                        </tr>
-                        </tbody>
+                      <thead>
+                      <tr>
+                          <th scope="col" colspan="4">Inventario de la fecha {{ carga_prod.fecha_carga }}</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr>                            
+                          <td>Usuario:</td>
+                          <td>{{ carga_prod.usuario }}</td>
+                          <td>Descripcion</td>
+                          <td>{{ carga_prod.descripcion }}</td>
+                      </tr>
+                      <tr>                        
+                          <td>Sucursal:</td>
+                          <td>{{ carga_prod.sucursal }}</td>
+                          <td>Fecha de carga de inventario:</td>
+                          <td>{{ carga_prod.fecha_carga }}</td>
+                      </tr>
+                      </tbody>
                     </table>
+                  </div>
                   {% endif %}
                 </div>
               </div><!-- End Default Card -->

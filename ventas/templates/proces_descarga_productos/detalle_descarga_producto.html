@@ -30,7 +30,8 @@
                 <div class="card-body">
                   <h5 class="card-title">Descarga de Inventario</h5>
                   {% if descargas %}
-                    <table class="table">
+                  <div class="table-responsive">
+                      <table class="table">
                         <thead>
                         <tr>
                             <th scope="col" colspan="4">Descarga de Inventario de la fecha {{ descarga.fecha_descarga}}</th>
@@ -50,7 +51,8 @@
                             <td>{{ descargas.fecha_descarga }}</td>
                         </tr>
                         </tbody>
-                    </table>
+                      </table>
+                  </div>
                   {% endif %}
                 </div>
               </div><!-- End Default Card -->
