@@ -64,7 +64,7 @@ def obtener_lista_cargas_de_productos_json(request):
                     </ul>
                 </div>
         """%(url_detalle)
-        print(carga.fecha_carga)
+    
         data.append({
             'id':str(carga.id),
             'usuario':str(carga.usuario),
