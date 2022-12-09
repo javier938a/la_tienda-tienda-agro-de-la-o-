@@ -24,7 +24,7 @@
               <a class="btn btn-primary pull-right" href="{% url 'store:add_carga_prod' %}">Agregar carga</a>
               <!-- Table with stripped rows -->
               <div class="table-responsive">
-                <table class="table datatable">
+                <table class="table" id="table-carga-productos">
                   <thead>
                     <tr>
                       <th scope="col">ID</th>
@@ -33,37 +33,14 @@
                       <th scope="col">Descripcion</th>
                       <th scope="col">Sucursal</th>
                       <th scope="col">Total</th>
-                      <th scope="col" colspan="2">Acciones</th>
+                      <th scope="col">Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
-                      {% if cargas_prod %}
-                          {% for carga in cargas_prod %}
-                              <tr>                    
-                                  <th scope="row">{{ carga.id }}</th>
-                                  <td>{{ carga.usuario }}</td>
-                                  <td>{{ carga.fecha_carga }}</td>
-                                  <td>{{ carga.descripcion }}</td>
-                                  <td>{{ carga.sucursal }}</td>
-                                  <td>{{ carga.total }}</td>
-                                  <td>
-                                      <div class="btn-group">
-                                          <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                              Action
-                                          </button>
-                                          <ul class="dropdown-menu">
-                                              {# <li><a class="dropdown-item" href="#">Detalle de Carga</a></li> #}
-                                              <li><a class="dropdown-item" href="{% url 'store:detalle_carga' carga.id %}">Detalle de carga</a></li>
-                                          </ul>
-                                      </div>
-                                  </td>
-                              </tr>
-                          {% endfor %}
-                      {% else %}
-                          <p>No hay registros que mostrar</p>
-                    {% endif %}
+
                   </tbody>
                 </table>
+                <input type="hidden" name="url_listar_cargas_json" id="url_listar_cargas_json" value="{% url 'store:list_cargas_json' %}">
                 <!-- End Table with stripped rows -->
               </div>
             </div>
@@ -78,5 +55,10 @@
 {% load static %}
 
 {% block extra-script %}
+  <script src="{% static 'assets/js/jquery-ui/jquery-ui.js' %}"></script>
+  <script src="{% static 'assets/js/jquery-mask/jquery.mask.js' %}"></script>
+  <script src="{% static 'assets/js/select2/select2.js' %}"></script>
+  <script src="{% static 'assets/js/toastr/toastr.min.js' %}"></script>
+  <script src="{% static 'assets/js/proces_carga_inventario/listar_carga_productos.js' %}"></script>
 
 {% endblock %}

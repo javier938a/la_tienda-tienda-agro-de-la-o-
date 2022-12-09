@@ -6,6 +6,7 @@ from ventas.models import CargaProductos, DetalleCargaProductos, User, Presentac
 from django.http import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
+from django.urls import reverse
 
 class ViewCargaInventario(LoginRequiredMixin, TemplateView):
     login_url="/ventas/login/"
@@ -17,15 +18,69 @@ class ViewCargaInventario(LoginRequiredMixin, TemplateView):
         context['suc']=sucursal
         return context
 
-class ListarCargaProductos(LoginRequiredMixin, ListView):
+class ListarCargaProductos(LoginRequiredMixin, TemplateView):
     login_url="/ventas/login/"
     redirect_field_name="redirect_to"
     template_name="proces_carga_productos/listar_carga_productos.html"
-    model=CargaProductos
-    context_object_name="cargas_prod"
 
-    def get_queryset(self):
-        return self.model.objects.all().order_by('-fecha_carga')
+
+def obtener_lista_cargas_de_productos_json(request):
+    #comentarios sobre la explicacion de este codigo 
+    #estan en el obtener_lista_productos
+    data=[]
+    cargas_productos=None
+    draw=request.POST.get('draw')
+    start=request.POST.get('start')
+    length=request.POST.get('length')
+    searchValue=request.POST.get('search[value]')
+    condiciones_de_busqueda=None
+    if searchValue!='':
+        condiciones_de_busqueda=Q(fecha_carga__date__icontains=searchValue) | Q(descripcion__icontains=searchValue) | Q(usuario__username__icontains=searchValue) | Q(sucursal__descripcion__icontains=searchValue)
+    totalRecords=CargaProductos.objects.all().count()
+
+    totalRecordWithFilter=0
+    if condiciones_de_busqueda is not None:
+        if int(start)>=int(length):
+            cargas_productos=CargaProductos.objects.filter(condiciones_de_busqueda).order_by('-fecha_carga')[int(start):int(length)+int(start)]
+        else:
+            cargas_productos=CargaProductos.objects.filter(condiciones_de_busqueda).order_by('-fecha_carga')[int(start):int(length)]
+        totalRecordWithFilter=cargas_productos.count()
+    else:
+        if int(start)>=int(length):
+            cargas_productos=CargaProductos.objects.all().order_by('-fecha_carga')[int(start):int(length)+int(start)]
+        else:
+            cargas_productos=CargaProductos.objects.all().order_by('-fecha_carga')[int(start):int(length)]
+        totalRecordWithFilter=cargas_productos.count()
+   
+    for carga in cargas_productos:
+        url_detalle=reverse('store:detalle_carga', args=[carga.id])
+        action="""
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        Action
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="%s">Detalle de carga</a></li>
+                    </ul>
+                </div>
+        """%(url_detalle)
+
+        data.append({
+            'id':str(carga.id),
+            'usuario':str(carga.usuario),
+            'fecha_carga':str(carga.fecha_carga),
+            'descripcion':str(carga.descripcion),
+            'sucursal':str(carga.sucursal),
+            'total':str(carga.total),
+            'action':action
+        })
+    return JsonResponse({
+        'draw':int(draw),
+        'iTotalRecords':totalRecordWithFilter,
+        'iTotalDisplayRecords':totalRecords,
+        'data':data
+    }, safe=False)
+
 
 class DetalleCargaInventario(LoginRequiredMixin, DetailView):
     login_url="/ventas/login/"

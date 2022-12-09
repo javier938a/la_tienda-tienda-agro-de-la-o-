@@ -11,7 +11,7 @@ from .views import ListarSucursal, CrearSucursal, EditarSucursal, EliminarSucurs
 from .views import ListarCategoriasProducto, CrearCategoriaProducto, EditarCategoriaProducto, EliminarCategoriaProducto
 from .views import ListarProductos, CrearProducto, EditarProducto, DetalleProducto, EliminarProducto, obtener_lista_productos_json
 from .views import ListarPresentacion, CrearPresentacion, EditarPresentacion, EliminarPresentacion
-from .views import ListarCargaProductos, ViewCargaInventario, DetalleCargaInventario, listar_productos_cargados_y_sin_cargar_autocomplete, agregar_producto_detalle_carga, cargar_producto_inventario
+from .views import ListarCargaProductos, ViewCargaInventario, DetalleCargaInventario, listar_productos_cargados_y_sin_cargar_autocomplete, agregar_producto_detalle_carga, cargar_producto_inventario, obtener_lista_cargas_de_productos_json
 from .views import ListarDescargasProductos, ViewCrearDescargaProducto, ViewDetalleDescargaProducto, listar_productos_a_descargar_por_sucursal_autocomplete, agregar_producto_a_descargar_a_detalle, efectuar_descarga_de_productos
 from .views import ListarInventario, ViewCrearInventario, EditarProductoInventario, ViewEditarInventario, EliminarInventario, obtener_productos_autocomplete, agregar_producto_detalle, obtener_lista_productos_inv_json
 from .views import guardar_datos_inventario, actualizar_datos_inventario, update_producto_detalle, DetalleInventario
@@ -69,6 +69,7 @@ urlpatterns = [
     path('carga/detalle_de_carga_inventario/<int:pk>', DetalleCargaInventario.as_view(), name="detalle_carga"),
     path('carga/listar_productos_cargados_y_sin_cargar', listar_productos_cargados_y_sin_cargar_autocomplete, name="list_prod_autocomplete"),
     path('carga/agregar_producto_detalle_carga', agregar_producto_detalle_carga, name="add_prod_detalle_carga" ),
+    path('cargas/listar_cargas_productos_json', obtener_lista_cargas_de_productos_json, name="list_cargas_json"),
     path('descarga_productos/', ListarDescargasProductos.as_view(), name="list_descarga_prod"),
     path('descarga_productos/crear_descarga_productos', ViewCrearDescargaProducto.as_view(), name="crear_descarga_prod"),
     path('descarga_productos/detalle_descarga_productos/<int:pk>', ViewDetalleDescargaProducto.as_view(), name="detalle_descarga"),
