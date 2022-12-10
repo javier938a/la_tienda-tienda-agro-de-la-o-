@@ -156,38 +156,48 @@ def obtener_lista_productos_inv_json(request):
     start=request.POST.get('start')
     length=request.POST.get('length')
     searchValue=request.POST.get('search[value]')
+        #aqui verificamos obtenemos el tipo de usuario del usuario logiado
+    tipo_usuario=str(request.user.tipo_usuario)
+    sucursal_usuario=request.user.sucursal
     condiciones_de_busqueda=None
-    if searchValue!='':
-        condiciones_de_busqueda=Q(fecha_de_registro__date__icontains=searchValue) | Q(sucursal__descripcion=searchValue) | Q(usuario__username__icontains=searchValue) | Q(producto__nombre_producto__icontains=searchValue) | Q(producto__codigo_barra__icontains=searchValue) | Q(producto__categoria__categoria__icontains=searchValue)
-    
-    totalRedords=ProductoStockSucursal.objects.all().count()
-
+    totalRedords=0
     totalRecordWithFilter=0
+    if searchValue!='':
+        condiciones_de_busqueda=Q(fecha_de_registro__date__icontains=searchValue) | Q(sucursal__descripcion__icontains=searchValue) | Q(usuario__username__icontains=searchValue) | Q(producto__nombre_producto__icontains=searchValue) | Q(producto__codigo_barra__icontains=searchValue) | Q(producto__categoria__categoria__icontains=searchValue)
+    
+    if tipo_usuario=="administrador":
+        totalRedords=ProductoStockSucursal.objects.all().count()
+    else:
+        totalRedords=ProductoStockSucursal.objects.filter(Q(sucursal=sucursal_usuario)).count()
+
+    
     if condiciones_de_busqueda is not None:
         if int(start)>=int(length):
-            inventario=ProductoStockSucursal.objects.filter(condiciones_de_busqueda).order_by('-fecha_de_registro')[int(start):int(length)+int(start)]
+            if tipo_usuario=="administrador":
+                inventario=ProductoStockSucursal.objects.filter(condiciones_de_busqueda).order_by('-fecha_de_registro')[int(start):int(length)+int(start)]
+            else:
+                inventario=ProductoStockSucursal.objects.filter(Q(sucursal=sucursal_usuario)).filter(condiciones_de_busqueda).order_by('-fecha_de_registro')[int(start):int(length)+int(start)]
         else:
-            inventario=ProductoStockSucursal.objects.filter(condiciones_de_busqueda).order_by('-fecha_de_registro')[int(start):int(length)]
+            if tipo_usuario=="administrador":
+                inventario=ProductoStockSucursal.objects.filter(condiciones_de_busqueda).order_by('-fecha_de_registro')[int(start):int(length)]
+            else:
+                inventario=ProductoStockSucursal.objects.filter(Q(sucursal=sucursal_usuario)).filter(condiciones_de_busqueda).order_by('-fecha_de_registro')[int(start):int(length)]
         totalRecordWithFilter=inventario.count()
     else:
         if int(start)>=int(length):
-            tipo_usuario=str(request.user.tipo_usuario)
             #verificamos si el tipo usuario es igual a administrador pues logicamente le mostrara todo
             if tipo_usuario=="administrador":
                 inventario=ProductoStockSucursal.objects.all().order_by('-fecha_de_registro')[int(start):int(length)+int(start)]
             else:#de lo contrario si es usuario solo le mostrara los productos de la de una sucursal especifica
-                sucursal_usuario=request.user.sucursal
+
                 inventario=ProductoStockSucursal.objects.filter(Q(sucursal=sucursal_usuario)).order_by('-fecha_de_registro')[int(start):int(length)+int(start)]
         else:
-            tipo_usuario=str(request.user.tipo_usuario)
             if tipo_usuario=="administrador":
                 inventario=ProductoStockSucursal.objects.all().order_by('-fecha_de_registro')[int(start):int(length)]
             else:
-                sucursal_usuario=request.user.sucursal
                 inventario=ProductoStockSucursal.objects.filter(Q(sucursal=sucursal_usuario)).order_by('-fecha_de_registro')[int(start):int(length)]
         totalRecordWithFilter=inventario.count()
-    #aqui verificamos obtenemos el tipo de usuario del usuario logiado
-    tipo_usuario=str(request.user.tipo_usuario)
+
     for inv in inventario:
         action=""
         if tipo_usuario=="administrador":#si el tipo de usuario es administrador podra eliminar producto y editar el precio y presentacion de producto
