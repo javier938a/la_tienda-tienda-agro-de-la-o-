@@ -171,27 +171,55 @@ def obtener_lista_productos_inv_json(request):
         totalRecordWithFilter=inventario.count()
     else:
         if int(start)>=int(length):
-            inventario=ProductoStockSucursal.objects.all().order_by('-fecha_de_registro')[int(start):int(length)+int(start)]
+            tipo_usuario=str(request.user.tipo_usuario)
+            #verificamos si el tipo usuario es igual a administrador pues logicamente le mostrara todo
+            if tipo_usuario=="administrador":
+                inventario=ProductoStockSucursal.objects.all().order_by('-fecha_de_registro')[int(start):int(length)+int(start)]
+            else:#de lo contrario si es usuario solo le mostrara los productos de la de una sucursal especifica
+                sucursal_usuario=request.user.sucursal
+                inventario=ProductoStockSucursal.objects.filter(Q(sucursal=sucursal_usuario)).order_by('-fecha_de_registro')[int(start):int(length)+int(start)]
         else:
-            inventario=ProductoStockSucursal.objects.all().order_by('-fecha_de_registro')[int(start):int(length)]
+            tipo_usuario=str(request.user.tipo_usuario)
+            if tipo_usuario=="administrador":
+                inventario=ProductoStockSucursal.objects.all().order_by('-fecha_de_registro')[int(start):int(length)]
+            else:
+                sucursal_usuario=request.user.sucursal
+                inventario=ProductoStockSucursal.objects.filter(Q(sucursal=sucursal_usuario)).order_by('-fecha_de_registro')[int(start):int(length)]
         totalRecordWithFilter=inventario.count()
-    
+    #aqui verificamos obtenemos el tipo de usuario del usuario logiado
+    tipo_usuario=str(request.user.tipo_usuario)
     for inv in inventario:
-        url_detalle=reverse('store:det_inv', args=[inv.id])
-        url_editar=reverse('store:edit_prod_inv', args=[inv.id])
-        url_del=reverse('store:del_inv', args=[inv.id])
-        action="""
-                <div class="btn-group">
-                    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                        Action
-                    </button>
-                    <ul class="dropdown-menu">              
-                        <li><a class="dropdown-item" href="%s">Detalle de producto</a></li>
-                        <li><a class="dropdown-item" href="%s" class="dropdown-item">Editar Producto</a></li>
-                        <li><a class="dropdown-item" href="%s">Eliminar producto</a></li>
-                    </ul>
-                </div>
-        """%(url_detalle, url_editar, url_del)
+        action=""
+        if tipo_usuario=="administrador":#si el tipo de usuario es administrador podra eliminar producto y editar el precio y presentacion de producto
+            url_detalle=reverse('store:det_inv', args=[inv.id])
+            url_editar=reverse('store:edit_prod_inv', args=[inv.id])
+            url_del=reverse('store:del_inv', args=[inv.id])
+
+            action="""
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            Action
+                        </button>
+                        <ul class="dropdown-menu">              
+                            <li><a class="dropdown-item" href="%s">Detalle de producto</a></li>
+                            <li><a class="dropdown-item" href="%s" class="dropdown-item">Editar Producto</a></li>
+                            <li><a class="dropdown-item" href="%s">Eliminar producto</a></li>
+                        </ul>
+                    </div>
+            """%(url_detalle, url_editar, url_del)
+        else:#de lo contrario si no es administrador entonces solo podra ver el detalle del producto
+            url_detalle=reverse('store:det_inv', args=[inv.id])
+            action="""
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            Action
+                        </button>
+                        <ul class="dropdown-menu">              
+                            <li><a class="dropdown-item" href="%s">Detalle de producto</a></li>
+                        </ul>
+                    </div>
+            """%(url_detalle)
+
         print(inv.producto.codigo_barra)
         
         if inv.producto.codigo_barra==None:
