@@ -9,6 +9,7 @@ from django.db.models import Q
 from django.urls import reverse_lazy
 from django.core.serializers import serialize
 from django.urls import reverse
+from django.utils import timezone
 
 class ViewCrearInventario(LoginRequiredMixin, TemplateView):
     login_url="/ventas/login/"
@@ -198,7 +199,7 @@ def obtener_lista_productos_inv_json(request):
             'id':inv.id, 
             'sucursal':str(inv.sucursal), 
             'usuario':str(inv.usuario),             
-            'fecha_de_registro':str(inv.fecha_de_registro), 
+            'fecha_de_registro':str( timezone.localtime(inv.fecha_de_registro)), 
             'codigo':'No Existe', 
             'producto':str(inv.producto), 
             'cantidad':inv.cantidad, 
@@ -212,7 +213,7 @@ def obtener_lista_productos_inv_json(request):
             'id':str(inv.id),
             'sucursal':str(inv.sucursal), 
             'usuario':str(inv.usuario),             
-            'fecha_de_registro':str(inv.fecha_de_registro), 
+            'fecha_de_registro':str(timezone.localtime(inv.fecha_de_registro)), 
             'codigo':str(inv.producto.codigo_barra), 
             'producto':str(inv.producto), 
             'cantidad':str(inv.cantidad), 

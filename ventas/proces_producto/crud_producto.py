@@ -5,6 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.http import JsonResponse
 from django.db.models import Q
+from django.utils import timezone
 
 class CrearProducto(LoginRequiredMixin, CreateView):
     login_url="/ventas/login/"
@@ -156,9 +157,9 @@ def obtener_lista_productos_json(request):
                 </div>
         """%(url_editar, url_eliminar, url_detalle)
         if producto.codigo_barra==None:            
-            data.append({'id':producto.id,'codigo_barra':'No Existe','producto':producto.nombre_producto, 'fecha_de_registro':producto.fecha_de_registro, 'descripcion':str(producto.descripcion),'usuario':str(producto.usuario), 'categoria':str(producto.categoria), 'action':action })
+            data.append({'id':producto.id,'codigo_barra':'No Existe','producto':producto.nombre_producto, 'fecha_de_registro':str(timezone.localtime(producto.fecha_de_registro)), 'descripcion':str(producto.descripcion),'usuario':str(producto.usuario), 'categoria':str(producto.categoria), 'action':action })
         else:
-            data.append({'id':producto.id,'codigo_barra':producto.codigo_barra,'producto':producto.nombre_producto, 'fecha_de_registro':producto.fecha_de_registro, 'descripcion':str(producto.descripcion), 'usuario':str(producto.usuario), 'categoria':str(producto.categoria), 'action':action })
+            data.append({'id':producto.id,'codigo_barra':producto.codigo_barra,'producto':producto.nombre_producto, 'fecha_de_registro':str(timezone.localtime(producto.fecha_de_registro)), 'descripcion':str(producto.descripcion), 'usuario':str(producto.usuario), 'categoria':str(producto.categoria), 'action':action })
     
     return JsonResponse(
         {

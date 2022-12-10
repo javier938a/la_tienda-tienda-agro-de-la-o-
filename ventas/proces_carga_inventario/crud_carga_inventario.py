@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.urls import reverse
+from django.utils import timezone
 
 class ViewCargaInventario(LoginRequiredMixin, TemplateView):
     login_url="/ventas/login/"
@@ -68,7 +69,7 @@ def obtener_lista_cargas_de_productos_json(request):
         data.append({
             'id':str(carga.id),
             'usuario':str(carga.usuario),
-            'fecha_carga':str(carga.fecha_carga),
+            'fecha_carga':str(timezone.localtime(carga.fecha_carga)),
             'descripcion':str(carga.descripcion),
             'sucursal':str(carga.sucursal),
             'total':str(carga.total),
