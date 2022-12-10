@@ -57,25 +57,30 @@ def obtener_lista_ventas_json(request):
     totalRecords=0
     totalRecordWithFilter=0
     if searchValue!='':
-        condiciones_de_busqueda=Q(fecha_venta__date__icontains=searchValue) | Q(usuario__username__icontains=searchValue) | Q(numero_factura__icontains=searchValue)
+        condiciones_de_busqueda=Q(fecha_venta__date__icontains=searchValue) | Q(usuario__username__icontains=searchValue) | Q(numero_factura__icontains=searchValue) | Q(sucursal__descripcion__icontains=searchValue)
     if tipo_usuario=="administrador":
         totalRecords=Venta.objects.all().count()
     else:
         totalRecords=Venta.objects.filter(Q(sucursal=sucursal_usuario)).count()
     
     if condiciones_de_busqueda is not None:
+        print(start)
+        print(length)
         if int(start)>=int(length):
             if tipo_usuario=="administrador":
-                ventas=Venta.objects.all().order_by('-fecha_venta')[int(start):int(length)+int(start)]
+                ventas=Venta.objects.filter(condiciones_de_busqueda).order_by('-fecha_venta')[int(start):int(length)+int(start)]
             else:
-                ventas=Venta.objects.filter(Q(sucursal=sucursal_usuario)).order_by('-fecha_venta')[int(start):int(length)+int(start)]
+                ventas=Venta.objects.filter(Q(sucursal=sucursal_usuario)).filter(condiciones_de_busqueda).order_by('-fecha_venta')[int(start):int(length)+int(start)]
         else:
+            #print(tipo_usuario)
             if tipo_usuario=="administrador":
-                ventas=Venta.objects.all().order_by('-fecha_venta')[int(start):int(length)]
+
+                ventas=Venta.objects.filter(condiciones_de_busqueda).order_by('-fecha_venta')[int(start):int(length)]
             else:
-                ventas=Venta.objects.filter(Q(sucursal=sucursal_usuario)).order_by('-fecha_venta')[int(start):int(length)]
+                ventas=Venta.objects.filter(Q(sucursal=sucursal_usuario)).filter(condiciones_de_busqueda).order_by('-fecha_venta')[int(start):int(length)]
         totalRecordWithFilter=ventas.count()
     else:
+        
         if int(start)>=int(length):
             if tipo_usuario=="administrador":
                 ventas=Venta.objects.all().order_by('-fecha_venta')[int(start):int(length)+int(start)]
