@@ -33,7 +33,7 @@
               <button class="btn btn-primary pull-right" id="btn_crear_venta">Crear Venta</button>
               <!-- Table with stripped rows -->
               <div class="table-responsive">
-                <table class="table datatable">
+                <table class="table" id="table-ventas">
                   <thead>
                     <tr>
                       <th scope="col">ID</th>
@@ -42,41 +42,18 @@
                       <th scope="col">Numero de Factura</th>
                       <th scope="col">Sucursal</th>
                       <th scope="col">Total</th>
-                      <th scope="col" colspan="2">Acciones</th>
+                      <th scope="col">Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
-                      {% if ventas %}
-                          {% for venta in ventas %}
-                              <tr>                    
-                                  <th scope="row">{{ venta.id }}</th>
-                                  <td>{{ venta.usuario }}</td>
-                                  <td>{{ venta.fecha_venta }}</td>
-                                  <td>{{ venta.numero_factura }}</td>
-                                  <td>{{ venta.sucursal }}</td>
-                                  <td>${{ venta.total_sin_iva }}</td>
-                                  <td>
-                                      <div class="btn-group">
-                                          <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                              Action
-                                          </button>
-                                          <ul class="dropdown-menu">
-                                              {# <li><a class="dropdown-item" href="#">Editar</a></li> #}
-                                              <li><a class="dropdown-item" href="{% url 'store:detalle_venta' venta.id %}">Detalle de venta</a></li>
-                                          </ul>
-                                      </div>
-                                  </td>
-                              </tr>
-                          {% endfor %}
-                      {% else %}
-                          <p>No hay registros que mostrar</p>
-                    {% endif %}
+
                   </tbody>
                 </table>
                 <!-- End Table with stripped rows -->
               </div>
               <input type="hidden" name="url_verificar_apertura_activa_usuario" id="url_verificar_apertura_activa_usuario" value="{% url 'store:ver_ape_act_user' %}">
               <input type="hidden" name="url_crear_venta" id="url_crear_venta" value="{% url 'store:crear_venta' %}">
+              <input type="hidden" name="url_listar_ventas_json" id="url_listar_ventas_json" value="{% url 'store:list_venta_json' %}">
             </div>
           </div>
 

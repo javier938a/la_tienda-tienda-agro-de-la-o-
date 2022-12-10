@@ -15,7 +15,7 @@ from .views import ListarCargaProductos, ViewCargaInventario, DetalleCargaInvent
 from .views import ListarDescargasProductos, ViewCrearDescargaProducto, ViewDetalleDescargaProducto, listar_productos_a_descargar_por_sucursal_autocomplete, agregar_producto_a_descargar_a_detalle, efectuar_descarga_de_productos
 from .views import ListarInventario, ViewCrearInventario, EditarProductoInventario, ViewEditarInventario, EliminarInventario, obtener_productos_autocomplete, agregar_producto_detalle, obtener_lista_productos_inv_json
 from .views import guardar_datos_inventario, actualizar_datos_inventario, update_producto_detalle, DetalleInventario
-from .views import ListarVentas, ViewCrearVenta, ViewDetalleVenta, verificar_stock_producto, obtener_productos_inventario_autocomplete, agregar_producto_detalle_venta, efectuar_venta
+from .views import ListarVentas, ViewCrearVenta, ViewDetalleVenta, verificar_stock_producto, obtener_productos_inventario_autocomplete, agregar_producto_detalle_venta, efectuar_venta, obtener_lista_ventas_json
 from .views import ListarDevolucionesVentas, ViewCrearDevolucionVenta, ViewDetalleDevolucion, obtener_ventas_autocomplete, listar_productos_de_venta, efectuar_devolucion_venta
 from .views import ListarAperturaCorte, CrearApertura, ViewRealizarCorteCaja, ViewCierreDeCaja, proces_efectuar_apertura_caja, proces_verificar_si_hay_apertura_de_caja, verificar_apertura_activa_de_usuario, efectuar_corte_de_caja, efectuar_cierre_de_caja
 from .views import ListarCajas, CrearCaja, EditarCaja, EliminarCaja
@@ -99,6 +99,7 @@ urlpatterns = [
     path('ventas/verificar_stock_producto', verificar_stock_producto, name="verificar_stock"),
     path('ventas/imprimir_ticket', imprimir_ticket, name="print_ticket"),
     path('ventas/obtener_ticket', Obtener_ticket, name='get_ticket'),
+    path('ventas/obtener_lista_ventas_json', obtener_lista_ventas_json, name="list_venta_json"),
     path('devoluciones_ventas/', ListarDevolucionesVentas.as_view(), name="dev_ventas"),
     path('devolucion/crear_devolucion_venta', ViewCrearDevolucionVenta.as_view(), name="crear_dev"),
     path('devolucion/efectuar_devolucion_venta', efectuar_devolucion_venta, name='efect_dev'),

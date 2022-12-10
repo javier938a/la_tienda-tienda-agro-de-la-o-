@@ -14,6 +14,29 @@ function getCookie(name) {
     return cookieValue;
 }
 $(document).ready(function(){
+    let url_listar_ventas_json=$("#url_listar_ventas_json").val();
+    const csrftoken=getCookie("csrftoken");
+    $("#table-ventas").DataTable({
+      'processing':true,
+      'serverSide':true,
+      'serverMethod':'post',
+      'ajax':{
+        url:url_listar_ventas_json,
+        data:{
+          csrfmiddlewaretoken:csrftoken,
+        }
+      },
+      'columns':[
+        {'data':'id'},
+        {'data':'usuario'},
+        {'data':'fecha_venta'},
+        {'data':'numero_factura'},
+        {'data':'sucursal'},
+        {'data':'total'},
+        {'data':'action'}
+      ]
+    });
+
     $("#btn_crear_venta").click(function(evt){
         let url_verificar_apertura_activa_usuario=$("#url_verificar_apertura_activa_usuario").val();
         const csrftoken=getCookie("csrftoken");
@@ -43,4 +66,6 @@ $(document).ready(function(){
             }
         })
     });
+
+ 
 });

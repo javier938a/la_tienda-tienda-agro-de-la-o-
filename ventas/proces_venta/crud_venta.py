@@ -8,6 +8,7 @@ from django.http import JsonResponse
 from django.core.serializers import serialize
 from django.utils import timezone
 import json
+from django.urls import reverse
 
 from escpos.printer import Usb
 
@@ -36,28 +37,88 @@ class ViewDetalleVenta(LoginRequiredMixin, DetailView):
         context['detalle_venta_servicios']=detalle_venta_servicios
         return context
 
-class ListarVentas(LoginRequiredMixin, ListView):
+class ListarVentas(LoginRequiredMixin, TemplateView):
     login_url="/ventas/login/"
     redirect_field_name="redirect_to"
 
     template_name="proces_venta/listar_venta.html"
-    model=Venta
-    context_object_name="ventas"
 
 
-    def get_queryset(self):
-        tipo_de_usuario=str(self.request.user.tipo_usuario)
-        sucursal_usuario=self.request.user.sucursal
-        ventas=None
-        print("Este es el "+tipo_de_usuario)
-        if tipo_de_usuario=="administrador":#validando que si es administrador pueda ver todas las ventas de todas las sucursales
-            ventas=self.model.objects.filter(Q(fecha_venta__date=timezone.now())).order_by('-fecha_venta')
-            print(str(timezone.now()))
-            print(ventas)
-        elif tipo_de_usuario=="usuario":#si es usuario solo podra las ventas de la sucursal a la que se le ha creado su usuario
-            ventas=self.model.objects.filter(Q(sucursal=sucursal_usuario) & Q(fecha_venta__date=timezone.now())).order_by('-fecha_venta')
-            print(ventas)
-        return ventas
+def obtener_lista_ventas_json(request):
+    data=[]
+    ventas=None
+    draw=request.POST.get('draw')
+    start=request.POST.get('start')
+    length=request.POST.get('length')
+    searchValue=request.POST.get('search[value]')
+    sucursal_usuario=request.user.sucursal
+    tipo_usuario=str(request.user.tipo_usuario)
+    condiciones_de_busqueda=None
+    totalRecords=0
+    totalRecordWithFilter=0
+    if searchValue!='':
+        condiciones_de_busqueda=Q(fecha_venta__date__icontains=searchValue) | Q(usuario__username__icontains=searchValue) | Q(numero_factura__icontains=searchValue)
+    if tipo_usuario=="administrador":
+        totalRecords=Venta.objects.all().count()
+    else:
+        totalRecords=Venta.objects.filter(Q(sucursal=sucursal_usuario)).count()
+    
+    if condiciones_de_busqueda is not None:
+        if int(start)>=int(length):
+            if tipo_usuario=="administrador":
+                ventas=Venta.objects.all().order_by('-fecha_venta')[int(start):int(length)+int(start)]
+            else:
+                ventas=Venta.objects.filter(Q(sucursal=sucursal_usuario)).order_by('-fecha_venta')[int(start):int(length)+int(start)]
+        else:
+            if tipo_usuario=="administrador":
+                ventas=Venta.objects.all().order_by('-fecha_venta')[int(start):int(length)]
+            else:
+                ventas=Venta.objects.filter(Q(sucursal=sucursal_usuario)).order_by('-fecha_venta')[int(start):int(length)]
+        totalRecordWithFilter=ventas.count()
+    else:
+        if int(start)>=int(length):
+            if tipo_usuario=="administrador":
+                ventas=Venta.objects.all().order_by('-fecha_venta')[int(start):int(length)+int(start)]
+            else:
+                ventas=Venta.objects.filter(Q(sucursal=sucursal_usuario)).order_by('-fecha_venta')[int(start):int(length)+int(start)]
+            totalRecordWithFilter=ventas.count()
+        else:
+            if tipo_usuario=="administrador":
+                ventas=Venta.objects.all().order_by('-fecha_venta')[int(start):int(length)]
+            else:
+                ventas=Venta.objects.filter(Q(sucursal=sucursal_usuario)).order_by('-fecha_venta')[int(start):int(length)]
+        totalRecordWithFilter=ventas.count()
+    
+    for venta in ventas:
+        url_detalle=reverse("store:detalle_venta", args=[venta.id])
+        action="""
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        Action
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="%s">Detalle de venta</a></li>
+                    </ul>
+                </div> 
+              """%(url_detalle)
+        data.append({
+            'id':str(venta.id),
+            'usuario':str(venta.usuario),
+            'fecha_venta':timezone.localtime(venta.fecha_venta),
+            'numero_factura':str(venta.numero_factura),
+            'sucursal':str(venta.sucursal),
+            'total':"$"+str(venta.total_sin_iva),
+            'action':action
+        })
+    
+    return JsonResponse({
+        'draw':int(draw),
+        'iTotalRecords':totalRecordWithFilter,
+        'iTotalDisplayRecords':totalRecords,
+        'data':data
+    }, safe=False)
+
+
 
 
 def obtener_productos_inventario_autocomplete(request):
