@@ -330,6 +330,7 @@ $(document).ready(function(){
         $("#total_iva").text("$"+total_iva);
         //aqui iria el total sin iva
         $("#total_sin_iva").text("$"+redondear(total));
+        $("#id_total_en_grande").val("$"+redondear(total))
         let total_con_iva=total_iva+redondear(total);
         $("#total").text("$"+ redondear(total_con_iva));
     }
