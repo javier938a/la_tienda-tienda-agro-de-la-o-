@@ -217,15 +217,14 @@ def cargar_producto_inventario(request):
     res=True
     try:
         ##primero se crea y se obtiene la carga de producto
-        carga_producto_obj=CargaProductos.objects.get_or_create(
+        CargaProductos.objects.create(
             descripcion=descripcion,
             usuario=user,
             sucursal=sucursal,
             total=total
-        )
+        )       
         
-        
-        cargaProducto=carga_producto_obj[0]#se obtiene la carga 
+        cargaProducto=CargaProductos.objects.all().last()#se obtiene la carga 
         for producto in detalles_productos:#se reccorren los detalles uno por uno y se obtienen los valores
             tipo_prod=producto['tipo_prod']
             id_prod_o_stockubi=producto['id_prod_o_stockubi']
