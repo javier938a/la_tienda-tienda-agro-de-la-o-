@@ -36,7 +36,7 @@ class Index(TemplateView, LoginRequiredMixin):
     redirect_field_name = 'redirect_to'
     def get_context_data(self, **kwargs):
         context= super(Index, self).get_context_data(**kwargs)
-        fecha_hoy=timezone.now().strftime("%Y-%m-%d")
+        fecha_hoy= timezone.localtime(timezone.now()).strftime("%Y-%m-%d")
         print("hola.......")
         print(type(fecha_hoy))
         print(fecha_hoy)

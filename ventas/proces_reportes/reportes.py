@@ -352,7 +352,7 @@ class DynamicNameView(WeasyTemplateResponseMixin, DetalleReporteVentas):
 
 
 def grafico_reporte_ventas(request):
-    fecha_hoy=ti.now().strftime("%Y-%m-%d")
+    fecha_hoy=ti.localtime(ti.now()).strftime("%Y-%m-%d")
     reporte_ventas_hoy=None
     if str(request.user)!="AnonymousUser":
         
