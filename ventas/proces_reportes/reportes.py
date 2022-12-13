@@ -369,7 +369,7 @@ def grafico_reporte_ventas(request):
     if reporte_ventas_hoy!=None:
         for venta in reporte_ventas_hoy:
             datos.append({
-                'x':venta.fecha_venta,
+                'x': ti.localtime(venta.fecha_venta),
                 'y':venta.total_sin_iva
             })
         print("se imprimio..")
