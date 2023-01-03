@@ -378,8 +378,12 @@ $(document).ready(function(){
             total+=(cantidad*precio);
         });
         console.log(total)
-
-        $("#total").text("$"+ redondear(total));
+        //verificando que el total no sea NAN en la vista de carga 
+        if(!isNaN(total)){
+            $("#total").text("$"+ redondear(total)); 
+        }else{
+            $("#total").text("$0");
+        }
     }
 
     //validar que no se agregue dos veces el mismo producto
