@@ -17,6 +17,57 @@ function getCookie(name) {
 $(document).ready(function(){
     $("#sucursal").select2();
 
+    $(document).keyup(function(evt){
+        console.log(evt.keyCode)
+        if(evt.keyCode==9){
+            let tipo_busqueda_seleccionada=$("#tipo_busqueda").val();
+            console.log(tipo_busqueda_seleccionada);
+            if(tipo_busqueda_seleccionada=="2"){
+                $("#tipo_busqueda").val("1");
+                $("#codigo_barra").css({
+                    'display':'block',
+                });
+                $("#producto").css({
+                    'display':'none',
+                })
+                $("#servicio").css({
+                    'display':'none',
+                });
+                $("#precio_servicio").css({
+                    'display':'none',
+                });
+                $("#titulo_precio").css({
+                    'display':'none',
+                });
+                $("#agregar_servicio_venta").css({
+                    'display':'none',
+                });
+                $("#codigo_barra").focus();
+            }else if(tipo_busqueda_seleccionada=="1"){
+                $("#tipo_busqueda").val("2");
+                $("#producto").css({
+                    'display':'block',
+                });
+                $("#codigo_barra").css({
+                    'display':'none',
+                });
+                $("#servicio").css({
+                    'display':'none',
+                });
+                $("#precio_servicio").css({
+                    'display':'none',
+                });
+                $("#titulo_precio").css({
+                    'display':'none',
+                });
+                $("#agregar_servicio_venta").css({
+                    'display':'none',
+                });
+                $("#producto").focus();
+            }
+        }
+    });
+
     let url_inv_autocomplete=$("#url_productos_inv_autocomplete").val();
     const csrftoken=getCookie('csrftoken');
     let id_sucursal=$("#sucursal").val();
