@@ -66,7 +66,7 @@
               <h5 class="card-title">Aperturas de caja</h5>
               <!-- Table with stripped rows -->
               <div class="table-responsive">
-                <table class="table datatable">
+                <table class="table" id="table-apertura-corte">
                   <thead>
                     <tr>
                       <th scope="col">ID</th>
@@ -82,79 +82,10 @@
                       <th scope="col">Ultimo Cierre</th>
                       <th scope="col">Cierre de caja</th>
                       <th scope="col">Utimo corte</th>
-                      <th scope="col" colspan="2">Acciones</th>
+                      <th scope="col">Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
-                      {% if apertura_caja %}
-                          {% for apcaja in apertura_caja %}
-                              <tr>                    
-                                  <th scope="row">{{ apcaja.id }}</th>
-                                  <td>{{ apcaja.usuario_.caja }}</td>
-                                  <td>{{ apcaja.usuario }}</td>
-                                  <td>{{ apcaja.fecha_de_apertura }}</td>
-                                  <td>{{ apcaja.monto_de_apertura }}</td>
-                                  {% if apcaja.diferencia_de_apertura == None %}
-                                    <td>0</td>
-                                  {% else %}
-                                    <td>{{ apcaja.diferencia_de_apertura }}</td>
-                                  {% endif %}
-                                  {% if apcaja.fecha_de_corte == None %}
-                                    <td>No hay corte</td>
-                                  {% else %}
-                                    <td>{{ apcaja.fecha_de_corte }}</td>
-                                  {% endif %}
-                                  {% if apcaja.monto_de_corte == None %}
-                                    <td>0</td>
-                                  {% else %}
-                                    <td>{{ apcaja.monto_de_corte}}</td>
-                                  {% endif %}
-                                  {% if apcaja.diferencia_de_corte == None %}
-                                    <td>0</td>
-                                  {% else %}
-                                    <td>{{ apcaja.diferencia_de_corte }}</td>
-                                  {% endif %}
-                                  {% if apcaja.usuario_de_corte == None %}
-                                    <td></td>
-                                  {% else %}
-                                    <td>apcaja.usuario_de_corte</td>
-                                  {% endif %}
-                                  {% if apcaja.estado_de_apertura == True %}
-                                      <td>Activo</td>
-                                  {% else %}
-                                      <td>Finalizado</td>
-                                  {% endif %}
-                                  {% if apcaja.corte_global == True %}
-                                    <td>Es cierre de Caja</td>
-                                  {% else %}
-                                    <td>No es Cierre de Caja</td>
-                                  {% endif %}
-                                  {% if apcaja.ultima_apertura == True %}
-                                    <td>si</td>
-                                  {% else %}
-                                    <td>no</td>
-                                  {% endif %}
-                                  <td>
-                                      <div class="btn-group">
-                                          <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                              Action
-                                          </button>
-                                          <ul class="dropdown-menu">
-                                            
-                                            {% if apcaja.estado_de_apertura == True and apcaja.usuario.caja.numero_de_caja == user.caja.numero_de_caja %}
-                                              <li><a class="dropdown-item" href="{% url 'store:realizar_corte' apcaja.id %}">Hacer corte</a></li>
-                                            {% endif %}
-                                            {% if apcaja.estado_de_apertura == False and apcaja.ultima_apertura == True %}
-                                            <li><a class="dropdown-item" href="{% url 'store:cierre_caja' apcaja.id %}">Cierre de caja</a></li>
-                                            {% endif %}
-                                          </ul>
-                                      </div>
-                                  </td>
-                              </tr>
-                          {% endfor %}
-                      {% else %}
-                          <p>No hay registros que mostrar</p>
-                    {% endif %}
                   </tbody>
                 </table>
                 <!-- End Table with stripped rows -->
@@ -162,6 +93,7 @@
             </div>
             <input type="hidden" name="url_verificar_apertura_caja_activa" id="url_verificar_apertura_caja_activa" value="{% url 'store:verificar_apertura_activa' %}">
             <input type="hidden" name="url_crear_apertura" id="url_crear_apertura" value="{% url 'store:crear_apertura' %}">
+            <input type="hidden" name="url_list_apecor_json" id="url_list_apecor_json" value="{% url 'store:list_apecor_json' %}">
           </div>
 
         </div>

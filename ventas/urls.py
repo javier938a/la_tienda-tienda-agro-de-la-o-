@@ -17,7 +17,7 @@ from .views import ListarInventario, ViewCrearInventario, EditarProductoInventar
 from .views import guardar_datos_inventario, actualizar_datos_inventario, update_producto_detalle, DetalleInventario
 from .views import ListarVentas, ViewCrearVenta, ViewDetalleVenta, verificar_stock_producto, obtener_productos_inventario_autocomplete, agregar_producto_detalle_venta, efectuar_venta, obtener_lista_ventas_json
 from .views import ListarDevolucionesVentas, ViewCrearDevolucionVenta, ViewDetalleDevolucion, obtener_ventas_autocomplete, listar_productos_de_venta, efectuar_devolucion_venta
-from .views import ListarAperturaCorte, CrearApertura, ViewRealizarCorteCaja, ViewCierreDeCaja, proces_efectuar_apertura_caja, proces_verificar_si_hay_apertura_de_caja, verificar_apertura_activa_de_usuario, efectuar_corte_de_caja, efectuar_cierre_de_caja
+from .views import ListarAperturaCorte, CrearApertura, ViewRealizarCorteCaja, ViewCierreDeCaja, proces_efectuar_apertura_caja, proces_verificar_si_hay_apertura_de_caja, verificar_apertura_activa_de_usuario, efectuar_corte_de_caja, efectuar_cierre_de_caja, obtener_lista_apertura_cortes_json
 from .views import ListarCajas, CrearCaja, EditarCaja, EliminarCaja
 from .views import ListarEntradasSalidas, CrearEntradaSalida, EditarEntradaSalida, EliminarEntradaSalida, DetalleEntradaSalida
 from .views import agregar_producto_a_detalle_por_codigo
@@ -119,6 +119,7 @@ urlpatterns = [
     path('apertura_corte/realizar_cierre_de_caja/<int:pk>', ViewCierreDeCaja.as_view(), name="cierre_caja"),
     path('apertura_corte/efectuar_corte_caja', efectuar_corte_de_caja, name="op_corte"),
     path('apertura_corte/efectuar_cierre_de_caja', efectuar_cierre_de_caja, name='efectuar_cierre'),
+    path('apertura_corte/obtener_lista_aperturas_json', obtener_lista_apertura_cortes_json, name='list_apecor_json'),
     path('entradas_salidas_efectivo/', ListarEntradasSalidas.as_view(), name='entrada_salida'),
     path('entradas_salidas_efectivo/crear_entrada_salida_efectivo', CrearEntradaSalida.as_view(), name="crear_entrada_salida_efectivo"),
     path('entradas_salidas_efectivo/editar_entrada_salida_efectivo/<int:pk>', EditarEntradaSalida.as_view(), name='editar_entrada_salida'),
@@ -131,7 +132,7 @@ urlpatterns = [
     path('reporte/print_reporte_aperturas', PrintViewReporteAperturas.as_view(), name="print_report_pertura"),
     path('reporte/print_reporte_venta', PrintViewReporteVentas.as_view(), name="print_report_venta"),
     path('reporte/print_reporte_entradas_salidas', PrintViewReporteEntradaSalida.as_view(), name='print_entradas_salidas'),
-     path('reporte/print_reporte_inventario', PrintViewReporteInventario.as_view(), name="reporte_inventario"),
+    path('reporte/print_reporte_inventario', PrintViewReporteInventario.as_view(), name="reporte_inventario"),
     path('reporte/grafico_reporte', grafico_reporte_ventas, name="url_grafico"),
     path('generar_codigo_barra/', ViewGenerarCodigoBarra.as_view(), name='gen_codigo_barra'),
     path('print_codigo_barra/', PrintViewCodigoBarra.as_view(), name='print_codigo_barra' ),

@@ -39,4 +39,36 @@ $(document).ready(function(){
             }
         })       
     })
+
+    let url_list_apecor_json=$("#url_list_apecor_json").val();
+    const csrftoken=getCookie('csrftoken');
+    $("#table-apertura-corte").DataTable({
+        'processing':true,
+        'serverSide':true,
+        'serverMethod':'post',
+        'ajax':{
+            url:url_list_apecor_json,
+            data:{
+                csrfmiddlewaretoken:csrftoken,
+            }
+        },
+        'columns':[
+            {'data':'id'},
+            {'data':'caja'},
+            {'data':'usuario'},
+            {'data':'fecha_de_apertura'},
+            {'data':'monto_de_apertura'},
+            {'data':'diferencia_de_apertura'},
+            {'data':'fecha_de_corte'},
+            {'data':'monto_de_corte'},
+            {'data':'diferencia_de_corte'},
+            {'data':'nombre_usuario_de_corte'},
+            {'data':'estado_apertura'},
+            {'data':'corte_global'},
+            {'data':'ultima_apertura'},
+            {'data':'action'}
+        ]
+    });
+
+
 });

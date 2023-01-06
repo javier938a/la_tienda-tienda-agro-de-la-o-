@@ -2,6 +2,7 @@ from django.views.generic import TemplateView, ListView
 from ventas.models import AperturaCorte, Venta
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q, Sum
+from django.urls import reverse
 from django.http import JsonResponse
 import django.utils.timezone as timezone
 
@@ -225,11 +226,10 @@ def verificar_apertura_activa_de_usuario(request):
 
 
 
-class ListarAperturaCorte(LoginRequiredMixin, ListView):
+class ListarAperturaCorte(LoginRequiredMixin, TemplateView):
     login_url="/ventas/login/"
     redirect_field_name="redirect_to"
     template_name="proces_apertura_corte/listar_apertura_corte.html"
-    model=AperturaCorte
     context_object_name="apertura_caja"
     def get_context_data(self, **kwargs):
         context=super(ListarAperturaCorte, self).get_context_data(**kwargs)
@@ -262,7 +262,116 @@ class ListarAperturaCorte(LoginRequiredMixin, ListView):
         return context
 
 
-    def get_queryset(self):
-        sucursal=self.request.user.sucursal
-        print(self.model.objects.filter(Q(usuario__sucursal=sucursal)))
-        return self.model.objects.filter(Q(usuario__sucursal=sucursal)).order_by('-fecha_de_apertura')
+def obtener_lista_apertura_cortes_json(request):
+    data=[]
+    sucursal=request.user.sucursal
+    aperturas_cortes=None#AperturaCorte.objects.filter(Q(usuario__sucursal=sucursal)).order_by('-fecha_de_apertura')
+    draw=request.POST.get('draw')
+    start=request.POST.get('start')
+    length=request.POST.get('length')
+    searchValue=request.POST.get('search[value]')
+    condiciones_de_busqueda=None
+    if searchValue!='':
+        condiciones_de_busqueda=Q(fecha_de_apertura__icontains=searchValue) | Q(usuario__username__icontains=searchValue) | Q(sucursal__descripcion__icontains=searchValue) | Q(observacion__icontains=searchValue) | Q(nombre_usuario_corte__icontains=searchValue) | Q(nombre_usuario_cierre__icontains=searchValue) | Q(observacion__icontains=searchValue)
+    totalRecords=AperturaCorte.objects.all().count()
+
+    totalRecordWithFilter=0
+    if condiciones_de_busqueda is not None:
+        if int(start)>=int(length):
+            aperturas_cortes=AperturaCorte.objects.filter(sucursal=request.user.sucursal).filter(condiciones_de_busqueda).order_by('-fecha_de_apertura')[int(start):int(length)+int(start)]
+        else:
+            aperturas_cortes=AperturaCorte.objects.filter(sucursal=request.user.sucursal).filter(condiciones_de_busqueda).order_by('-fecha_de_apertura')[int(start):int(length)]
+
+        totalRecordWithFilter=aperturas_cortes.count()
+    else:
+        if int(start)>=int(length):
+            aperturas_cortes=AperturaCorte.objects.all().order_by('-fecha_de_apertura')[int(start):int(length)+int(start)]
+        else:
+            aperturas_cortes=AperturaCorte.objects.all().order_by('-fecha_de_apertura')[int(start):int(length)]
+        totalRecordWithFilter=aperturas_cortes.count()
+    for apertura in aperturas_cortes:
+        url_realizar_corte=reverse('store:realizar_corte', args=[apertura.id])
+        url_cierre_caja=reverse('store:cierre_caja', args=[apertura.id])
+        action="""
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        Action
+                    </button>
+                        <ul class="dropdown-menu">                                                        
+                            
+                        </ul>
+                </div>
+            """
+        if apertura.estado_de_apertura==True and apertura.usuario.caja.numero_de_caja==request.user.caja.numero_de_caja:
+            action="""
+                    <div class="btn-group">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                Action
+                            </button>
+                            <ul class="dropdown-menu">                                                        
+                                <li><a class="dropdown-item" href="%s">Hacer corte</a></li>
+                            </ul>
+                    </div>
+                    """%(url_realizar_corte)
+        if apertura.estado_de_apertura==False and apertura.ultima_apertura==True:
+            action="""
+                    <div class="btn-group">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                Action
+                            </button>
+                            <ul class="dropdown-menu">                                                        
+                                <li><a class="dropdown-item" href="%s">Cierre de caja</a></li>
+                            </ul>
+                    </div>
+                    """%(url_cierre_caja)
+
+        campos={}
+        campos['id']=str(apertura.id)
+        campos['caja']=str(apertura.usuario.caja)
+        campos['usuario']=str(apertura.usuario)
+        campos['fecha_de_apertura']=str(timezone.localtime(apertura.fecha_de_apertura))
+        campos['monto_de_apertura']=str(apertura.monto_de_apertura)
+        if apertura.diferencia_de_apertura==None:
+            campos['diferencia_de_apertura']='0'
+        else:
+            campos['diferencia_de_apertura']=apertura.diferencia_de_apertura
+        
+        if apertura.fecha_de_corte==None:
+            campos['fecha_de_corte']='No hay Corte'
+        else:
+            campos['fecha_de_corte']=apertura.fecha_de_corte
+
+        if apertura.monto_de_corte==None:
+            campos['monto_de_corte']='0'
+        else:
+            campos['monto_de_corte']=apertura.monto_de_corte
+        if apertura.diferencia_de_corte==None:
+            campos['diferencia_de_corte']='0'
+        else:
+            campos['diferencia_de_corte']=apertura.monto_de_corte
+        if apertura.nombre_usuario_corte==None:
+            campos['nombre_usuario_de_corte']=''
+        else:
+            campos['nombre_usuario_de_corte']=apertura.nombre_usuario_corte
+        if apertura.estado_de_apertura==True:
+            campos['estado_apertura']='Activo'
+        else:
+            campos['estado_apertura']='Finalizado'
+        if apertura.corte_global==True:
+            campos['corte_global']="Es cierre de caja"
+        else:
+            campos['corte_global']="No es cierre de caja"
+        if apertura.ultima_apertura==True:
+            campos['ultima_apertura']="Si"
+        else:
+            campos['ultima_apertura']="No"
+        
+        campos['action']=action
+
+        data.append(campos)
+    return JsonResponse({
+        'draw':int(draw),
+        'iTotalRecords':totalRecordWithFilter,
+        'iTotalDisplayRecords':totalRecords,
+        'data':data
+    }, safe=False)
