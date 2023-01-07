@@ -1,22 +1,75 @@
-from itertools import product
-from django.views.generic import ListView, TemplateView, DetailView
-from ventas.models import CargaProductos, ProductoStockSucursal
+from django.views.generic import TemplateView, DetailView
+from ventas.models import ProductoStockSucursal
 from ventas.models import DescargaProductos, DetalleDescargaProducto
 from django.contrib.auth.mixins import LoginRequiredMixin
 from ventas.models import Sucursal
 from django.db.models import Q
+from django.urls import reverse
+from django.utils import timezone
 from django.http import JsonResponse
 import json
 
-class ListarDescargasProductos(LoginRequiredMixin, ListView):
+class ListarDescargasProductos(LoginRequiredMixin, TemplateView):
     login_url="/ventas/login/"
     redirect_field_name="redirect_to"
     template_name="proces_descarga_productos/listar_descargas_productos.html"
-    model=DescargaProductos
     context_object_name="descarga_prod"
 
-    def get_queryset(self):
-        return self.model.objects.all().order_by('-fecha_descarga')
+
+
+def obtener_lista_de_descarga_productos_json(request):
+    data=[]
+    descarga_productos=None
+    draw=request.POST.get('draw')
+    start=request.POST.get('start')
+    length=request.POST.get('length')
+    searchValue=request.POST.get('search[value]')
+    condiciones_de_busqueda=None
+    if searchValue!='':
+        condiciones_de_busqueda=Q(fecha_descarga__date__icontains=searchValue) | Q(descripcion__icontains=searchValue) | Q(usuario__username__icontains=searchValue) | Q(sucursal__descripcion__icontains=searchValue)
+    totalRecords=DescargaProductos.objects.all().count()
+
+    totalRecordWithFilter=0
+    if condiciones_de_busqueda is not None:
+        if int(start)>=int(length):
+            descarga_productos=DescargaProductos.objects.filter(condiciones_de_busqueda).order_by('-fecha_descarga')[int(start):int(length)+int(start)]
+        else:
+            descarga_productos=DescargaProductos.objects.filter(condiciones_de_busqueda).order_by('-fecha_descarga')[int(start):int(length)]
+        totalRecordWithFilter=descarga_productos.count()
+    else:
+        if int(start)>=int(length):
+            descarga_productos=DescargaProductos.objects.all().order_by('-fecha_descarga')[int(start):int(length)+int(start)]
+        else:
+            descarga_productos=DescargaProductos.objects.all().order_by('-fecha_descarga')[int(start):int(length)]
+        
+    for descarga in descarga_productos:
+        url_detalle_descarga=reverse('store:detalle_descarga', args=[descarga.id])
+        action="""
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        Action
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="%s">Detalle de descarga</a></li>
+                    </ul>
+                </div>
+            """%(url_detalle_descarga)
+        data.append({
+            'id':str(descarga.id),
+            'usuario':str(descarga.usuario),
+            'fecha_de_descarga':str(timezone.localtime(descarga.fecha_descarga)),
+            'descripcion':str(descarga.descripcion),
+            'sucursal':str(descarga.sucursal),
+            'total':str(descarga.total),
+            'action':action
+        })
+    return JsonResponse({
+        'draw':int(draw),
+        'iTotalRecords':totalRecordWithFilter,
+        'iTotalDisplayRecords':totalRecords,
+        'data':data
+    })
+
 
 class ViewDetalleDescargaProducto(LoginRequiredMixin, DetailView):
     login_url='/ventas/login/'

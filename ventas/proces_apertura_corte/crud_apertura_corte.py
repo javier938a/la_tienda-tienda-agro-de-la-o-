@@ -221,11 +221,6 @@ def verificar_apertura_activa_de_usuario(request):
         datos, safe=False
     )
 
- 
-
-
-
-
 class ListarAperturaCorte(LoginRequiredMixin, TemplateView):
     login_url="/ventas/login/"
     redirect_field_name="redirect_to"
