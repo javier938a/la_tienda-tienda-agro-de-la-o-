@@ -167,6 +167,8 @@ $(document).ready(function(){
                             let res = data.res;
                             if(res===true){
                                 toastr['success']("Inventario cargado exitosamente");
+                                //ya una vez efectuada la carga el usuario ya no podra presionar 2 veces el boton porque duplicaria las cargas
+                                $("#efectuar_carga").prop("disabled",true);
                                 setTimeout(function(){
                                     window.location.href=$("#url_listar_cargas_inventario").val();
                                 }, 1000)
