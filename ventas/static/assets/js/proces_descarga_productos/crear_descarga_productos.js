@@ -141,6 +141,7 @@ $(document).ready(function(){
                             let res=data.res;
                             if(res===true){
                                 toastr['success']("Descarga efectuada exitosamente")
+                                $("#efectuar_descarga").prop("disabled",true);
                                 setTimeout(function(){
                                     window.location.href=$("#url_listar_descarga_prod").val();
                                 }, 1000);
