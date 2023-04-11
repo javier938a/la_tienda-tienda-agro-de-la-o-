@@ -98,7 +98,7 @@ class DetalleTransaccion(models.Model):
     total=models.FloatField(help_text="Ingrese el total por denominacion", null=True)
 
     def __str__(self):
-        return "Billete:%s-->Cantidad%s-->Total%s"(str(self.denominacion), str(self.cantidad), str(self.total))
+        return "Billete:%s-->Cantidad:%s-->Total%s"(str(self.denominacion), str(self.cantidad), str(self.total))
 
 class Producto(models.Model):
     proveedor=models.ForeignKey(Proveedor, help_text="Seleccione el proveedor", on_delete=models.SET_NULL, null=True)
