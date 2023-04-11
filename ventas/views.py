@@ -23,6 +23,7 @@ from ventas.proces_apertura_corte.crud_apertura_corte import ListarAperturaCorte
 from ventas.proces_caja.crud_caja import ListarCajas,CrearCaja, EditarCaja, EliminarCaja
 from ventas.proces_entradas_salidas_efectivo.crud_entrada_salida import ListarEntradasSalidas, CrearEntradaSalida, EditarEntradaSalida, EliminarEntradaSalida ,DetalleEntradaSalida
 from ventas.proces_crear_codigo_barra.generar_codigo_barra import ViewGenerarCodigoBarra, PrintViewCodigoBarra
+from ventas.proces_transacciones.crud_transacciones import ListarTransacciones, obtener_listas_transacciones_json
 # Create your views here.
 
 from django.db.models import Sum

@@ -60,6 +60,46 @@ class Categoria(models.Model):
     def __str__(self) -> str:
         return "%s"%str(self.categoria) 
 
+class TipoTransaccion(models.Model):
+    tipo_transaccion=models.CharField(max_length=50, help_text="tipo de transaccion")
+
+    def __str__(self):
+        return "%s"%(self.tipo_transaccion)
+class Transaccion(models.Model):
+    tipo_transacion=models.ForeignKey(TipoTransaccion, on_delete=models.SET_NULL, null=True)
+    usuario=models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    sucursal=models.ForeignKey(Sucursal, on_delete=models.SET_NULL, null=True)
+    nombre_cliente=models.CharField(max_length=50, help_text="Nombre del cliente")
+    apellido_cliente=models.CharField(max_length=50, help_text="Apellido del cliente")
+    fecha_transaccion=models.DateTimeField(auto_now=True, help_text="Fecha y hora de la transaccion")
+    total=models.FloatField(help_text="total de la transaccion", null=True)
+
+    def __str__(self):
+        return "%s -> %s"%(str(self.usuario), str(self.total))
+
+class TipoDenominacion(models.Model):
+    tipo_denominacion=models.CharField(max_length=50, help_text="nombre de la denominacion")
+
+    def __str__(self):
+        return "%s"(str(self.tipo_denominacion))
+
+class Denominaciones(models.Model):
+    denominacion=models.CharField(max_length=50, help_text="nombre de la denominacion")
+    precio=models.FloatField(help_text="ingrese el precio de la denominacion", null=True)
+    tipo_denominacion=models.ForeignKey(TipoTransaccion, on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return "%s->%s"%(str(self.denominacion), str(self.precio))
+    
+class DetalleTransaccion(models.Model):
+    denominacion=models.ForeignKey(Denominaciones, on_delete=models.SET_NULL, null=True)
+    transaccion=models.ForeignKey(Transaccion, on_delete=models.SET_NULL, null=True)
+    cantidad=models.IntegerField(help_text="cantidad de esta denominacion", null=True)
+    total=models.FloatField(help_text="Ingrese el total por denominacion", null=True)
+
+    def __str__(self):
+        return "Billete:%s-->Cantidad%s-->Total%s"(str(self.denominacion), str(self.cantidad), str(self.total))
+
 class Producto(models.Model):
     proveedor=models.ForeignKey(Proveedor, help_text="Seleccione el proveedor", on_delete=models.SET_NULL, null=True)
     fecha_de_registro=models.DateTimeField(help_text="Ingrese la fecha de registro", null=True, blank=True, auto_now_add=True)

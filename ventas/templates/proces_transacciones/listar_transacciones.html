@@ -14,11 +14,11 @@
 {% endblock %}
 {% block contenido %}
     <div class="pagetitle">
-      <h1>Listar Ventas</h1>
+      <h1>Listar Transacciones</h1>
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="{% url 'store:index' %}">Inicio</a></li>
-          <li class="breadcrumb-item"><a href="{% url 'store:list_venta' %}">Listar Ventas</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'store:list_trans' %}">Listar Transacciones</a></li>
         </ol>
       </nav>
     </div><!-- End Page Title -->
@@ -29,31 +29,31 @@
 
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Ventas</h5>
-              <button class="btn btn-primary pull-right" id="btn_crear_venta">Crear Venta</button>
+              <h5 class="card-title">Transacciones</h5>
+              <button class="btn btn-primary pull-right" id="btn_crear_venta">Crear Transaccion</button>
               <!-- Table with stripped rows -->
               <div class="table-responsive">
-                <table class="table" id="table-ventas">
+                <table class="table" id="table-transacciones">
                   <thead>
                     <tr>
                       <th scope="col">ID</th>
                       <th scope="col">Usuario</th>
-                      <th scope="col">Fecha de transaccion</th>
-                      <th scope="col">Tipo de Transaccion</th>
+                      <th scope="col">Fecha de Transaccion</th>
+                      <th scope="col">Tipo</th>
                       <th scope="col">Sucursal</th>
+                      <th scope="col">Nombre</th>
+                      <th scope="col">Apellido</th>
                       <th scope="col">Total</th>
                       <th scope="col">Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
-
+                    
                   </tbody>
                 </table>
                 <!-- End Table with stripped rows -->
               </div>
-              <input type="hidden" name="url_verificar_apertura_activa_usuario" id="url_verificar_apertura_activa_usuario" value="{% url 'store:ver_ape_act_user' %}">
-              <input type="hidden" name="url_crear_venta" id="url_crear_venta" value="{% url 'store:crear_venta' %}">
-              <input type="hidden" name="url_listar_ventas_json" id="url_listar_ventas_json" value="{% url 'store:list_venta_json' %}">
+              <input type="hidden" name="url_lista_trans_json" id="url_lista_trans_json" value="{% url 'store:list_trans_json' %}">
             </div>
           </div>
 
@@ -71,6 +71,6 @@
   <script src="{% static 'assets/js/jquery-mask/jquery.mask.js' %}"></script>
   <script src="{% static 'assets/js/select2/select2.js' %}"></script>
   <script src="{% static 'assets/js/toastr/toastr.min.js' %}"></script>
-  <script src="{% static 'assets/js/proces_venta/listar_venta.js' %}"></script>
+  <script src="{% static 'assets/js/proces_transacciones/listar_transacciones.js' %}"></script>
 
   {% endblock %}
