@@ -81,12 +81,12 @@ class TipoDenominacion(models.Model):
     tipo_denominacion=models.CharField(max_length=50, help_text="nombre de la denominacion")
 
     def __str__(self):
-        return "%s"(str(self.tipo_denominacion))
+        return "%s"%(str(self.tipo_denominacion))
 
 class Denominaciones(models.Model):
     denominacion=models.CharField(max_length=50, help_text="nombre de la denominacion")
     precio=models.FloatField(help_text="ingrese el precio de la denominacion", null=True)
-    tipo_denominacion=models.ForeignKey(TipoTransaccion, on_delete=models.SET_NULL, null=True)
+    tipo_denominacion=models.ForeignKey(TipoDenominacion, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return "%s->%s"%(str(self.denominacion), str(self.precio))

@@ -1,9 +1,52 @@
-from django.views.generic import ListView
+from django.views.generic import ListView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.utils import timezone
-from ventas.models import Transaccion
+from ventas.models import Transaccion, Denominaciones, TipoTransaccion
 from django.http import JsonResponse
+
+class ViewCrearTransaccion(LoginRequiredMixin, TemplateView):
+    template_name="proces_transacciones/crear_transaccion.html"
+    login_url="/ventas/login/"
+    redirect_field_name="redirect_to"
+
+    def get_context_data(self, **kwargs):
+        context=super(ViewCrearTransaccion, self).get_context_data(**kwargs)
+ 
+        
+        tipo_transacciones=TipoTransaccion.objects.all()
+        deno_1=Denominaciones.objects.get(Q(denominacion='$1') & Q(tipo_denominacion__tipo_denominacion="Billete"))
+        deno_2=Denominaciones.objects.get(Q(denominacion='$2') & Q(tipo_denominacion__tipo_denominacion="Billete"))
+        deno_5=Denominaciones.objects.get(Q(denominacion='$5') & Q(tipo_denominacion__tipo_denominacion="Billete"))
+        deno_10=Denominaciones.objects.get(Q(denominacion='$10') & Q(tipo_denominacion__tipo_denominacion="Billete"))
+        deno_20=Denominaciones.objects.get(Q(denominacion='$20') & Q(tipo_denominacion__tipo_denominacion="Billete"))
+        deno_50=Denominaciones.objects.get(Q(denominacion='$50') & Q(tipo_denominacion__tipo_denominacion="Billete"))
+        deno_100=Denominaciones.objects.get(Q(denominacion='$100') & Q(tipo_denominacion__tipo_denominacion="Billete"))
+
+        deno_1_moneda=Denominaciones.objects.get(Q(denominacion='$1') & Q(tipo_denominacion__tipo_denominacion="Moneda"))
+        deno_01_moneda=Denominaciones.objects.get(Q(denominacion='$0.01') & Q(tipo_denominacion__tipo_denominacion="Moneda"))
+        deno_05_moneda=Denominaciones.objects.get(Q(denominacion='$0.05') & Q(tipo_denominacion__tipo_denominacion="Moneda"))
+        deno_010_moneda=Denominaciones.objects.get(Q(denominacion='$0.10') & Q(tipo_denominacion__tipo_denominacion="Moneda"))
+        deno_025_moneda=Denominaciones.objects.get(Q(denominacion='$0.25') & Q(tipo_denominacion__tipo_denominacion="Moneda"))
+        deno_050_moneda=Denominaciones.objects.get(Q(denominacion='$0.50') & Q(tipo_denominacion__tipo_denominacion="Moneda"))
+        
+        context['deno_1']=deno_1
+        context["deno_2"]=deno_2
+        context["deno_5"]=deno_5
+        context["deno_10"]=deno_10
+        context["deno_20"]=deno_20
+        context["deno_50"]=deno_50
+        context["deno_100"]=deno_100
+
+        context["deno_1_moneda"]=deno_1_moneda
+        context["deno_01_moneda"]=deno_01_moneda
+        context["deno_05_moneda"]=deno_05_moneda
+        context["deno_010_moneda"]=deno_010_moneda
+        context["deno_025_moneda"]=deno_025_moneda
+        context["deno_050_moneda"]=deno_050_moneda
+        context["tipo_transacciones"]=tipo_transacciones
+        return context
+
 
 class ListarTransacciones(LoginRequiredMixin, ListView):
     login_url="/ventas/login/"

@@ -404,6 +404,19 @@
               </ul>
             </li><!-- End Forms Nav -->
             <li class="nav-item">
+              <a class="nav-link collapsed" data-bs-target="#transacciones-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-shop"></i><span>Administrar Transacciones</span><i class="bi bi-chevron-down ms-auto"></i>
+              </a>
+              <ul id="transacciones-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                <li class="nav-item">
+                  <a class="nav-link collapsed" href="{% url 'store:list_trans' %}">
+                    <i class="bi bi-card-list"></i>
+                    <span>Transacciones</span>
+                  </a>
+                </li><!-- End Register Page Nav -->
+              </ul>
+            </li><!-- End Forms Nav -->
+            <li class="nav-item">
               <a class="nav-link collapsed" data-bs-target="#ventas-nav" data-bs-toggle="collapse" href="#">
                 <i class="bi bi-shop"></i><span>Administrar Ventas</span><i class="bi bi-chevron-down ms-auto"></i>
               </a>
@@ -412,12 +425,6 @@
                   <a class="nav-link collapsed" href="{% url 'store:list_venta' %}">
                     <i class="bi bi-card-list"></i>
                     <span>Ventas</span>
-                  </a>
-                </li><!-- End Register Page Nav -->
-                <li class="nav-item">
-                  <a class="nav-link collapsed" href="{% url 'store:list_trans' %}">
-                    <i class="bi bi-card-list"></i>
-                    <span>Transacciones</span>
                   </a>
                 </li><!-- End Register Page Nav -->
               </ul>
