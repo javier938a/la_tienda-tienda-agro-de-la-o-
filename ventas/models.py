@@ -71,11 +71,12 @@ class Transaccion(models.Model):
     sucursal=models.ForeignKey(Sucursal, on_delete=models.SET_NULL, null=True)
     nombre_cliente=models.CharField(max_length=50, help_text="Nombre del cliente")
     apellido_cliente=models.CharField(max_length=50, help_text="Apellido del cliente")
+    concepto=models.TextField(help_text="concepto sobre que trata la transaccion", null=True)
     fecha_transaccion=models.DateTimeField(auto_now=True, help_text="Fecha y hora de la transaccion")
     total=models.FloatField(help_text="total de la transaccion", null=True)
 
     def __str__(self):
-        return "%s -> %s"%(str(self.usuario), str(self.total))
+        return "%s -> %s -> %s"%(str(self.usuario),self.concepto, str(self.total))
 
 class TipoDenominacion(models.Model):
     tipo_denominacion=models.CharField(max_length=50, help_text="nombre de la denominacion")

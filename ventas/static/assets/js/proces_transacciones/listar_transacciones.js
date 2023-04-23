@@ -35,6 +35,7 @@ $(document).ready(function(){
         {'data':'sucursal'},
         {'data':'nombre_cliente'},
         {'data':'apellido_cliente'},
+        {'data':'concepto'},
         {'data':'total'},
         {'data':'action'}
       ]

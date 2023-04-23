@@ -121,6 +121,7 @@ def obtener_listas_transacciones_json(request):
             'sucursal':str(sucursal_usuario),
             'nombre_cliente':str(transaccion.nombre_cliente),
             'apellido_cliente':str(transaccion.apellido_cliente),
+            'concepto':str(transaccion.concepto),
             'total':"$"+str(transaccion.total),
             'action':action
         })
