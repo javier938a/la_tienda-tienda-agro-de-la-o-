@@ -161,7 +161,7 @@ def obtener_listas_transacciones_json(request):
     totalRecords=0
     totalRecordWithFilter=0
     if searchValue!='':
-        condiciones_de_busqueda=Q(fecha_transaccion__date__icontains=searchValue) | Q(usuario__username__icontains=searchValue) | Q(nombre_cliente__icontains=searchValue) | Q(apellido_cliente__icontains=searchValue)
+        condiciones_de_busqueda=Q(concepto__icontains=searchValue) | Q(tipo_transaccion__nombre_tipo_transaccion__icontains=searchValue)| Q(sucursal__descripcion__icontains=searchValue) | Q(correlativo__icontains=searchValue) | Q(fecha_transaccion__date__icontains=searchValue) | Q(usuario__username__icontains=searchValue) | Q(nombre_cliente__icontains=searchValue) | Q(apellido_cliente__icontains=searchValue)
     if tipo_usuario=="administrador":
         totalRecords=Transaccion.objects.all().count()
     else:

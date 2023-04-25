@@ -74,6 +74,7 @@ $(document).ready(function(){
                     console.log(data.res)
                     let resultado=data.res;
                     if(resultado){
+                        $("#btn_guardar_transaccion").prop('disabled', true);
                         setTimeout(function(){
                             window.location.href=$("#url_list_trans").val();
                         }, 1000)
