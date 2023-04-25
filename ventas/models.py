@@ -61,22 +61,34 @@ class Categoria(models.Model):
         return "%s"%str(self.categoria) 
 
 class TipoTransaccion(models.Model):
-    tipo_transaccion=models.CharField(max_length=50, help_text="tipo de transaccion")
+    nombre_tipo_transaccion=models.CharField(max_length=50, help_text="tipo de transaccion", null=True)
 
     def __str__(self):
-        return "%s"%(self.tipo_transaccion)
+        return "%s"%(self.nombre_tipo_transaccion)
+    
+class Correlativos(models.Model):
+    sucursal=models.ForeignKey(Sucursal, on_delete=models.SET_NULL, null=True)
+    nombre_documento=models.CharField(max_length=100, help_text="Ingrese el nombre del documento")
+    numero_correlativo_actual=models.CharField(max_length=100,help_text="Ingrese el numero de correlativo actual")
+
+    def __str__(self):
+        return "%s --> %s"%(self.nombre_documento, self.numero_correlativo_actual)
+
 class Transaccion(models.Model):
-    tipo_transacion=models.ForeignKey(TipoTransaccion, on_delete=models.SET_NULL, null=True)
+    correlativo=models.CharField(max_length=50, help_text="numero de transaccion", null=True)
+    tipo_transaccion=models.ForeignKey(TipoTransaccion, on_delete=models.SET_NULL, null=True)
     usuario=models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     sucursal=models.ForeignKey(Sucursal, on_delete=models.SET_NULL, null=True)
     nombre_cliente=models.CharField(max_length=50, help_text="Nombre del cliente")
     apellido_cliente=models.CharField(max_length=50, help_text="Apellido del cliente")
     concepto=models.TextField(help_text="concepto sobre que trata la transaccion", null=True)
     fecha_transaccion=models.DateTimeField(auto_now=True, help_text="Fecha y hora de la transaccion")
+    total_billete=models.FloatField(help_text="el total en billete", null=True)
+    total_moneda=models.FloatField(help_text="El total moneda", null=True)
     total=models.FloatField(help_text="total de la transaccion", null=True)
 
     def __str__(self):
-        return "%s -> %s -> %s"%(str(self.usuario),self.concepto, str(self.total))
+        return "%s -> %s"%(str(self.usuario),str(self.concepto))
 
 class TipoDenominacion(models.Model):
     tipo_denominacion=models.CharField(max_length=50, help_text="nombre de la denominacion")
@@ -99,7 +111,7 @@ class DetalleTransaccion(models.Model):
     total=models.FloatField(help_text="Ingrese el total por denominacion", null=True)
 
     def __str__(self):
-        return "Billete:%s-->Cantidad:%s-->Total%s"(str(self.denominacion), str(self.cantidad), str(self.total))
+        return "Billete:%s-->Cantidad:%s-->Total%s"%(str(self.denominacion), str(self.cantidad), str(self.total))
 
 class Producto(models.Model):
     proveedor=models.ForeignKey(Proveedor, help_text="Seleccione el proveedor", on_delete=models.SET_NULL, null=True)
@@ -115,14 +127,6 @@ class Producto(models.Model):
     def __str__(self) -> str:
         return "%s"%self.nombre_producto
 
-
-class Correlativos(models.Model):
-    sucursal=models.ForeignKey(Sucursal, on_delete=models.SET_NULL, null=True)
-    nombre_documento=models.CharField(max_length=100, help_text="Ingrese el nombre del documento")
-    numero_correlativo_actual=models.CharField(max_length=100,help_text="Ingrese el numero de correlativo actual")
-
-    def __str__(self):
-        return "%s --> %s"%(self.nombre_documento, self.numero_correlativo_actual)
 
 
 class Presentacion(models.Model):

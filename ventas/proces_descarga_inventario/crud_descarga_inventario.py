@@ -107,13 +107,13 @@ def listar_productos_a_descargar_por_sucursal_autocomplete(request):
         lista_productos=ProductoStockSucursal.objects.filter(sucursal=sucursal).filter(Q(producto__nombre_producto__icontains=clave)|Q(producto__descripcion__icontains=clave)|Q(producto__codigo_producto=clave))
         for prod in lista_productos:
             if prod.producto!= None:
-                fila=str(prod.id)+'|'+str(prod.producto.nombre_producto)+'|'+str(prod.producto.descripcion)+'|'+str(prod.cantidad)
+                fila=str(prod.id)+'|'+str(prod.producto.nombre_producto)+'|'+str(prod.presentacion)+'|'+str(prod.cantidad)
                 datos.append(fila)
     else:
         lista_productos=ProductoStockSucursal.objects.filter(sucursal=sucursal)
         for prod in lista_productos:
             if prod.producto!= None:
-                fila=str(prod.id)+'|'+str(prod.producto.nombre_producto)+'|'+str(prod.producto.descripcion)+'|'+str(prod.cantidad)
+                fila=str(prod.id)+'|'+str(prod.producto.nombre_producto)+'|'+str(prod.presentacion)+'|'+str(prod.cantidad)
                 datos.append(fila)
     
     return JsonResponse(datos, safe=False)

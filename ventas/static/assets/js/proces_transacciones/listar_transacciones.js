@@ -29,9 +29,10 @@ $(document).ready(function(){
       },
       'columns':[
         {'data':'id'},
+        {'data':'correlativo'},
         {'data':'usuario'},
         {'data':'fecha_transaccion'},
-        {'data':'tipo_transaccion'},
+        {'data':'tipo_de_transaccion'},
         {'data':'sucursal'},
         {'data':'nombre_cliente'},
         {'data':'apellido_cliente'},

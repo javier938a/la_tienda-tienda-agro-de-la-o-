@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block titulo %}
+  <title>Detalle Transaccion</title>
+{% endblock %}
+
+{% block contenido %}
+    <section class="section">
+        <div class="row align-items-top">
+            <div class="col-lg-2">
+
+            </div>
+            <div class="col-lg-8">
+    
+              <!-- Default Card -->
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Detalle de Transaccion</h5>
+                  {% if transaccion %}
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                      <tr>
+                          <th scope="col" colspan="4">Transaccion realizada el {{ venta.fecha_venta }}</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr>                            
+                          <td>Usuario:</td>
+                          <td>{{ transaccion.usuario }}</td>
+                          <td>No de transaccion</td>
+                          <td>{{ transaccion.correlativo }}</td>
+                      </tr>
+                      <tr>                        
+                          <td>Sucursal:</td>
+                          <td>{{ transaccion.sucursal }}</td>
+                          <td>Fecha de venta:</td>
+                          <td>{{ transaccion.fecha_transaccion }}</td>
+                      </tr>
+                      <tr>                        
+                        <td>Nombre del cliente:</td>
+                        <td>{{ transaccion.nombre_cliente }}</td>
+                        <td>Apellido del cliente:</td>
+                        <td>{{ transaccion.apellido_cliente }}</td>
+                     </tr>
+                     <tr>                        
+                        <td>Concepto:</td>
+                        <td>{{ transaccion.concepto }}</td>
+                        <td></td>
+                        <td></td>
+                     </tr>
+                  </tbody>
+                  </table>
+                  </div>
+                    {% endif %}
+                </div>
+              </div><!-- End Default Card -->
+    
+              <!-- Card with header and footer -->
+              <div class="card">
+                <div class="card-header">Detalle</div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th scope="col">ID</th>
+                          <th scope="col">Denominacion</th>
+                          <th scope="col"></th>
+                          <th scope="col">cantidad</th>
+                          <th scope="col">total</th>
+                        </tr>
+                      </thead>
+                      {% if detalle_transaccion %}
+                        <tbody>                      
+                                    {% for detalle_deno in detalle_transaccion %}
+                                        <tr>
+                                            <th scope="row">{{ detalle_deno.id }}</th>
+                                            <td>{{ detalle_deno.denominacion.denominacion }}</td>
+                                            <td>X</td>
+                                            <td>{{ detalle_deno.cantidad }}</td>
+                                            <td>${{ detalle_deno.total }}</td>
+                                        </tr>
+                                    {% endfor %} 
+                    {% else %}
+                            <p>No hay productos registrados para esta venta</p>                        
+                    {% endif %}    
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th scope="row" colspan="4" style="text-align: right;">Total</th>
+                                <td>${{ transaccion.total }}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                  </div>
+                </div>
+                <div class="card-footer">
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a class="btn btn-success" href="{% url 'store:list_trans' %}">Salir</a>                        
+                    </div>                    
+                </div>
+              </div><!-- End Card with header and footer -->
+            </div>
+        </div>
+    
+    </div>
+    </section>
+
+
+{% endblock %}
+
+{% load  static %}
+{% block extra-script %}
+  
+    <script src="{% static 'assets/js/proces_venta/detalle_venta.js' %}"></script>
+{% endblock %}

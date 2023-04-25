@@ -20,7 +20,7 @@ from .views import ListarDevolucionesVentas, ViewCrearDevolucionVenta, ViewDetal
 from .views import ListarAperturaCorte, CrearApertura, ViewRealizarCorteCaja, ViewCierreDeCaja, proces_efectuar_apertura_caja, proces_verificar_si_hay_apertura_de_caja, verificar_apertura_activa_de_usuario, efectuar_corte_de_caja, efectuar_cierre_de_caja, obtener_lista_apertura_cortes_json
 from .views import ListarCajas, CrearCaja, EditarCaja, EliminarCaja
 from .views import ListarEntradasSalidas, CrearEntradaSalida, EditarEntradaSalida, EliminarEntradaSalida, DetalleEntradaSalida
-from .views import ListarTransacciones, obtener_listas_transacciones_json, ViewCrearTransaccion
+from .views import ListarTransacciones, obtener_listas_transacciones_json, ViewCrearTransaccion, efectuar_transaccion, DetailTransaccion
 from .views import agregar_producto_a_detalle_por_codigo
 from .views import imprimir_ticket, Obtener_ticket
 from .views import ViewSelectReporteVentas, ViewSelectReporteAperturas, ViewSelectReporteInventario, PrintViewReporteVentas, ViewSelectReporteEntradaSalidasEfectivo, PrintViewReporteAperturas, PrintViewReporteEntradaSalida, PrintViewReporteInventario
@@ -128,7 +128,9 @@ urlpatterns = [
     path('entradas_salidas_efectivo/detalle_entrada_salida_efectivo/<int:pk>', DetalleEntradaSalida.as_view(), name="detalle_entrada_salida"),
     path('ventas/transacciones', ListarTransacciones.as_view(), name="list_trans"),
     path('ventas/crear_transaccion', ViewCrearTransaccion.as_view(), name="crear_trans"),
+    path('ventas/detalle_transaccion/<int:pk>', DetailTransaccion.as_view(), name="detalle_trans"),
     path('ventas/lista_transacciones_json', obtener_listas_transacciones_json, name="list_trans_json"),
+    path('ventas/efectuar_transaccion_json', efectuar_transaccion, name="efectuar_trans_json"),
     path('reporte/select_reporte_ventas', ViewSelectReporteVentas.as_view(), name="reporte_venta_view"),
     path('reporte/select_reporte_aperturas', ViewSelectReporteAperturas.as_view(), name="report_ape"),
     path('reporte/select_reporte_entrada_salida_efectivo', ViewSelectReporteEntradaSalidasEfectivo.as_view(), name='report_ent_sal'), 

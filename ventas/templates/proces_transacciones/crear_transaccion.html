@@ -41,12 +41,14 @@
                 {% csrf_token %}
                   <div class="row">
                     <div class="col-md-4 form-group">
+                      <input type="hidden" name="url_efectuar_trans_json" id="url_efectuar_trans_json" value="{% url 'store:efectuar_trans_json' %}">
+                      <input type="hidden" name="url_list_trans" id="url_list_trans" value="{% url 'store:list_trans' %}">
                       <label for="">Tipo de Transaccion</label>
                       <select class="form-control" name="tipo_transaccion" id="tipo_transaccion">
                         <option value="" selected>seleccione</option>
                         {% if tipo_transacciones %}
                           {% for tipo_transaccion in tipo_transacciones %}
-                            <option value="{{ tipo_transaccion.id }}">{{ tipo_transaccion.tipo_transaccion }}</option>
+                            <option value="{{ tipo_transaccion.id }}">{{ tipo_transaccion.nombre_tipo_transaccion }}</option>
                           {% endfor %}
                         {% endif %}
                       </select>
@@ -80,12 +82,17 @@
                     </div>
                   </div>
                   <div class="row">
-                    <div class="col-md-9">
+                    <div class="col-md-7">
 
                     </div>
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <button id="limpiar" class="btn-primary btn form-control">Limpiar</button>
+                        </div>
+                      </div>
                     <div class="col-md-2">
                       <div class="form-group">
-                          <button class="btn btn-success form-control">Guardar</button>
+                          <button id="btn_guardar_transaccion" class="btn btn-success form-control">Guardar</button>
                       </div>
                     </div>
                     <div class="col-md-1">
@@ -126,85 +133,85 @@
                                   {% if deno_1 %}
                                     <td>
                                       <input class="form-control precio_deno1_b" type="text" value="{{ deno_1.denominacion }}" disabled>
-                                      <input class="id_deno" type="hidden" value="{{ deno_1.id}}">
+                                      <input class="id_deno1_b" type="hidden" value="{{ deno_1.id}}">
                                     </td>
                                     <td><input class="form-control" type="text" value="X" disabled></td>
                                     <td><input class="form-control cantidad1_b" type="text" value="" ></td>
                                     <td><input class="form-control" type="text" value="=" disabled></td>
-                                    <td><input class="form-control total1_b" type="text" value="" disabled></td>
+                                    <td><input class="form-control total1_b" type="text" value="$0.0" disabled></td>
                                   {% endif %}
                                   {% if deno_20 %}
                                     <td>
                                       <input class="form-control precio_deno2_b" type="text" value="{{ deno_20.denominacion }}" disabled>
-                                      <input class="id_deno" type="hidden" value="{{ deno_20.id}}">
+                                      <input class="id_deno2_b" type="hidden" value="{{ deno_20.id}}">
                                     </td>
                                     <td><input class="form-control" type="text" value="X" disabled></td>
                                     <td><input class="form-control cantidad2_b" type="text" value="" ></td>
                                     <td><input class="form-control" type="text" value="=" disabled></td>
-                                    <td><input class="form-control total2_b" type="text" value="" disabled></td>
+                                    <td><input class="form-control total2_b" type="text" value="$0.0" disabled></td>
                                   {% endif %}
                                 </tr>
                                 <tr>
                                   {% if deno_2 %}
                                     <td>
                                       <input class="form-control precio_deno1_b" type="text" value="{{ deno_2.denominacion }}" disabled>
-                                      <input class="id_deno" type="hidden" value="{{ deno_2.id}}">
+                                      <input class="id_deno1_b" type="hidden" value="{{ deno_2.id}}">
                                     </td>
                                     <td><input class="form-control" type="text" value="X" disabled></td>
                                     <td><input class="form-control cantidad1_b" type="text" value="" ></td>
                                     <td><input class="form-control" type="text" value="=" disabled></td>
-                                    <td><input class="form-control total1_b" type="text" value="" disabled></td>
+                                    <td><input class="form-control total1_b" type="text" value="$0.0" disabled></td>
                                   {% endif %}
                                   {% if deno_50 %}
                                     <td>
                                       <input class="form-control precio_deno2_b" type="text" value="{{ deno_50.denominacion }}" disabled>
-                                      <input class="id_deno" type="hidden" value="{{ deno_50.id}}">
+                                      <input class="id_deno2_b" type="hidden" value="{{ deno_50.id}}">
                                     </td>
                                     <td><input class="form-control" type="text" value="X" disabled></td>
                                     <td><input class="form-control cantidad2_b" type="text" value="" ></td>
                                     <td><input class="form-control" type="text" value="=" disabled></td>
-                                    <td><input class="form-control total2_b" type="text" value="" disabled></td>
+                                    <td><input class="form-control total2_b" type="text" value="$0.0" disabled></td>
                                   {% endif %}
                                 </tr>
                                 <tr>
                                   {% if deno_5 %}
                                     <td>
                                       <input class="form-control precio_deno1_b" type="text" value="{{ deno_5.denominacion }}" disabled>
-                                      <input class="id_deno" type="hidden" value="{{ deno_5.id}}">
+                                      <input class="id_deno1_b" type="hidden" value="{{ deno_5.id}}">
                                     </td>
                                     <td><input class="form-control" type="text" value="X" disabled></td>
                                     <td><input class="form-control cantidad1_b" type="text" value="" ></td>
                                     <td><input class="form-control" type="text" value="=" disabled></td>
-                                    <td><input class="form-control total1_b" type="text" value="" disabled></td>
+                                    <td><input class="form-control total1_b" type="text" value="$0.0" disabled></td>
                                   {% endif %}
                                   {% if deno_100 %}
                                     <td>
                                       <input class="form-control precio_deno2_b" type="text" value="{{ deno_100.denominacion }}" disabled>
-                                      <input class="id_deno" type="hidden" value="{{ deno_100.id}}">
+                                      <input class="id_deno2_b" type="hidden" value="{{ deno_100.id}}">
                                     </td>                                      
                                     <td><input class="form-control" type="text" value="X" disabled></td>
                                     <td><input class="form-control cantidad2_b" type="text" value="" ></td>
                                     <td><input class="form-control" type="text" value="=" disabled></td>
-                                    <td><input class="form-control total2_b" type="text" value="" disabled></td>
+                                    <td><input class="form-control total2_b" type="text" value="$0.0" disabled></td>
                                   {% endif %}
                                 </tr>
                                 <tr>
                                   {% if deno_10 %}
                                     <td>
                                       <input class="form-control precio_deno1_b" type="text" value="{{ deno_10.denominacion }}" disabled>
-                                      <input class="id_deno" type="hidden" value="{{ deno_10.id}}">
+                                      <input class="id_deno1_b" type="hidden" value="{{ deno_10.id}}">
                                     </td>
                                     <td><input class="form-control" type="text" value="X" disabled></td>
                                     <td><input class="form-control cantidad1_b" type="text" value="" ></td>
                                     <td><input class="form-control" type="text" value="=" disabled></td>
-                                    <td><input class="form-control total1_b" type="text" value="" disabled></td>
+                                    <td><input class="form-control total1_b" type="text" value="$0.0" disabled></td>
                                   {% endif %}
                                 </tr>                      
                           </tbody>
                           <tfoot>
                             <tr>
                               <td colspan="7">Total Billete</td>
-                              <td colspan="3"><input id="total_billete" type="text" class="form-control" disabled></td>
+                              <td colspan="3"><input id="total_billete" type="text" class="form-control" value="$0.0" disabled></td>
                             </tr>
                           </tfoot>
                         </table> 
@@ -230,77 +237,77 @@
                               {% if deno_1_moneda %}
                                 <td>
                                   <input class="form-control precio_deno1_m" type="text" value="{{ deno_1_moneda.denominacion }}" disabled>
-                                  <input class="id_deno" type="hidden" value="{{ deno_1_moneda.id}}">
+                                  <input class="id_deno1_m" type="hidden" value="{{ deno_1_moneda.id}}">
                                 </td>
                                 <td><input class="form-control" type="text" value="X" disabled></td>
                                 <td><input class="form-control cantidad1_m" type="text" value="" ></td>
                                 <td><input class="form-control" type="text" value="=" disabled></td>
-                                <td><input class="form-control total1_m" type="text" value="" disabled></td>
+                                <td><input class="form-control total1_m" type="text" value="$0.0" disabled></td>
                               {% endif %}
                               {% if deno_010_moneda %}
                                 <td>
                                   <input class="form-control precio_deno2_m" type="text" value="{{ deno_010_moneda.denominacion }}" disabled>
-                                  <input class="id_deno" type="hidden" value="{{ deno_010_moneda.id}}">
+                                  <input class="id_deno2_m" type="hidden" value="{{ deno_010_moneda.id}}">
                                 </td>
                                 <td><input class="form-control" type="text" value="X" disabled></td>
                                 <td><input class="form-control cantidad2_m" type="text" value="" ></td>
                                 <td><input class="form-control" type="text" value="=" disabled></td>
-                                <td><input class="form-control total2_m" type="text" value="" disabled></td>
+                                <td><input class="form-control total2_m" type="text" value="$0.0" disabled></td>
                               {% endif %}
                             </tr>
                             <tr>
                               {% if deno_050_moneda %}
                                 <td>
                                   <input class="form-control precio_deno1_m" type="text" value="{{ deno_050_moneda.denominacion }}" disabled>
-                                  <input class="id_deno" type="hidden" value="{{ deno_050_moneda.id}}">
+                                  <input class="id_deno1_m" type="hidden" value="{{ deno_050_moneda.id}}">
                                 </td>
                                 <td><input class="form-control" type="text" value="X" disabled></td>
                                 <td><input class="form-control cantidad1_m" type="text" value="" ></td>
                                 <td><input class="form-control" type="text" value="=" disabled></td>
-                                <td><input class="form-control total1_m" type="text" value="" disabled></td>
+                                <td><input class="form-control total1_m" type="text" value="$0.0" disabled></td>
                               {% endif %}
                               {% if deno_05_moneda %}
                                 <td>
                                   <input class="form-control precio_deno2_m" type="text" value="{{ deno_05_moneda.denominacion }}" disabled>
-                                  <input class="id_deno" type="hidden" value="{{ deno_05_moneda.id}}">
+                                  <input class="id_deno2_m" type="hidden" value="{{ deno_05_moneda.id}}">
                                 </td>
                                 <td><input class="form-control" type="text" value="X" disabled></td>
                                 <td><input class="form-control cantidad2_m" type="text" value="" ></td>
                                 <td><input class="form-control" type="text" value="=" disabled></td>
-                                <td><input class="form-control total2_m" type="text" value="" disabled></td>
+                                <td><input class="form-control total2_m" type="text" value="$0.0" disabled></td>
                               {% endif %}
                             </tr>
                             <tr>
                               {% if deno_025_moneda %}
                                 <td>
                                   <input class="form-control precio_deno1_m" type="text" value="{{ deno_025_moneda.denominacion }}" disabled>
-                                  <input class="id_deno" type="hidden" value="{{ deno_025_moneda.id}}">
+                                  <input class="id_deno1_m" type="hidden" value="{{ deno_025_moneda.id}}">
                                 </td>
                                 <td><input class="form-control" type="text" value="X" disabled></td>
                                 <td><input class="form-control cantidad1_m" type="text" value="" ></td>
                                 <td><input class="form-control" type="text" value="=" disabled></td>
-                                <td><input class="form-control total1_m" type="text" value="" disabled></td>
+                                <td><input class="form-control total1_m" type="text" value="$0.0" disabled></td>
                               {% endif %}
                               {% if deno_01_moneda %}
                                 <td>
                                   <input class="form-control precio_deno2_m" type="text" value="{{ deno_01_moneda.denominacion }}" disabled>
-                                  <input class="id_deno" type="hidden" value="{{ deno_01_moneda.id}}">
+                                  <input class="id_deno2_m" type="hidden" value="{{ deno_01_moneda.id}}">
                                 </td>
                                 <td><input class="form-control" type="text" value="X" disabled></td>
                                 <td><input class="form-control cantidad2_m" type="text" value="" ></td>
                                 <td><input class="form-control" type="text" value="=" disabled></td>
-                                <td><input class="form-control total2_m" type="text" value="" disabled></td>
+                                <td><input class="form-control total2_m" type="text" value="$0.0" disabled></td>
                               {% endif %}
                             </tr>
                           </tbody>
                           <tfoot>
                             <tr>
                               <td colspan="7">Total Moneda</td>
-                              <td colspan="3"><input id="total_moneda" type="text" class="form-control" disabled></td>
+                              <td colspan="3"><input id="total_moneda" type="text" class="form-control" value="$0.0" disabled></td>
                             </tr>
                             <tr>
                               <td colspan="7">Total Billete mas Moneda</td>
-                              <td colspan="3"><input id="total_billete_moneda" type="text" class="form-control" disabled></td>
+                              <td colspan="3"><input id="total_billete_moneda" type="text" class="form-control" value="$0.0" disabled></td>
                             </tr>
                           </tfoot>
                         </table>                       

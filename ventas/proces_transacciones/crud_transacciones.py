@@ -1,9 +1,12 @@
-from django.views.generic import ListView, TemplateView
+from django.views.generic import ListView, TemplateView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.utils import timezone
-from ventas.models import Transaccion, Denominaciones, TipoTransaccion
+from ventas.models import DetalleTransaccion, Transaccion, Denominaciones, TipoTransaccion
 from django.http import JsonResponse
+from ventas.models import Correlativos
+from django.urls import reverse
+import json
 
 class ViewCrearTransaccion(LoginRequiredMixin, TemplateView):
     template_name="proces_transacciones/crear_transaccion.html"
@@ -48,6 +51,82 @@ class ViewCrearTransaccion(LoginRequiredMixin, TemplateView):
         return context
 
 
+def efectuar_transaccion(request):
+    res=False
+    correlativos=Correlativos.objects.filter(sucursal=request.user.sucursal).filter(nombre_documento="transaccion")[0]
+    num_correlativo_actual=int(correlativos.numero_correlativo_actual)
+    nuevo_correlativo_entero=num_correlativo_actual + 1
+    nuevo_numero_correlativo=str(nuevo_correlativo_entero).zfill(8)
+    Correlativos.objects.filter(sucursal=request.user.sucursal).filter(nombre_documento="transaccion").update(numero_correlativo_actual=nuevo_numero_correlativo)
+    
+    sucursal=request.user.sucursal
+    id_tipo_transaccion=request.POST.get('id_tipo_transaccion')
+    print(id_tipo_transaccion)
+    tipo_transaccion=TipoTransaccion.objects.get(id=id_tipo_transaccion)
+    print(tipo_transaccion)
+    nombre_cliente=request.POST.get('nombre_cliente')
+    apellido_cliente=request.POST.get('apellido_cliente')
+    print(apellido_cliente)
+    print(nombre_cliente)
+    concepto=request.POST.get('concepto')
+    total_billete=request.POST.get('total_billete')
+    total_moneda=request.POST.get('total_moneda')
+    total_billete_moneda=request.POST.get('total_billete_moneda')
+    print(request.user)
+    detalle_transaccion= json.loads(request.POST.get("detalle_transaccion"))
+    print(request.POST)
+    transaccion_objeto=Transaccion.objects.get_or_create(
+        correlativo=nuevo_numero_correlativo,
+        tipo_transaccion=tipo_transaccion,
+        usuario=request.user,
+        sucursal=sucursal,
+        nombre_cliente=nombre_cliente,
+        apellido_cliente=apellido_cliente,
+        concepto=concepto,
+        total_billete=float(total_billete),
+        total_moneda=float(total_moneda),
+        total=float(total_billete_moneda)
+    )
+    
+    transaccion_guardada=transaccion_objeto[0]
+    resultado_transaccion=transaccion_objeto[1]
+    print(transaccion_guardada)
+    
+    cuenta_deno=0
+    if resultado_transaccion==True:
+        print(detalle_transaccion)
+        for deno_detalle in detalle_transaccion:
+            print("Hello word")            
+            id_denominacion=deno_detalle['id_denominacion']
+            print(type(id_denominacion))
+            denominacion=Denominaciones.objects.get(id=id_denominacion)
+            cantidad=deno_detalle['cantidad']
+            total=deno_detalle['total']
+            if cantidad =='':
+                DetalleTransaccion.objects.create(
+                    transaccion=transaccion_guardada,
+                    denominacion=denominacion,
+                    cantidad="0",
+                    total="0.0"
+                )
+            else:
+                DetalleTransaccion.objects.create(
+                    transaccion=transaccion_guardada,
+                    denominacion=denominacion,
+                    cantidad=cantidad,
+                    total=total
+                )   
+            cuenta_deno = cuenta_deno + 1
+        if cuenta_deno==len(detalle_transaccion):
+            res=True
+        datos={
+            'res':res
+        }
+
+    return JsonResponse(datos, safe=False)
+
+
+
 class ListarTransacciones(LoginRequiredMixin, ListView):
     login_url="/ventas/login/"
     redirect_field_name="redirect_to"
@@ -55,6 +134,19 @@ class ListarTransacciones(LoginRequiredMixin, ListView):
     context_object_name="transacciones"
     model=Transaccion
 
+class DetailTransaccion(LoginRequiredMixin, DetailView):
+    login_url="/ventas/login/"
+    redirect_field_name="redirect_to"
+    template_name="proces_transacciones/detalle_transaccion.html"
+    context_object_name="transaccion"
+    model=Transaccion
+
+    def get_context_data(self, **kwargs):
+        context=super(DetailTransaccion, self).get_context_data(**kwargs)
+        transaccion=Transaccion.objects.get(id=self.kwargs['pk'])
+        print(DetalleTransaccion.objects.filter(transaccion=transaccion))
+        context['detalle_transaccion']=DetalleTransaccion.objects.filter(transaccion=transaccion)
+        return context
 
 def obtener_listas_transacciones_json(request):
     data=[]
@@ -102,7 +194,7 @@ def obtener_listas_transacciones_json(request):
         totalRecordWithFilter=transacciones.count()
     
     for transaccion in transacciones:
-        url_detalle=""
+        url_detalle=reverse("store:detalle_trans", args=[transaccion.pk])
         action="""
                 <div class="btn-group">
                     <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -114,10 +206,11 @@ def obtener_listas_transacciones_json(request):
                 </div> 
               """%(url_detalle)    
         data.append({
-            'id':str(transaccion.id),
+            'id':str(transaccion.pk),
+            'correlativo':str(transaccion.correlativo),
             'usuario':str(transaccion.usuario),
             'fecha_transaccion':timezone.localtime(transaccion.fecha_transaccion),
-            'tipo_de_transaccion':str(transaccion.tipo_transacion),
+            'tipo_de_transaccion':str(transaccion.tipo_transaccion),
             'sucursal':str(sucursal_usuario),
             'nombre_cliente':str(transaccion.nombre_cliente),
             'apellido_cliente':str(transaccion.apellido_cliente),
