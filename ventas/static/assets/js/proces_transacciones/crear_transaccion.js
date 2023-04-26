@@ -21,10 +21,10 @@ $(document).ready(function(){
         $(".cantidad2_b").val("");
         $(".cantidad1_m").val("");
         $(".cantidad2_m").val("");
-        $("#total_billete").val("");
-        $("#total_moneda").val("");
-        $("#total_billete_moneda").val("");
-        $("#id_total_en_grande").val("");
+        $("#total_billete").val("$0.0");
+        $("#total_moneda").val("$0.0");
+        $("#total_billete_moneda").val("$0.0");
+        $("#id_total_en_grande").val("$0.0");
     });
     $("#tipo_transaccion").select2();
     //validando las cantidades a que solo pueda ingresar solo numeros

@@ -21,10 +21,16 @@
                     <table class="table">
                       <thead>
                       <tr>
-                          <th scope="col" colspan="4">Transaccion realizada el {{ venta.fecha_venta }}</th>
+                          <th scope="col" colspan="4">Transaccion realizada el {{ transaccion.fecha_transaccion }}</th>
                       </tr>
                       </thead>
                       <tbody>
+                        <tr>                            
+                          <td>Tipo de transaccion:</td>
+                          <td>{{ transaccion.tipo_transaccion }}</td>
+                          <td></td>
+                          <td></td>
+                        </tr>
                       <tr>                            
                           <td>Usuario:</td>
                           <td>{{ transaccion.usuario }}</td>
@@ -34,20 +40,14 @@
                       <tr>                        
                           <td>Sucursal:</td>
                           <td>{{ transaccion.sucursal }}</td>
-                          <td>Fecha de venta:</td>
-                          <td>{{ transaccion.fecha_transaccion }}</td>
+                          <td>Concepto:</td>
+                          <td>{{ transaccion.concepto }}</td>
                       </tr>
                       <tr>                        
                         <td>Nombre del cliente:</td>
                         <td>{{ transaccion.nombre_cliente }}</td>
                         <td>Apellido del cliente:</td>
                         <td>{{ transaccion.apellido_cliente }}</td>
-                     </tr>
-                     <tr>                        
-                        <td>Concepto:</td>
-                        <td>{{ transaccion.concepto }}</td>
-                        <td></td>
-                        <td></td>
                      </tr>
                   </tbody>
                   </table>
